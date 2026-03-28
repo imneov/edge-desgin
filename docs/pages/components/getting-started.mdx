@@ -1,0 +1,49 @@
+# 组件库快速开始
+
+## 安装
+
+```bash
+pnpm install @edge/ui
+```
+
+## 使用
+
+### 1. 导入样式
+
+在应用入口导入 CSS：
+
+```tsx
+import '@edge/ui/styles'
+```
+
+### 2. 使用组件
+
+```tsx
+import { Button } from '@edge/ui'
+
+export function App() {
+  return <Button>Click me</Button>
+}
+```
+
+### 3. 导入工具函数
+
+```tsx
+import { cn } from '@edge/ui'
+
+// 合并 Tailwind 类名
+const className = cn('px-4 py-2', isActive && 'bg-blue-500')
+```
+
+## 组件列表
+
+> 组件正在从 Edge Console 提取中，敬请期待...
+
+目前已完成提取的组件：
+- 无
+
+计划提取的组件：
+- `LabelEditor` - 标签编辑器
+- `ConfirmDeleteDialog` - 删除确认对话框
+- `EmptyState` - 空状态组件
+- `MetricCard` - 指标卡片

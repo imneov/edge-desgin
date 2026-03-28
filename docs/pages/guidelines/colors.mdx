@@ -1,0 +1,41 @@
+# 色彩
+
+Edge Design System 使用 HSL 颜色系统，支持深色模式。
+
+## 主题色
+
+### Primary
+主色，用于主要操作和重要信息。
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--primary` | `hsl(221.2 83.2% 53.3%)` | `hsl(217.2 91.2% 59.8%)` |
+| `--primary-foreground` | `hsl(210 40% 98%)` | `hsl(222.2 47.4% 11.2%)` |
+
+### Destructive
+危险色，用于删除、警告等操作。
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--destructive` | `hsl(0 84.2% 60.2%)` | `hsl(0 62.8% 30.6%)` |
+| `--destructive-foreground` | `hsl(210 40% 98%)` | `hsl(210 40% 98%)` |
+
+## 使用方式
+
+在 Tailwind 中使用：
+
+```css
+/* 自定义样式 */
+.my-element {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+```
+
+在 React 组件中使用：
+
+```tsx
+<div className="bg-primary text-primary-foreground">
+  主色按钮
+</div>
+```

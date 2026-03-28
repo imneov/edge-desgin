@@ -1,0 +1,27 @@
+{
+  "name": "edge-design",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Edge Platform Design System",
+  "scripts": {
+    "dev": "pnpm --filter @edge/ui dev",
+    "build": "pnpm --filter @edge/ui build",
+    "build:docs": "pnpm --filter docs build",
+    "storybook": "pnpm --filter @edge/ui storybook",
+    "docs:dev": "pnpm --filter docs dev",
+    "lint": "pnpm --filter @edge/ui lint",
+    "typecheck": "pnpm --filter @edge/ui typecheck",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish",
+    "clean": "rm -rf node_modules **/node_modules **/dist **/.turbo"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.7",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

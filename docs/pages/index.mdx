@@ -1,0 +1,44 @@
+# 欢迎使用 Edge Design System
+
+Edge Platform 统一设计系统，为所有 Edge 产品提供一致的设计语言和组件库。
+
+## 特性
+
+- 🎨 **统一视觉** - 基于 Tailwind CSS 的一致设计令牌
+- 🧩 **可复用组件** - 从 Edge Console 提取的业务组件
+- 📖 **完整文档** - Storybook + Nextra 双文档系统
+- 🔧 **TypeScript** - 完整的类型支持
+- 🌙 **深色模式** - 内置主题切换
+
+## 快速开始
+
+### 安装
+
+```bash
+pnpm install
+```
+
+### 开发
+
+```bash
+# Storybook - 组件文档
+pnpm storybook
+
+# 文档站点 - 设计规范
+pnpm docs:dev
+```
+
+## 项目结构
+
+```
+design/
+├── packages/
+│   └── ui/          # 组件库 (@edge/ui)
+└── docs/            # 文档站点
+```
+
+## 文档
+
+- [设计规范](./guidelines)
+- [组件库](./components)
+- [提取指南](./extraction)
