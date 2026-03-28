@@ -1,44 +1,67 @@
-# 欢迎使用 Edge Design System
+# Edge Design
 
-Edge Platform 统一设计系统，为所有 Edge 产品提供一致的设计语言和组件库。
+A comprehensive design system for the Edge Platform — providing a consistent design language, reusable components, and composable patterns for building cloud-edge management interfaces.
 
-## 特性
+## Features
 
-- 🎨 **统一视觉** - 基于 Tailwind CSS 的一致设计令牌
-- 🧩 **可复用组件** - 从 Edge Console 提取的业务组件
-- 📖 **完整文档** - Storybook + Nextra 双文档系统
-- 🔧 **TypeScript** - 完整的类型支持
-- 🌙 **深色模式** - 内置主题切换
+- **Design Tokens** — Colors, typography, spacing, and motion tokens in CSS variables, Tailwind preset, and JS constants
+- **6 Built-in Themes** — Classic Blue, Purple, Green, Orange, Dark, and Cyan with custom theme extensibility
+- **50+ Components** — Core UI components built on Radix UI with full accessibility support
+- **Domain Components** — Edge-specific selectors, monitoring dashboards, topology visualization
+- **Hooks Library** — Reusable React hooks for state management, UI interactions, and utilities
+- **Pluggable Architecture** — Token-first design enables complete rebranding; layered packages allow selective adoption
 
-## 快速开始
+## Packages
 
-### 安装
+| Package | Description |
+|---------|-------------|
+| `@edge/tokens` | Design tokens — CSS variables, Tailwind preset, JS/TS constants |
+| `@edge/ui` | Core UI components — Button, Input, Dialog, Table, Card, etc. |
+| `@edge/edge-components` | Domain components — Selectors, Monitoring, Topology, Terminal |
+| `@edge/hooks` | Shared hooks — State management, UI, DOM utilities |
+| `@edge/icons` | Icon system — Lucide React + custom Edge icons |
+
+## Quick Start
+
+### Install
 
 ```bash
-pnpm install
+pnpm add @edge/ui @edge/tokens
 ```
 
-### 开发
+### Use the Tailwind Preset
 
-```bash
-# Storybook - 组件文档
-pnpm storybook
+```js
+// tailwind.config.js
+const edgePreset = require('@edge/tokens/tailwind-preset')
 
-# 文档站点 - 设计规范
-pnpm docs:dev
+module.exports = {
+  presets: [edgePreset],
+  content: ['./src/**/*.{ts,tsx}'],
+}
 ```
 
-## 项目结构
+### Use Components
 
+```tsx
+import { Button, Card, Badge } from '@edge/ui'
+
+function App() {
+  return (
+    <Card>
+      <Badge variant="success">Running</Badge>
+      <Button>Deploy</Button>
+    </Card>
+  )
+}
 ```
-design/
-├── packages/
-│   └── ui/          # 组件库 (@edge/ui)
-└── docs/            # 文档站点
-```
 
-## 文档
+## Documentation
 
-- [设计规范](./guidelines)
-- [组件库](./components)
-- [提取指南](./extraction)
+- [Guide](/guide) — Introduction, installation, and getting started
+- [Customization](/customization) — Colors, themes, typography, spacing, motion
+- [Components](/components) — Core UI component library
+- [Domain Components](/domain) — Edge Platform-specific components
+- [Hooks](/hooks) — Reusable React hooks
+- [Icons](/icons) — Icon system and gallery
+- [Patterns](/patterns) — Composition patterns and templates

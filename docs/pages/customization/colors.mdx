@@ -1,0 +1,142 @@
+# Colors & Themes
+
+Edge Design uses a two-tier color system:
+
+1. **Semantic CSS custom properties** — HSL channel values that map to Tailwind utilities
+2. **Theme presets** — Complete color configurations for header, sidebar, and navigation
+
+## Semantic Colors
+
+All semantic colors are defined as HSL channel values on `:root` and `.dark`, enabling Tailwind's opacity modifier syntax:
+
+```css
+:root {
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+}
+```
+
+```html
+<div class="bg-primary text-primary-foreground">
+  Solid primary
+</div>
+<div class="bg-primary/50">
+  50% opacity primary
+</div>
+```
+
+### Color Tokens
+
+| Token | Light | Dark | Usage |
+|-------|-------|------|-------|
+| `background` | `0 0% 100%` | `222.2 84% 4.9%` | Page background |
+| `foreground` | `222.2 84% 4.9%` | `210 40% 98%` | Default text |
+| `primary` | `221.2 83.2% 53.3%` | `217.2 91.2% 59.8%` | Primary actions, links |
+| `secondary` | `210 40% 96%` | `217.2 32.6% 17.5%` | Secondary backgrounds |
+| `muted` | `210 40% 96%` | `217.2 32.6% 17.5%` | Muted backgrounds |
+| `muted-foreground` | `215.4 16.3% 46.9%` | `215 20.2% 65.1%` | Subtle text |
+| `accent` | `210 40% 96%` | `217.2 32.6% 17.5%` | Hover/focus highlights |
+| `destructive` | `0 84.2% 60.2%` | `0 62.8% 30.6%` | Destructive actions |
+| `border` | `214.3 31.8% 91.4%` | `217.2 32.6% 17.5%` | Borders |
+| `ring` | `221.2 83.2% 53.3%` | `224.3 76.3% 94.1%` | Focus rings |
+
+### Cockpit Colors
+
+The cockpit (monitoring dashboard) uses a separate set of hex-based color tokens:
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--cockpit-accent` | `#3B82F6` | Primary accent (blue) |
+| `--cockpit-success` | `#14B8A6` | Success / healthy state |
+| `--cockpit-warning` | `#F59E0B` | Warning state |
+| `--cockpit-danger` | `#EF4444` | Danger / error state |
+| `--cockpit-purple` | `#8B5CF6` | Purple accent |
+
+Each has a `-muted` variant at 10% opacity for background fills.
+
+### Status Colors
+
+| State | Color | Hex |
+|-------|-------|-----|
+| Success | Teal | `#14B8A6` |
+| Warning | Amber | `#F59E0B` |
+| Error | Red | `#EF4444` |
+| Info | Blue | `#3B82F6` |
+| Neutral | Gray | `#6B7280` |
+
+## Themes
+
+Edge Design ships with 6 built-in themes that control header, sidebar, and menu styling:
+
+| Theme | Label | Header Background |
+|-------|-------|-------------------|
+| `default` | 经典蓝 (Classic Blue) | `#1e293b` |
+| `purple` | 优雅紫色 (Elegant Purple) | `#2d1b3d` |
+| `green` | 清新绿色 (Fresh Green) | `#1a2f2a` |
+| `orange` | 活力橙色 (Vibrant Orange) | `#2d1f1a` |
+| `dark` | 暗夜黑色 (Night Black) | `#0f1419` |
+| `cyan` | 科技青色 (Tech Cyan) | `#0f2a2e` |
+
+### Using Themes
+
+```tsx
+import { themes, getTheme } from '@edge/tokens'
+
+// Get a theme
+const theme = getTheme('purple')
+
+// Apply to header
+<header className={theme.colors.headerBg}>
+  <span className={theme.colors.text}>Edge Platform</span>
+</header>
+```
+
+### Custom Themes
+
+```tsx
+import { registerTheme } from '@edge/tokens'
+import type { Theme } from '@edge/tokens'
+
+const myTheme: Theme = {
+  name: 'custom',
+  label: 'My Custom Theme',
+  colors: {
+    headerBg: 'bg-[#1a1a2e]',
+    headerBorder: 'border-indigo-900',
+    // ... all ThemeColors fields
+  },
+}
+
+registerTheme(myTheme)
+```
+
+## Overriding Tokens
+
+Override any CSS custom property in your global styles:
+
+```css
+:root {
+  --primary: 262 83% 58%;    /* Change primary to purple */
+  --radius: 0.75rem;          /* Larger border radius */
+}
+```
+
+Or extend the Tailwind preset:
+
+```js
+const edgePreset = require('@edge/tokens/tailwind-preset')
+
+module.exports = {
+  presets: [edgePreset],
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          DEFAULT: 'hsl(262 83% 58%)',
+          foreground: 'hsl(0 0% 100%)',
+        },
+      },
+    },
+  },
+}
+```

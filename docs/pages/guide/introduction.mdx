@@ -1,0 +1,58 @@
+# Introduction
+
+Edge Design is the design system for Edge Platform — a Kubernetes-based cloud-edge management platform. It provides a complete set of design tokens, UI components, domain-specific components, and composition patterns.
+
+## Design Philosophy
+
+**Token-first.** Every visual decision flows through design tokens. Colors, spacing, typography, and motion are all defined as tokens that can be overridden to completely rebrand the system.
+
+**Layered architecture.** The system is organized in four layers:
+
+```
+┌─────────────────────────────────────────────┐
+│  Layer 4: Patterns & Templates              │
+│  (Wizards, CRUD Flows, Dashboard Layouts)   │
+├─────────────────────────────────────────────┤
+│  Layer 3: Domain Components                 │
+│  (Selectors, Monitoring, Topology)          │
+├─────────────────────────────────────────────┤
+│  Layer 2: Core Components                   │
+│  (Button, Input, Dialog, Table, Card...)    │
+├─────────────────────────────────────────────┤
+│  Layer 1: Foundations                       │
+│  (Tokens, Colors, Typography, Spacing,      │
+│   Icons, Motion, Themes)                    │
+└─────────────────────────────────────────────┘
+```
+
+Consumers can adopt any layer independently. Use `@edge/tokens` alone for design tokens, add `@edge/ui` for core components, or go all-in with `@edge/edge-components` for the full Edge Platform experience.
+
+**Accessibility-first.** Core components are built on [Radix UI](https://www.radix-ui.com/) primitives, providing WAI-ARIA compliant keyboard navigation, focus management, and screen reader support out of the box.
+
+**Pluggable.** Designed for reuse beyond Edge Platform. The token system supports custom themes, components accept generic type parameters, and domain components can be configured for different API backends.
+
+## Packages
+
+| Package | Purpose | Layer |
+|---------|---------|-------|
+| `@edge/tokens` | Design tokens, Tailwind preset, theme system | 1 — Foundations |
+| `@edge/ui` | Core UI components | 2 — Components |
+| `@edge/edge-components` | Edge Platform domain components | 3 — Domain |
+| `@edge/hooks` | Shared React hooks | Cross-cutting |
+| `@edge/icons` | Icon system | 1 — Foundations |
+
+## Tech Stack
+
+- **React 18+** with TypeScript strict mode
+- **Tailwind CSS 3** with CSS custom properties
+- **Radix UI** for accessible component primitives
+- **class-variance-authority** for component variants
+- **Recharts** for data visualization
+- **@xyflow/react** for topology visualization
+- **xterm.js** for terminal components
+
+## Inspired By
+
+- [KubeDesign](https://kube.design/) — Component structure and category organization
+- [shadcn/ui](https://ui.shadcn.com/) — Component patterns and Radix UI integration
+- [Atlassian Design System](https://atlassian.design/) — Token architecture
