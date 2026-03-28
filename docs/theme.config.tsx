@@ -19,11 +19,6 @@ const config: DocsThemeConfig = {
       return <>{title}</>
     }
   },
-  useNextSeoProps() {
-    return {
-      titleTemplate: '%s – Edge Design',
-    }
-  },
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />

@@ -149,12 +149,12 @@ export function ContainerStatus({
     return translateStatus(containers.phase)
   }
 
-  const hasConditions =
-    containers.conditions && containers.conditions.length > 0
-
   if (!containers) {
     return <span className="text-muted-foreground text-xs">无容器信息</span>
   }
+
+  const hasConditions =
+    containers.conditions && containers.conditions.length > 0
 
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
