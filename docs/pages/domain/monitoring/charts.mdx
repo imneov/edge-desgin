@@ -1,0 +1,115 @@
+import { ResourceChart } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
+# Charts
+
+Time-series area chart for resource usage visualization.
+
+## ResourceChart
+
+A generic time-series area chart from `@edge/ui`. Displays percentage usage, a progress bar, and an area chart.
+
+### Import
+
+```tsx
+import { ResourceChart } from '@edge/ui'
+```
+
+### Preview
+
+<Preview>
+  <div className="p-4 max-w-sm">
+    <ResourceChart
+      title="CPU 使用率"
+      currentValue="2.4 / 4 cores"
+      percentage={62.5}
+      timeSeries={[
+        { time: '10:00', value: 45 },
+        { time: '10:05', value: 52 },
+        { time: '10:10', value: 58 },
+        { time: '10:15', value: 62 },
+        { time: '10:20', value: 71 },
+        { time: '10:25', value: 63 },
+        { time: '10:30', value: 62 },
+      ]}
+      color="#3b82f6"
+      unit="%"
+    />
+  </div>
+</Preview>
+
+### High Usage
+
+<Preview>
+  <div className="p-4 max-w-sm">
+    <ResourceChart
+      title="内存使用率"
+      currentValue="6.8 / 8 GB"
+      percentage={85}
+      timeSeries={[
+        { time: '10:00', value: 70 },
+        { time: '10:05', value: 75 },
+        { time: '10:10', value: 78 },
+        { time: '10:15', value: 82 },
+        { time: '10:20', value: 85 },
+        { time: '10:25', value: 85 },
+        { time: '10:30', value: 85 },
+      ]}
+      color="#8b5cf6"
+      unit="%"
+    />
+  </div>
+</Preview>
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | — | Chart title |
+| `currentValue` | `string` | — | Current value string (e.g. `"2.4 / 4 cores"`) |
+| `percentage` | `number` | — | Usage percentage for progress bar and display |
+| `timeSeries` | `ResourceChartDataPoint[]` | — | Time-series data array |
+| `color` | `string` | `"#3b82f6"` | Chart theme color (hex) |
+| `unit` | `string` | `"%"` | Unit label for axis and tooltip |
+| `showGrid` | `boolean` | `true` | Show chart grid lines |
+| `className` | `string` | — | Additional CSS classes |
+
+**ResourceChartDataPoint Type:**
+
+```tsx
+interface ResourceChartDataPoint {
+  time: string | number  // time label for X axis
+  value: number          // numeric value for Y axis
+}
+```
+
+### Progress Bar Color Rules
+
+The progress bar color changes automatically based on `percentage`:
+
+| Range | Color |
+|-------|-------|
+| `> 80%` | Red (`bg-red-500`) |
+| `> 60%` | Yellow (`bg-yellow-500`) |
+| `≤ 60%` | Blue (`bg-blue-500`) |
+
+### Usage in Edge Console
+
+In `edge-console`, `ResourceChart` is used in the telemetry dashboards for CPU, memory, and disk metrics. Data comes from the monitoring service SDK hooks:
+
+```tsx
+import { ResourceChart } from '@edge/ui'
+
+function CpuChart({ timeSeries, currentUsage, percentage }) {
+  return (
+    <ResourceChart
+      title="CPU 使用率"
+      currentValue={currentUsage}
+      percentage={percentage}
+      timeSeries={timeSeries}
+      color="#3b82f6"
+      unit="%"
+    />
+  )
+}
+```

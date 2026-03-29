@@ -1,0 +1,243 @@
+import { EventsTable } from '@edge/ui'
+import { EventsViewer, AlertList, AlertListContainer } from '@edge/components'
+import { Preview } from '../../../components/Preview'
+
+# Events & Alerts
+
+Components for displaying Kubernetes events and firing alerts.
+
+## EventsTable
+
+Generic events table from `@edge/ui`. Accepts event data through props with no domain knowledge.
+
+### Import
+
+```tsx
+import { EventsTable } from '@edge/ui'
+import type { EventInfo } from '@edge/ui'
+```
+
+### Preview
+
+<Preview>
+  <EventsTable
+    events={[
+      {
+        id: 1,
+        type: 'Normal',
+        reason: 'Scheduled',
+        message: 'Successfully assigned default/my-pod to node-1',
+        timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+        count: 1,
+        source: 'default-scheduler',
+      },
+      {
+        id: 2,
+        type: 'Warning',
+        reason: 'BackOff',
+        message: 'Back-off restarting failed container',
+        timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+        count: 3,
+        source: 'kubelet',
+      },
+      {
+        id: 3,
+        type: 'Normal',
+        reason: 'Pulled',
+        message: 'Successfully pulled image "nginx:latest"',
+        timestamp: new Date(Date.now() - 60 * 1000).toISOString(),
+        count: 1,
+        source: 'kubelet',
+      },
+    ]}
+  />
+</Preview>
+
+### Loading State
+
+<Preview>
+  <EventsTable events={[]} loading={true} />
+</Preview>
+
+### Empty State
+
+<Preview>
+  <EventsTable events={[]} emptyMessage="暂无事件" emptyDescription="该资源暂未产生任何事件" />
+</Preview>
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `events` | `EventInfo[]` | — | Events array |
+| `loading` | `boolean` | `false` | Show loading overlay |
+| `error` | `string \| null` | `null` | Error message |
+| `emptyMessage` | `string` | `"暂无事件"` | Empty state title |
+| `emptyDescription` | `string` | `"该资源暂未产生任何事件"` | Empty state description |
+| `className` | `string` | — | Additional CSS classes |
+
+**EventInfo Type:**
+
+```tsx
+interface EventInfo {
+  id?: number | string
+  type: string        // 'Normal' | 'Warning' | 'Error'
+  reason: string
+  message: string
+  timestamp: string   // ISO date string
+  count: number
+  source: string
+}
+```
+
+---
+
+## EventsViewer
+
+Layer 3 wrapper around `EventsTable` from `@edge/components`. Provides the same interface.
+
+### Import
+
+```tsx
+import { EventsViewer } from '@edge/components'
+```
+
+### Usage
+
+```tsx
+import { EventsViewer } from '@edge/components'
+
+function PodEventsTab({ events, loading, error }) {
+  return (
+    <EventsViewer
+      events={events}
+      loading={loading}
+      error={error}
+      emptyMessage="该 Pod 暂无事件"
+    />
+  )
+}
+```
+
+### Props
+
+Same as `EventsTable` — see above.
+
+---
+
+## AlertList
+
+A list of firing alerts from `@edge/components`. Accepts pre-fetched alert data.
+
+### Import
+
+```tsx
+import { AlertList } from '@edge/components'
+import type { AlertItem } from '@edge/components'
+```
+
+### Preview
+
+<Preview>
+  <AlertList
+    alerts={[
+      {
+        id: '1',
+        title: 'CPU 使用率过高',
+        severity: 'critical',
+        status: 'firing',
+        description: '节点 node-1 的 CPU 使用率超过 90% 持续 5 分钟',
+        duration: '15m',
+        severityText: '严重',
+        labels: { namespace: 'production', pod: 'api-server-xxx' },
+      },
+      {
+        id: '2',
+        title: '内存使用率警告',
+        severity: 'warning',
+        status: 'firing',
+        description: '容器内存使用率超过 80%',
+        duration: '3m',
+        severityText: '警告',
+        labels: { namespace: 'staging' },
+      },
+    ]}
+  />
+</Preview>
+
+### Empty State
+
+<Preview>
+  <AlertList alerts={[]} />
+</Preview>
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `alerts` | `AlertItem[]` | — | Alert list |
+| `loading` | `boolean` | `false` | Show loading state |
+| `error` | `string \| null` | `null` | Error message |
+| `className` | `string` | — | Additional CSS classes |
+
+**AlertItem Type:**
+
+```tsx
+interface AlertItem {
+  id: string
+  title: string
+  severity: 'critical' | 'warning' | 'info'
+  status: 'firing' | 'resolved'
+  description?: string
+  duration: string
+  severityText: string
+  labels: {
+    namespace?: string
+    pod?: string
+    [key: string]: string | undefined
+  }
+}
+```
+
+---
+
+## AlertListContainer
+
+A container component with title bar and optional refresh button.
+
+### Import
+
+```tsx
+import { AlertListContainer } from '@edge/components'
+```
+
+### Preview
+
+<Preview>
+  <div className="p-4">
+    <AlertListContainer
+      alerts={[
+        {
+          id: '1',
+          title: 'Disk I/O 异常',
+          severity: 'warning',
+          status: 'firing',
+          description: '磁盘 I/O 延迟超过阈值',
+          duration: '8m',
+          severityText: '警告',
+          labels: { namespace: 'default' },
+        },
+      ]}
+    />
+  </div>
+</Preview>
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `alerts` | `AlertItem[]` | — | Alert list |
+| `loading` | `boolean` | `false` | Show loading state |
+| `error` | `string \| null` | `null` | Error message |
+| `onRefresh` | `() => void` | — | Optional refresh callback |
+| `className` | `string` | — | Additional CSS classes |

@@ -193,3 +193,14 @@ export { Popover, PopoverTrigger, PopoverAnchor, PopoverContent } from './compon
 export { ChartContainer, ChartTooltip, ChartTooltipContent } from './components/chart'
 export type { ChartConfig } from './components/chart'
 
+// ─── Telemetry ───────────────────────────────────────────────────────────────
+export { KPICard } from './components/kpi-card'
+export type { KPICardProps } from './components/kpi-card'
+
+export { ResourceChart } from './components/resource-chart'
+export type { ResourceChartProps, ResourceChartDataPoint } from './components/resource-chart'
+
+// ─── Events ───────────────────────────────────────────────────────────────────
+export { EventsTable } from './components/events-table'
+export type { EventsTableProps, EventInfo } from './components/events-table'
+

@@ -1,0 +1,191 @@
+import { KPICard } from '@edge/ui'
+import { MetricCard, NamespaceStatsCards, NodeStatsCards } from '@edge/components'
+import { Preview } from '../../../components/Preview'
+import { Activity, Cpu, Server } from 'lucide-react'
+
+# Metrics Cards
+
+Components for displaying KPI and monitoring metric values.
+
+## KPICard
+
+A generic KPI display card from `@edge/ui`. No domain knowledge — accepts any icon, value, and optional trend.
+
+### Import
+
+```tsx
+import { KPICard } from '@edge/ui'
+import { Activity } from 'lucide-react'
+```
+
+### Preview
+
+<Preview>
+  <div className="grid grid-cols-3 gap-4 p-4">
+    <KPICard
+      icon={Activity}
+      title="活跃节点"
+      value={42}
+      trend={{ value: 5, isPositive: true }}
+    />
+    <KPICard
+      icon={Cpu}
+      title="CPU 使用率"
+      value="62.5"
+      unit="%"
+      iconBgColor="bg-orange-50"
+      iconColor="text-orange-600"
+    />
+    <KPICard
+      icon={Server}
+      title="异常节点"
+      value={3}
+      trend={{ value: 2, isPositive: false }}
+      iconBgColor="bg-red-50"
+      iconColor="text-red-600"
+    />
+  </div>
+</Preview>
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `icon` | `LucideIcon` | — | Icon component |
+| `title` | `string` | — | Card title |
+| `value` | `number \| string` | — | Primary metric value |
+| `unit` | `string` | — | Optional unit label |
+| `trend` | `{ value: number; isPositive: boolean }` | — | Optional trend indicator |
+| `iconBgColor` | `string` | `"bg-blue-50"` | Icon background class |
+| `iconColor` | `string` | `"text-blue-600"` | Icon color class |
+| `className` | `string` | — | Additional CSS classes |
+
+---
+
+## MetricCard
+
+A K8s-aware metric display component from `@edge/components`. Supports value format awareness (number, percentage, bytes, rate).
+
+### Import
+
+```tsx
+import { MetricCard } from '@edge/components'
+import { Cpu } from 'lucide-react'
+```
+
+### Preview
+
+<Preview>
+  <div className="space-y-4 p-4">
+    <MetricCard icon={Cpu} title="CPU 使用率" value={0.625} format="percentage" trend="stable" />
+    <MetricCard icon={Server} title="内存使用" value={2147483648} format="bytes" />
+    <MetricCard icon={Activity} title="网络速率" value={1048576} format="rate" />
+    <MetricCard icon={Cpu} title="副本数" value={5} format="number" unit="个" />
+  </div>
+</Preview>
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `icon` | `LucideIcon` | — | Icon component |
+| `title` | `string` | — | Metric title |
+| `value` | `number \| string` | — | Metric value |
+| `unit` | `string` | `""` | Unit label (shown for `number` format) |
+| `format` | `'number' \| 'percentage' \| 'bytes' \| 'rate'` | `"number"` | Format mode |
+| `trend` | `'up' \| 'down' \| 'stable'` | — | Trend direction (affects value color) |
+| `isLoading` | `boolean` | `false` | Show loading skeleton |
+| `error` | `boolean` | `false` | Show error state |
+
+---
+
+## NamespaceStatsCards
+
+Namespace-level overview statistics card. Computes totals from a namespace list.
+
+### Import
+
+```tsx
+import { NamespaceStatsCards } from '@edge/components'
+```
+
+### Preview
+
+<Preview>
+  <div className="p-4">
+    <NamespaceStatsCards
+      namespaces={[
+        { status: '活跃', quotas: { pods: { used: 12 }, services: { used: 4 } } },
+        { status: '活跃', quotas: { pods: { used: 8 }, services: { used: 2 } } },
+        { status: '停用', quotas: { pods: { used: 0 }, services: { used: 0 } } },
+      ]}
+    />
+  </div>
+</Preview>
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `namespaces` | `NamespaceItem[]` | `[]` | Namespace list (filtered from API response) |
+| `loading` | `boolean` | `false` | Show loading skeletons |
+| `className` | `string` | — | Additional CSS classes |
+
+**NamespaceItem Type:**
+
+```tsx
+interface NamespaceItem {
+  status?: string
+  quotas?: {
+    pods?: { used?: number }
+    services?: { used?: number }
+  }
+}
+```
+
+---
+
+## NodeStatsCards
+
+Node statistics overview card. Accepts pre-computed stats.
+
+### Import
+
+```tsx
+import { NodeStatsCards } from '@edge/components'
+```
+
+### Preview
+
+<Preview>
+  <div className="p-4">
+    <NodeStatsCards
+      stats={{
+        totalNodes: 8,
+        readyNodes: 7,
+        avgCpuUsage: 45.2,
+        avgMemoryUsage: 62.8,
+      }}
+    />
+  </div>
+</Preview>
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `stats` | `NodeStats \| null` | — | Pre-computed node statistics |
+| `loading` | `boolean` | `false` | Show loading skeletons |
+| `error` | `boolean` | `false` | Show error card |
+| `className` | `string` | — | Additional CSS classes |
+
+**NodeStats Type:**
+
+```tsx
+interface NodeStats {
+  totalNodes: number
+  readyNodes: number
+  avgCpuUsage: number    // percentage 0–100
+  avgMemoryUsage: number // percentage 0–100
+}
+```

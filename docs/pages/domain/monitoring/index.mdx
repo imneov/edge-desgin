@@ -1,3 +1,60 @@
+import { KPICard } from '@edge/ui'
+import { MetricCard, NamespaceStatsCards } from '@edge/components'
+import { Preview } from '../../../components/Preview'
+import { Activity } from 'lucide-react'
+
 # Monitoring
 
-Coming soon.
+Components for displaying monitoring data, metrics, events, and alerts.
+
+## Layer Overview
+
+| Layer | Package | Components |
+|-------|---------|------------|
+| **Layer 2** | `@edge/ui` | `KPICard`, `ResourceChart`, `EventsTable` |
+| **Layer 3** | `@edge/components` | `MetricCard`, `NamespaceStatsCards`, `NodeStatsCards`, `EventsViewer`, `AlertList`, `AlertListContainer` |
+
+## Layer Rules
+
+- **Layer 2** components are generic — no K8s domain knowledge, no API calls.
+- **Layer 3** components know about Edge Platform concepts (namespaces, nodes, alerts) but still do **not** call APIs directly.
+
+## Quick Preview
+
+### KPICard
+
+<Preview>
+  <KPICard
+    icon={Activity}
+    title="活跃节点"
+    value={42}
+    unit="个"
+    trend={{ value: 5, isPositive: true }}
+  />
+</Preview>
+
+### MetricCard
+
+<Preview>
+  <MetricCard
+    icon={Activity}
+    title="CPU 使用率"
+    value={0.625}
+    format="percentage"
+    trend="stable"
+  />
+</Preview>
+
+### NamespaceStatsCards
+
+<Preview>
+  <NamespaceStatsCards
+    namespaces={[
+      { status: '活跃', quotas: { pods: { used: 12 }, services: { used: 4 } } },
+      { status: '活跃', quotas: { pods: { used: 8 }, services: { used: 2 } } },
+      { status: '停用', quotas: { pods: { used: 0 }, services: { used: 0 } } },
+    ]}
+  />
+</Preview>
+
+See [Metrics Cards](./metrics-cards), [Charts](./charts), and [Events & Alerts](./events-alerts) for full documentation.

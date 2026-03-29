@@ -43,6 +43,28 @@ export type { ReplicaConfirmationDialogProps } from './components/replica-confir
 export { MonitoringChart, formatTime, DEFAULT_MONITORING_COLOR } from './components/monitoring-chart'
 export type { MonitoringChartProps, MonitoringChartConfig, DataPoint } from './components/monitoring-chart'
 
+export { MetricCard } from './components/metric-card'
+export type { MetricCardProps, MetricFormat } from './components/metric-card'
+
+export { NamespaceStatsCards, NamespaceStatsCardsError } from './components/namespace-stats-cards'
+export type { NamespaceStatsCardsProps, NamespaceItem } from './components/namespace-stats-cards'
+
+export { NodeStatsCards } from './components/node-stats-cards'
+export type { NodeStatsCardsProps, NodeStats } from './components/node-stats-cards'
+
+export { EventsViewer } from './components/events-viewer'
+export type { EventsViewerProps } from './components/events-viewer'
+
+export { AlertList, AlertListContainer } from './components/alert-list'
+export type {
+  AlertListProps,
+  AlertListContainerProps,
+  AlertItem,
+  AlertSeverity,
+  AlertStatus,
+  AlertLabels,
+} from './components/alert-list'
+
 // Selectors
 export { ClusterSelector } from './components/cluster-selector'
 export type { ClusterSelectorProps, ClusterData } from './components/cluster-selector'
