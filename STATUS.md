@@ -46,6 +46,17 @@
 
 ## Phase 2 进行中
 
+### ✅ Phase 2.3 完成 (2026-03-30)
+
+**EDG-49** - 新页面开发标准文档：
+- 创建 `docs/pages/patterns/new-page-standard.mdx`：完整的新页面开发标准
+  - 四层架构模型说明（tokens → @edge/ui → @edge/components → 页面层）
+  - @edge/ui + @edge/components 组合模式规范
+  - 完整示范实现（Namespace 列表页面）
+  - 反面示例（禁止模式）
+  - 快速检查清单
+- 更新 `docs/pages/patterns/_meta.ts`：将「新页面开发标准」置于 Patterns 首位
+
 ### 🚧 子任务
 
 已创建 3 个子任务，分配给 Frontend Engineer:
