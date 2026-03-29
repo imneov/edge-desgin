@@ -21,9 +21,6 @@ import { ClusterNode, type ClusterNodeData } from "./cluster-node"
 import { NodeGroupNode, type NodeGroupNodeData } from "./node-group-node"
 import { EdgeNode, type EdgeNodeData } from "./edge-node"
 
-// Import styles
-import '@xyflow/react/dist/style.css'
-
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export interface ClusterTopologyProps {

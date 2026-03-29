@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@edge/components": "workspace:*",
     "@edge/ui": "workspace:*",
     "next": "14.2.33",
     "nextra": "^3.3.1",

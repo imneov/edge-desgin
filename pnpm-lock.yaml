@@ -17,6 +17,9 @@ importers:
 
   docs:
     dependencies:
+      '@edge/components':
+        specifier: workspace:*
+        version: link:../packages/components
       '@edge/ui':
         specifier: workspace:*
         version: link:../packages/ui
