@@ -1,3 +1,11 @@
+import {
+  Button,
+  Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogClose,
+  Tabs, TabsList, TabsTrigger, TabsContent,
+  Input, Textarea, Label,
+} from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Create Dialogs
 
 Business dialogs for creating Edge Platform resources.
@@ -15,6 +23,77 @@ Business dialogs for creating Edge Platform resources.
 ```tsx
 import { CreateClusterDialog } from '@edge/components'
 ```
+
+### Preview
+
+<Preview label="点击按钮打开 Dialog" center={false}>
+  <div className="p-4">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>创建集群</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[560px]">
+        <DialogHeader>
+          <DialogTitle>创建集群</DialogTitle>
+        </DialogHeader>
+        <Tabs defaultValue="import">
+          <TabsList className="w-full">
+            <TabsTrigger value="import" className="flex-1">导入集群</TabsTrigger>
+            <TabsTrigger value="vcluster" className="flex-1">创建 vCluster</TabsTrigger>
+          </TabsList>
+          <TabsContent value="import" className="space-y-4 pt-4">
+            <div className="space-y-2">
+              <Label>集群名称 *</Label>
+              <Input placeholder="my-cluster" />
+            </div>
+            <div className="space-y-2">
+              <Label>别名</Label>
+              <Input placeholder="可选" />
+            </div>
+            <div className="space-y-2">
+              <Label>云服务商</Label>
+              <Input placeholder="可选" />
+            </div>
+            <div className="space-y-2">
+              <Label>Kubeconfig *</Label>
+              <Textarea className="font-mono min-h-[100px]" placeholder="粘贴 kubeconfig 内容" />
+            </div>
+          </TabsContent>
+          <TabsContent value="vcluster" className="space-y-4 pt-4">
+            <div className="space-y-2">
+              <Label>集群名称 *</Label>
+              <Input placeholder="my-vcluster" />
+            </div>
+            <div className="space-y-2">
+              <Label>别名</Label>
+              <Input placeholder="可选" />
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label>CPU 限制 (cores)</Label>
+                <Input type="number" placeholder="4" />
+              </div>
+              <div className="space-y-2">
+                <Label>内存限制</Label>
+                <Input placeholder="4Gi" />
+              </div>
+              <div className="space-y-2">
+                <Label>存储限制</Label>
+                <Input placeholder="10Gi" />
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">取消</Button>
+          </DialogClose>
+          <Button disabled>创建</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </div>
+</Preview>
 
 ### Usage
 
@@ -82,6 +161,43 @@ Both modes call `createCluster()` from `@/gen/client` and show `toast.success` o
 import { CreateNamespaceDialog } from '@edge/components'
 ```
 
+### Preview
+
+<Preview label="点击按钮打开 Dialog" center={false}>
+  <div className="p-4">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>创建项目</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>创建命名空间</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label>命名空间名称 *</Label>
+            <Input placeholder="my-namespace" />
+          </div>
+          <div className="space-y-2">
+            <Label>别名</Label>
+            <Input placeholder="可选，最多 63 字符" />
+          </div>
+          <div className="space-y-2">
+            <Label>描述</Label>
+            <Textarea placeholder="可选，最多 256 字符" />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">取消</Button>
+          </DialogClose>
+          <Button disabled>创建</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </div>
+</Preview>
+
 ### Usage
 
 ```tsx
@@ -142,6 +258,51 @@ function NamespaceList() {
 ```tsx
 import { CreateUserDialog } from '@edge/components'
 ```
+
+### Preview
+
+<Preview label="点击按钮打开 Dialog" center={false}>
+  <div className="p-4">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>创建用户</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>创建用户</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label>用户名 *</Label>
+            <Input placeholder="lowercase-username" />
+          </div>
+          <div className="space-y-2">
+            <Label>别名</Label>
+            <Input placeholder="可选" />
+          </div>
+          <div className="space-y-2">
+            <Label>角色 *</Label>
+            <Input placeholder="平台管理员" readOnly className="bg-muted" />
+          </div>
+          <div className="space-y-2">
+            <Label>邮箱 *</Label>
+            <Input type="email" placeholder="user@example.com" />
+          </div>
+          <div className="space-y-2">
+            <Label>密码 *</Label>
+            <Input type="password" placeholder="8-64 字符，需含大小写字母、数字和特殊字符" />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">取消</Button>
+          </DialogClose>
+          <Button disabled>创建</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </div>
+</Preview>
 
 ### Usage
 

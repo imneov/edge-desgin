@@ -1,3 +1,11 @@
+import {
+  Button,
+  Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogClose,
+  Input, Label, Badge,
+  Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
+} from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Member Dialogs
 
 Business dialogs for managing Edge Platform membership.
@@ -15,6 +23,68 @@ Business dialogs for managing Edge Platform membership.
 ```tsx
 import InviteMemberDialog from '@edge/components'
 ```
+
+### Preview
+
+<Preview label="点击按钮打开 Dialog" center={false}>
+  <div className="p-4">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>邀请成员</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[640px]">
+        <DialogHeader>
+          <DialogTitle>邀请成员到集群</DialogTitle>
+        </DialogHeader>
+        <div className="flex gap-4 min-h-[280px]">
+          <div className="flex-1 border rounded-md p-3 space-y-2">
+            <Input placeholder="搜索用户名或显示名" />
+            <div className="space-y-1 mt-2">
+              {[
+                { name: 'alice', display: 'Alice Zhang' },
+                { name: 'bob', display: 'Bob Li' },
+                { name: 'charlie', display: 'Charlie Wang', disabled: true },
+              ].map((u) => (
+                <div key={u.name} className={`flex items-center gap-2 p-2 rounded cursor-pointer hover:bg-muted ${u.disabled ? 'opacity-40' : ''}`}>
+                  <input type="checkbox" disabled={u.disabled} className="rounded" />
+                  <div>
+                    <div className="text-sm font-medium">{u.name}</div>
+                    <div className="text-xs text-muted-foreground">{u.display}</div>
+                  </div>
+                  {u.disabled && <Badge variant="outline" className="ml-auto text-xs">已加入</Badge>}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="w-[200px] border rounded-md p-3">
+            <div className="text-sm text-muted-foreground mb-2">已选择 (1)</div>
+            <div className="flex items-center gap-2 p-2 border rounded mb-2">
+              <span className="text-sm flex-1">alice</span>
+              <Button variant="ghost" size="icon" className="h-5 w-5">×</Button>
+            </div>
+            <Label className="text-xs text-muted-foreground">角色</Label>
+            <Select defaultValue="cluster-viewer">
+              <SelectTrigger className="mt-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="cluster-viewer">集群查看者</SelectItem>
+                <SelectItem value="cluster-editor">集群编辑者</SelectItem>
+                <SelectItem value="cluster-admin">集群管理员</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">取消</Button>
+          </DialogClose>
+          <Button>邀请 (1)</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </div>
+</Preview>
 
 ### Usage
 

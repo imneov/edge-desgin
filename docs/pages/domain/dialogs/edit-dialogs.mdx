@@ -1,3 +1,10 @@
+import {
+  Button,
+  Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogClose,
+  Input, Textarea, Label,
+} from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Edit Dialogs
 
 Business dialogs for editing Edge Platform resource metadata and configuration.
@@ -15,6 +22,53 @@ Business dialogs for editing Edge Platform resource metadata and configuration.
 ```tsx
 import { EditLabelsDialog } from '@edge/components'
 ```
+
+### Preview
+
+<Preview label="点击按钮打开 Dialog" center={false}>
+  <div className="p-4">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">编辑标签</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[520px]">
+        <DialogHeader>
+          <DialogTitle>编辑标签</DialogTitle>
+        </DialogHeader>
+        <div className="py-2">
+          <div className="grid grid-cols-[1fr_1fr_32px] gap-2 mb-2 text-sm font-medium text-muted-foreground">
+            <span>Key</span>
+            <span>Value</span>
+            <span></span>
+          </div>
+          <div className="space-y-2">
+            <div className="grid grid-cols-[1fr_1fr_32px] gap-2 items-center">
+              <Input defaultValue="app" />
+              <Input defaultValue="edge-node" />
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">×</Button>
+            </div>
+            <div className="grid grid-cols-[1fr_1fr_32px] gap-2 items-center">
+              <Input defaultValue="region" />
+              <Input defaultValue="cn-north" />
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">×</Button>
+            </div>
+            <div className="grid grid-cols-[1fr_1fr_32px] gap-2 items-center border border-dashed rounded-md p-2">
+              <Input placeholder="新 Key" />
+              <Input placeholder="新 Value" />
+              <Button variant="ghost" size="icon" className="h-8 w-8" disabled>+</Button>
+            </div>
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">取消</Button>
+          </DialogClose>
+          <Button>保存</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </div>
+</Preview>
 
 ### Usage
 
@@ -79,6 +133,48 @@ function NodeDetail({ node, clusterId }) {
 import { EditAnnotationsDialog } from '@edge/components'
 ```
 
+### Preview
+
+<Preview label="点击按钮打开 Dialog" center={false}>
+  <div className="p-4">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">编辑注解</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[560px]">
+        <DialogHeader>
+          <DialogTitle>编辑注解</DialogTitle>
+        </DialogHeader>
+        <div className="py-2">
+          <div className="grid grid-cols-[1fr_1fr_32px] gap-2 mb-2 text-sm font-medium text-muted-foreground">
+            <span className="font-mono">Key</span>
+            <span className="font-mono">Value</span>
+            <span></span>
+          </div>
+          <div className="space-y-2">
+            <div className="grid grid-cols-[1fr_1fr_32px] gap-2 items-start">
+              <Input defaultValue="description" className="font-mono" />
+              <Textarea defaultValue="Edge compute node" className="font-mono min-h-[60px]" />
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground mt-0">×</Button>
+            </div>
+            <div className="grid grid-cols-[1fr_1fr_32px] gap-2 items-start border border-dashed rounded-md p-2">
+              <Input placeholder="新 Key" className="font-mono" />
+              <Textarea placeholder="新 Value" className="font-mono min-h-[60px]" />
+              <Button variant="ghost" size="icon" className="h-8 w-8" disabled>+</Button>
+            </div>
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">取消</Button>
+          </DialogClose>
+          <Button>保存</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </div>
+</Preview>
+
 ### Usage
 
 ```tsx
@@ -142,6 +238,59 @@ function NodeDetail({ node, clusterId }) {
 ```tsx
 import { EditQuotaDialog } from '@edge/components'
 ```
+
+### Preview
+
+<Preview label="点击按钮打开 Dialog" center={false}>
+  <div className="p-4">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">编辑配额</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[520px]">
+        <DialogHeader>
+          <DialogTitle>编辑资源配额</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-6 py-2">
+          <div>
+            <h4 className="text-sm font-medium mb-3">计算资源</h4>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">CPU Request (cores)</Label>
+                <Input placeholder="4" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">CPU Limit (cores)</Label>
+                <Input placeholder="8" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Memory Request</Label>
+                <Input placeholder="4Gi" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Memory Limit</Label>
+                <Input placeholder="8Gi" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4 className="text-sm font-medium mb-3">存储资源</h4>
+            <div className="space-y-2">
+              <Label className="text-xs text-muted-foreground">Storage Request</Label>
+              <Input placeholder="20Gi" />
+            </div>
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">取消</Button>
+          </DialogClose>
+          <Button>保存</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </div>
+</Preview>
 
 ### Usage
 
@@ -215,6 +364,39 @@ Dynamic list of resource quotas. Supported resource types:
 ```tsx
 import EditRoleInfoDialog from '@edge/components'
 ```
+
+### Preview
+
+<Preview label="点击按钮打开 Dialog" center={false}>
+  <div className="p-4">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">编辑角色信息</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[440px]">
+        <DialogHeader>
+          <DialogTitle>编辑角色信息</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label>显示名称</Label>
+            <Input defaultValue="集群管理员" />
+          </div>
+          <div className="space-y-2">
+            <Label>描述</Label>
+            <Textarea defaultValue="具有集群完整管理权限" className="min-h-[80px]" />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">取消</Button>
+          </DialogClose>
+          <Button>保存</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </div>
+</Preview>
 
 ### Usage
 

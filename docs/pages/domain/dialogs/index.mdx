@@ -1,3 +1,10 @@
+import {
+  Button,
+  Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogClose,
+  Input, Label,
+} from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Domain Dialogs
 
 Business dialogs for Edge Platform management operations. These are Layer 3 components — they accept props only and do not call APIs directly.
@@ -8,6 +15,160 @@ Business dialogs for Edge Platform management operations. These are Layer 3 comp
 |-------|---------|----------------|
 | **Layer 2** | `@edge/ui` | Generic dialog patterns: `ConfirmDeleteDialog`, `NameConfirmDeleteDialog`, `CreateResourceDialog`, `YamlEditDialog` |
 | **Layer 3** | `@edge/components` | Business dialogs — accept props only, no API calls |
+
+## Quick Preview
+
+点击按钮体验各 Dialog 交互（完整实现见各子页面）：
+
+<Preview label="点击按钮打开 Dialog" center={false}>
+  <div className="p-4 flex flex-wrap gap-3">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>创建集群</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>创建集群</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label>集群名称 *</Label>
+            <Input placeholder="my-cluster" />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild><Button variant="outline">取消</Button></DialogClose>
+          <Button disabled>创建</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>创建命名空间</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>创建命名空间</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label>命名空间名称 *</Label>
+            <Input placeholder="my-namespace" />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild><Button variant="outline">取消</Button></DialogClose>
+          <Button disabled>创建</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>创建用户</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>创建用户</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label>用户名 *</Label>
+            <Input placeholder="lowercase-username" />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild><Button variant="outline">取消</Button></DialogClose>
+          <Button disabled>创建</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">编辑标签</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>编辑标签</DialogTitle>
+        </DialogHeader>
+        <div className="py-2 text-sm text-muted-foreground">键值对编辑器 — 详见 <a href="./edit-dialogs#editlabelsdialog" className="underline">EditLabelsDialog</a></div>
+        <DialogFooter>
+          <DialogClose asChild><Button variant="outline">取消</Button></DialogClose>
+          <Button disabled>保存</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">编辑注解</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>编辑注解</DialogTitle>
+        </DialogHeader>
+        <div className="py-2 text-sm text-muted-foreground">键值对编辑器 — 详见 <a href="./edit-dialogs#editannotationsdialog" className="underline">EditAnnotationsDialog</a></div>
+        <DialogFooter>
+          <DialogClose asChild><Button variant="outline">取消</Button></DialogClose>
+          <Button disabled>保存</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">编辑配额</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>编辑资源配额</DialogTitle>
+        </DialogHeader>
+        <div className="py-2 text-sm text-muted-foreground">资源限制表单 — 详见 <a href="./edit-dialogs#editquotadialog" className="underline">EditQuotaDialog</a></div>
+        <DialogFooter>
+          <DialogClose asChild><Button variant="outline">取消</Button></DialogClose>
+          <Button disabled>保存</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">编辑角色信息</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>编辑角色信息</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label>显示名称</Label>
+            <Input placeholder="角色显示名称" />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild><Button variant="outline">取消</Button></DialogClose>
+          <Button disabled>保存</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>邀请成员</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[480px]">
+        <DialogHeader>
+          <DialogTitle>邀请成员</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label>搜索用户</Label>
+            <Input placeholder="输入用户名搜索" />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild><Button variant="outline">取消</Button></DialogClose>
+          <Button disabled>邀请</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </div>
+</Preview>
 
 ## Dialog Catalog
 
