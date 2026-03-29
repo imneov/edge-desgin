@@ -95,3 +95,183 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Cockpit Theme Components - Light Mode Style */
+@layer components {
+  /* Card with subtle depth */
+  .cockpit-card {
+    background: #FFFFFF;
+    border: 1px solid var(--cockpit-border);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+
+  .cockpit-card::before {
+    display: none;
+  }
+
+  .cockpit-card:hover {
+    border-color: var(--cockpit-border-hover);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .cockpit-accent-text {
+    color: var(--cockpit-accent);
+  }
+
+  @keyframes ring-fill {
+    from { stroke-dashoffset: 251; }
+  }
+
+  .ring-gauge-animated {
+    animation: ring-fill 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes status-pulse-subtle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .status-pulse {
+    animation: status-pulse-subtle 2s ease-in-out infinite;
+  }
+
+  @keyframes count-fade-in {
+    from { opacity: 0; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .count-animate {
+    animation: count-fade-in 0.3s ease-out;
+  }
+
+  .node-card-normal {
+    background: #FFFFFF;
+    border-color: var(--cockpit-border);
+  }
+
+  .node-card-warning {
+    background: #FFFFFF;
+    border-color: rgba(245, 158, 11, 0.3);
+    border-left: 2px solid var(--cockpit-warning);
+  }
+
+  .node-card-danger {
+    background: #FFFFFF;
+    border-color: rgba(239, 68, 68, 0.3);
+    border-left: 2px solid var(--cockpit-danger);
+  }
+
+  .progress-bar-track {
+    background: #E5E7EB;
+    border-radius: 2px;
+  }
+
+  .progress-bar-fill {
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .cockpit-tooltip {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E7EB !important;
+    border-radius: 6px !important;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+    font-size: 11px;
+    color: #1E293B;
+  }
+
+  .cockpit-gradient-accent {
+    background: linear-gradient(135deg, #4DB8CC 0%, #3A9AAB 100%);
+  }
+
+  .cockpit-gradient-success {
+    background: linear-gradient(135deg, #3EAA7D 0%, #2E8A63 100%);
+  }
+
+  .cockpit-gradient-warning {
+    background: linear-gradient(135deg, #D4A44A 0%, #B08A3A 100%);
+  }
+
+  .cockpit-gradient-danger {
+    background: linear-gradient(135deg, #D45A5A 0%, #B04A4A 100%);
+  }
+
+  .cockpit-scrollbar::-webkit-scrollbar { width: 4px; }
+  .cockpit-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .cockpit-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 2px; }
+  .cockpit-scrollbar::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+  .cockpit-grid-bg {
+    background-image: none;
+    background-color: var(--cockpit-bg);
+  }
+
+  .cockpit-metric-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--cockpit-text-muted);
+  }
+
+  .cockpit-metric-value {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cockpit-divider {
+    height: 1px;
+    background: #E5E7EB;
+  }
+
+  .cockpit-icon-box {
+    background: #F3F4F6;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cockpit-badge {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  .cockpit-badge-success {
+    background: var(--cockpit-success-muted);
+    color: var(--cockpit-success);
+  }
+
+  .cockpit-badge-warning {
+    background: var(--cockpit-warning-muted);
+    color: var(--cockpit-warning);
+  }
+
+  .cockpit-badge-danger {
+    background: var(--cockpit-danger-muted);
+    color: var(--cockpit-danger);
+  }
+
+  .cockpit-time-btn {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    color: var(--cockpit-text-muted);
+    transition: all 0.15s ease;
+  }
+
+  .cockpit-time-btn:hover {
+    color: var(--cockpit-text-secondary);
+    background: #F3F4F6;
+  }
+
+  .cockpit-time-btn-active {
+    color: var(--cockpit-accent);
+    background: var(--cockpit-accent-muted);
+  }
+}

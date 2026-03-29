@@ -1,3 +1,6 @@
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectSeparator } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Select
 
 A dropdown selection control with keyboard navigation, built on Radix UI Select.
@@ -19,36 +22,101 @@ import {
 
 ## Usage
 
+监控页面时间范围筛选。
+
+<Preview bgColor="#EFF4F9">
+  <Select>
+    <SelectTrigger className="w-40">
+      <SelectValue placeholder="选择时间范围" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="1h">最近 1 小时</SelectItem>
+      <SelectItem value="24h">最近 24 小时</SelectItem>
+      <SelectItem value="7d">最近 7 天</SelectItem>
+      <SelectItem value="all">全部时间</SelectItem>
+    </SelectContent>
+  </Select>
+</Preview>
+
 ```tsx
+{/* 监控页面 — 时间范围筛选 */}
 <Select>
-  <SelectTrigger className="w-48">
-    <SelectValue placeholder="Select a region" />
+  <SelectTrigger className="w-40">
+    <SelectValue placeholder="选择时间范围" />
   </SelectTrigger>
   <SelectContent>
-    <SelectItem value="us-east">US East</SelectItem>
-    <SelectItem value="us-west">US West</SelectItem>
-    <SelectItem value="eu-west">EU West</SelectItem>
+    <SelectItem value="1h">最近 1 小时</SelectItem>
+    <SelectItem value="24h">最近 24 小时</SelectItem>
+    <SelectItem value="7d">最近 7 天</SelectItem>
+    <SelectItem value="all">全部时间</SelectItem>
   </SelectContent>
 </Select>
 ```
 
 ## With groups
 
+状态筛选 + 日志级别分组，用于 OTA 任务列表和日志查看器。
+
+<Preview bgColor="#EFF4F9">
+  <Select>
+    <SelectTrigger className="w-40">
+      <SelectValue placeholder="全部状态" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>执行状态</SelectLabel>
+        <SelectItem value="all">全部状态</SelectItem>
+        <SelectItem value="success">成功</SelectItem>
+        <SelectItem value="failed">失败</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+  <Select>
+    <SelectTrigger className="w-40">
+      <SelectValue placeholder="所有级别" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>日志级别</SelectLabel>
+        <SelectItem value="all">所有级别</SelectItem>
+        <SelectItem value="error">错误</SelectItem>
+        <SelectItem value="warn">警告</SelectItem>
+        <SelectItem value="info">信息</SelectItem>
+        <SelectItem value="debug">调试</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+</Preview>
+
 ```tsx
+{/* OTA 任务列表 — 状态筛选 */}
 <Select>
-  <SelectTrigger className="w-48">
-    <SelectValue placeholder="Select environment" />
+  <SelectTrigger className="w-40">
+    <SelectValue placeholder="全部状态" />
   </SelectTrigger>
   <SelectContent>
     <SelectGroup>
-      <SelectLabel>Production</SelectLabel>
-      <SelectItem value="prod-us">US Production</SelectItem>
-      <SelectItem value="prod-eu">EU Production</SelectItem>
+      <SelectLabel>执行状态</SelectLabel>
+      <SelectItem value="all">全部状态</SelectItem>
+      <SelectItem value="success">成功</SelectItem>
+      <SelectItem value="failed">失败</SelectItem>
     </SelectGroup>
-    <SelectSeparator />
+  </SelectContent>
+</Select>
+
+{/* 日志查看器 — 级别筛选 */}
+<Select>
+  <SelectTrigger className="w-40">
+    <SelectValue placeholder="所有级别" />
+  </SelectTrigger>
+  <SelectContent>
     <SelectGroup>
-      <SelectLabel>Staging</SelectLabel>
-      <SelectItem value="staging">Staging</SelectItem>
+      <SelectLabel>日志级别</SelectLabel>
+      <SelectItem value="all">所有级别</SelectItem>
+      <SelectItem value="error">错误</SelectItem>
+      <SelectItem value="warn">警告</SelectItem>
+      <SelectItem value="info">信息</SelectItem>
+      <SelectItem value="debug">调试</SelectItem>
     </SelectGroup>
   </SelectContent>
 </Select>
@@ -59,16 +127,18 @@ import {
 ```tsx
 import { useState } from 'react'
 
-function ControlledSelect() {
-  const [value, setValue] = useState('')
+function TimeRangeSelect() {
+  const [value, setValue] = useState('24h')
   return (
     <Select value={value} onValueChange={setValue}>
-      <SelectTrigger className="w-48">
-        <SelectValue placeholder="Pick one" />
+      <SelectTrigger className="w-40">
+        <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="a">Option A</SelectItem>
-        <SelectItem value="b">Option B</SelectItem>
+        <SelectItem value="1h">最近 1 小时</SelectItem>
+        <SelectItem value="24h">最近 24 小时</SelectItem>
+        <SelectItem value="7d">最近 7 天</SelectItem>
+        <SelectItem value="all">全部时间</SelectItem>
       </SelectContent>
     </Select>
   )
@@ -77,14 +147,23 @@ function ControlledSelect() {
 
 ## Disabled
 
+<Preview bgColor="#EFF4F9">
+  <Select disabled>
+    <SelectTrigger className="w-40">
+      <SelectValue placeholder="全部状态" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">全部状态</SelectItem>
+    </SelectContent>
+  </Select>
+</Preview>
+
 ```tsx
 <Select disabled>
-  <SelectTrigger className="w-48">
-    <SelectValue placeholder="Disabled" />
+  <SelectTrigger className="w-40">
+    <SelectValue placeholder="全部状态" />
   </SelectTrigger>
-  <SelectContent>
-    <SelectItem value="x">Option X</SelectItem>
-  </SelectContent>
+  ...
 </Select>
 ```
 

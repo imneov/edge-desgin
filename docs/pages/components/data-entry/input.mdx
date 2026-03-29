@@ -1,3 +1,6 @@
+import { Input, Label } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Input
 
 A styled text input field that supports all native HTML input types.
@@ -10,35 +13,76 @@ import { Input } from '@edge/ui'
 
 ## Usage
 
+<Preview center={false} bgColor="#EFF4F9">
+  <Input placeholder="搜索用户名" className="max-w-xs" />
+</Preview>
+
 ```tsx
-<Input placeholder="Enter a value..." />
+{/* 用户管理页面搜索框 */}
+<Input placeholder="搜索用户名" />
 ```
 
-## Types
+## 搜索场景
+
+<Preview center={false} className="flex flex-col gap-3" bgColor="#EFF4F9">
+  <Input type="search" placeholder="搜索用户名" className="max-w-sm" />
+  <Input type="search" placeholder="搜索容器组名称、项目或节点..." className="max-w-sm" />
+  <Input type="search" placeholder="搜索应用名称或描述..." className="max-w-sm" />
+</Preview>
 
 ```tsx
-<Input type="text" placeholder="Text" />
-<Input type="email" placeholder="Email" />
-<Input type="password" placeholder="Password" />
-<Input type="number" placeholder="Number" />
-<Input type="search" placeholder="Search" />
+{/* 用户管理 */}
+<Input type="search" placeholder="搜索用户名" />
+
+{/* 容器组列表 */}
+<Input type="search" placeholder="搜索容器组名称、项目或节点..." />
+
+{/* 应用市场 */}
+<Input type="search" placeholder="搜索应用名称或描述..." />
 ```
 
 ## With label
+
+<Preview center={false} bgColor="#EFF4F9">
+  <div className="flex flex-col gap-1.5 w-64">
+    <Label htmlFor="demo-username">用户名</Label>
+    <Input id="demo-username" placeholder="输入用户名" />
+  </div>
+</Preview>
 
 ```tsx
 import { Label } from '@edge/ui'
 
 <div className="flex flex-col gap-1.5">
-  <Label htmlFor="username">Username</Label>
-  <Input id="username" placeholder="edge-user" />
+  <Label htmlFor="username">用户名</Label>
+  <Input id="username" placeholder="输入用户名" />
 </div>
+```
+
+## Types
+
+<Preview center={false} className="flex flex-col gap-3" bgColor="#EFF4F9">
+  <Input type="text" placeholder="文本" className="max-w-xs" />
+  <Input type="email" placeholder="邮箱" className="max-w-xs" />
+  <Input type="password" placeholder="密码" className="max-w-xs" />
+  <Input type="number" placeholder="数字" className="max-w-xs" />
+</Preview>
+
+```tsx
+<Input type="text" placeholder="文本" />
+<Input type="email" placeholder="邮箱" />
+<Input type="password" placeholder="密码" />
+<Input type="number" placeholder="数字" />
 ```
 
 ## Disabled
 
+<Preview center={false} bgColor="#EFF4F9">
+  <Input disabled placeholder="搜索用户名" className="max-w-xs" />
+</Preview>
+
 ```tsx
-<Input disabled placeholder="Disabled input" />
+<Input disabled placeholder="搜索用户名" />
 ```
 
 ## File input

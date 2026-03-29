@@ -1,3 +1,6 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Tabs
 
 A tabbed interface for switching between related content panels, built on Radix UI Tabs.
@@ -10,22 +13,110 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@edge/ui'
 
 ## Usage
 
+集群状态页面 Tabs，用于切换概览、物理资源监控、API Server 监控。
+
+<Preview center={false} bgColor="#EFF4F9">
+  <Tabs defaultValue="overview" className="w-full max-w-lg">
+    <TabsList>
+      <TabsTrigger value="overview">概览</TabsTrigger>
+      <TabsTrigger value="resources">物理资源监控</TabsTrigger>
+      <TabsTrigger value="apiserver">API Server 监控</TabsTrigger>
+    </TabsList>
+    <TabsContent value="overview">
+      <p className="text-sm text-muted-foreground pt-2">集群基本信息和健康状态</p>
+    </TabsContent>
+    <TabsContent value="resources">
+      <p className="text-sm text-muted-foreground pt-2">CPU、内存、磁盘资源使用图表</p>
+    </TabsContent>
+    <TabsContent value="apiserver">
+      <p className="text-sm text-muted-foreground pt-2">API Server 请求量与延迟图表</p>
+    </TabsContent>
+  </Tabs>
+</Preview>
+
 ```tsx
+{/* 集群状态页 */}
 <Tabs defaultValue="overview">
   <TabsList>
-    <TabsTrigger value="overview">Overview</TabsTrigger>
-    <TabsTrigger value="pods">Pods</TabsTrigger>
-    <TabsTrigger value="logs">Logs</TabsTrigger>
+    <TabsTrigger value="overview">概览</TabsTrigger>
+    <TabsTrigger value="resources">物理资源监控</TabsTrigger>
+    <TabsTrigger value="apiserver">API Server 监控</TabsTrigger>
   </TabsList>
-  <TabsContent value="overview">
-    <p>Overview content</p>
-  </TabsContent>
-  <TabsContent value="pods">
-    <p>Pod list here</p>
-  </TabsContent>
-  <TabsContent value="logs">
-    <p>Log viewer here</p>
-  </TabsContent>
+  <TabsContent value="overview">...</TabsContent>
+  <TabsContent value="resources">...</TabsContent>
+  <TabsContent value="apiserver">...</TabsContent>
+</Tabs>
+```
+
+## 工作负载 Tabs
+
+工作负载页面切换部署 / 有状态副本集 / 守护进程集。
+
+<Preview center={false} bgColor="#EFF4F9">
+  <Tabs defaultValue="deployments" className="w-full max-w-lg">
+    <TabsList>
+      <TabsTrigger value="deployments">部署</TabsTrigger>
+      <TabsTrigger value="statefulsets">有状态副本集</TabsTrigger>
+      <TabsTrigger value="daemonsets">守护进程集</TabsTrigger>
+    </TabsList>
+    <TabsContent value="deployments">
+      <p className="text-sm text-muted-foreground pt-2">Deployment 列表</p>
+    </TabsContent>
+    <TabsContent value="statefulsets">
+      <p className="text-sm text-muted-foreground pt-2">StatefulSet 列表</p>
+    </TabsContent>
+    <TabsContent value="daemonsets">
+      <p className="text-sm text-muted-foreground pt-2">DaemonSet 列表</p>
+    </TabsContent>
+  </Tabs>
+</Preview>
+
+```tsx
+{/* 工作负载页 */}
+<Tabs defaultValue="deployments">
+  <TabsList>
+    <TabsTrigger value="deployments">部署</TabsTrigger>
+    <TabsTrigger value="statefulsets">有状态副本集</TabsTrigger>
+    <TabsTrigger value="daemonsets">守护进程集</TabsTrigger>
+  </TabsList>
+  <TabsContent value="deployments">...</TabsContent>
+  <TabsContent value="statefulsets">...</TabsContent>
+  <TabsContent value="daemonsets">...</TabsContent>
+</Tabs>
+```
+
+## 集群设置 Tabs
+
+<Preview center={false} bgColor="#EFF4F9">
+  <Tabs defaultValue="basic" className="w-full max-w-md">
+    <TabsList>
+      <TabsTrigger value="basic">基本信息</TabsTrigger>
+      <TabsTrigger value="members">集群成员</TabsTrigger>
+      <TabsTrigger value="roles">集群角色</TabsTrigger>
+    </TabsList>
+    <TabsContent value="basic">
+      <p className="text-sm text-muted-foreground pt-2">集群名称、描述、连接配置</p>
+    </TabsContent>
+    <TabsContent value="members">
+      <p className="text-sm text-muted-foreground pt-2">成员列表与权限管理</p>
+    </TabsContent>
+    <TabsContent value="roles">
+      <p className="text-sm text-muted-foreground pt-2">IAMRole 绑定配置</p>
+    </TabsContent>
+  </Tabs>
+</Preview>
+
+```tsx
+{/* 集群设置页 */}
+<Tabs defaultValue="basic">
+  <TabsList>
+    <TabsTrigger value="basic">基本信息</TabsTrigger>
+    <TabsTrigger value="members">集群成员</TabsTrigger>
+    <TabsTrigger value="roles">集群角色</TabsTrigger>
+  </TabsList>
+  <TabsContent value="basic">...</TabsContent>
+  <TabsContent value="members">...</TabsContent>
+  <TabsContent value="roles">...</TabsContent>
 </Tabs>
 ```
 
@@ -34,16 +125,18 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@edge/ui'
 ```tsx
 import { useState } from 'react'
 
-function ControlledTabs() {
+function ClusterTabs() {
   const [tab, setTab] = useState('overview')
   return (
     <Tabs value={tab} onValueChange={setTab}>
       <TabsList>
-        <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="settings">Settings</TabsTrigger>
+        <TabsTrigger value="overview">概览</TabsTrigger>
+        <TabsTrigger value="resources">物理资源监控</TabsTrigger>
+        <TabsTrigger value="apiserver">API Server 监控</TabsTrigger>
       </TabsList>
-      <TabsContent value="overview">Overview</TabsContent>
-      <TabsContent value="settings">Settings</TabsContent>
+      <TabsContent value="overview">...</TabsContent>
+      <TabsContent value="resources">...</TabsContent>
+      <TabsContent value="apiserver">...</TabsContent>
     </Tabs>
   )
 }
@@ -51,13 +144,25 @@ function ControlledTabs() {
 
 ## Disabled tab
 
+<Preview center={false} bgColor="#EFF4F9">
+  <Tabs defaultValue="deployments" className="w-full max-w-md">
+    <TabsList>
+      <TabsTrigger value="deployments">部署</TabsTrigger>
+      <TabsTrigger value="statefulsets" disabled>有状态副本集</TabsTrigger>
+    </TabsList>
+    <TabsContent value="deployments">
+      <p className="text-sm text-muted-foreground pt-2">Deployment 列表</p>
+    </TabsContent>
+  </Tabs>
+</Preview>
+
 ```tsx
-<Tabs defaultValue="active">
+<Tabs defaultValue="deployments">
   <TabsList>
-    <TabsTrigger value="active">Active</TabsTrigger>
-    <TabsTrigger value="disabled" disabled>Disabled</TabsTrigger>
+    <TabsTrigger value="deployments">部署</TabsTrigger>
+    <TabsTrigger value="statefulsets" disabled>有状态副本集</TabsTrigger>
   </TabsList>
-  <TabsContent value="active">Active content</TabsContent>
+  <TabsContent value="deployments">...</TabsContent>
 </Tabs>
 ```
 

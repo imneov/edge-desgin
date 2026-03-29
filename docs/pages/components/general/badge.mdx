@@ -1,3 +1,6 @@
+import { Badge } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Badge
 
 A small status label used to highlight information such as counts, tags, or states.
@@ -8,35 +11,57 @@ A small status label used to highlight information such as counts, tags, or stat
 import { Badge, badgeVariants } from '@edge/ui'
 ```
 
-## Usage
+## 状态标签
+
+用户状态、申请审批等场景。
+
+<Preview bgColor="#EFF4F9">
+  <Badge className="bg-green-100 text-green-800">活跃</Badge>
+  <Badge className="bg-red-100 text-red-800">已拒绝</Badge>
+  <Badge className="bg-yellow-100 text-yellow-800">待审核</Badge>
+  <Badge className="bg-blue-100 text-blue-800">审核中</Badge>
+  <Badge className="bg-gray-100 text-gray-800">停用</Badge>
+</Preview>
 
 ```tsx
-<Badge>Default</Badge>
-<Badge variant="secondary">Secondary</Badge>
-<Badge variant="destructive">Error</Badge>
-<Badge variant="outline">Outline</Badge>
+{/* 用户管理 / 审批流程 — 状态标签 */}
+<Badge className="bg-green-100 text-green-800">活跃</Badge>
+<Badge className="bg-red-100 text-red-800">已拒绝</Badge>
+<Badge className="bg-yellow-100 text-yellow-800">待审核</Badge>
+<Badge className="bg-blue-100 text-blue-800">审核中</Badge>
+<Badge className="bg-gray-100 text-gray-800">停用</Badge>
 ```
 
-## Variants
+## 应用类型标签
+
+应用市场 / 工作负载列表中标识部署类型。
+
+<Preview bgColor="#EFF4F9">
+  <Badge variant="outline" className="text-blue-600 border-blue-200">Helm</Badge>
+  <Badge variant="outline" className="text-green-600 border-green-200">Git</Badge>
+  <Badge variant="outline" className="text-purple-600 border-purple-200">OCI</Badge>
+</Preview>
 
 ```tsx
-<div className="flex gap-2">
-  <Badge variant="default">Running</Badge>
-  <Badge variant="secondary">Pending</Badge>
-  <Badge variant="destructive">Failed</Badge>
-  <Badge variant="outline">Draft</Badge>
-</div>
+{/* 应用市场 / 工作负载 — 部署类型 */}
+<Badge variant="outline" className="text-blue-600 border-blue-200">Helm</Badge>
+<Badge variant="outline" className="text-green-600 border-green-200">Git</Badge>
+<Badge variant="outline" className="text-purple-600 border-purple-200">OCI</Badge>
 ```
 
-## With icon
+## 资源来源标签
+
+配置管理中标识值的来源（Secret / ConfigMap）。
+
+<Preview bgColor="#EFF4F9">
+  <Badge variant="outline" className="bg-red-100 text-red-800 text-xs">Secret</Badge>
+  <Badge variant="outline" className="bg-blue-100 text-blue-800 text-xs">ConfigMap</Badge>
+</Preview>
 
 ```tsx
-import { CheckCircle } from 'lucide-react'
-
-<Badge variant="secondary">
-  <CheckCircle className="mr-1 h-3 w-3" />
-  Healthy
-</Badge>
+{/* 配置字典 / 环境变量 — 资源来源 */}
+<Badge variant="outline" className="bg-red-100 text-red-800 text-xs">Secret</Badge>
+<Badge variant="outline" className="bg-blue-100 text-blue-800 text-xs">ConfigMap</Badge>
 ```
 
 ## As a link
@@ -47,8 +72,8 @@ Use `badgeVariants` to apply badge styles to non-badge elements:
 import Link from 'next/link'
 import { badgeVariants } from '@edge/ui'
 
-<Link href="/status" className={badgeVariants({ variant: 'outline' })}>
-  View Status
+<Link href="/boss/users?status=pending" className={badgeVariants({ variant: 'outline' })}>
+  待审核
 </Link>
 ```
 

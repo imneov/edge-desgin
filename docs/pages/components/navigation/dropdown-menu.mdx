@@ -1,3 +1,16 @@
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  Button,
+} from '@edge/ui'
+import { MoreHorizontal, Edit, Shield, Key, Users, Trash2 } from 'lucide-react'
+import { Preview } from '../../../components/Preview'
+
 # Dropdown Menu
 
 A contextual menu that appears below a trigger, supporting items, checkboxes, radio buttons, and submenus, built on Radix UI DropdownMenu.
@@ -24,39 +37,128 @@ import {
 
 ## Usage
 
-```tsx
-import { MoreHorizontal } from 'lucide-react'
+用户管理页表格行操作菜单（来自 `/boss/access/users`）。
 
+<Preview bgColor="#EFF4F9">
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+        <MoreHorizontal className="h-4 w-4" />
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem>
+        <Edit className="h-3 w-3 mr-2" />
+        编辑信息
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <Shield className="h-3 w-3 mr-2" />
+        管理角色
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <Key className="h-3 w-3 mr-2" />
+        重置密码
+      </DropdownMenuItem>
+      <DropdownMenuItem className="text-red-600">
+        <Trash2 className="h-3 w-3 mr-2" />
+        删除
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</Preview>
+
+```tsx
+import { MoreHorizontal, Edit, Shield, Key, Trash2 } from 'lucide-react'
+
+{/* 用户管理页 — 表格行操作 */}
 <DropdownMenu>
   <DropdownMenuTrigger asChild>
-    <Button variant="ghost" size="icon">
+    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
       <MoreHorizontal className="h-4 w-4" />
     </Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent align="end">
-    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem>View Details</DropdownMenuItem>
-    <DropdownMenuItem>Edit</DropdownMenuItem>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+    <DropdownMenuItem onClick={() => handleEditUser(user)}>
+      <Edit className="h-3 w-3 mr-2" />
+      编辑信息
+    </DropdownMenuItem>
+    <DropdownMenuItem onClick={() => handleEditRole(user)}>
+      <Shield className="h-3 w-3 mr-2" />
+      管理角色
+    </DropdownMenuItem>
+    <DropdownMenuItem onClick={() => handleResetPassword(user)}>
+      <Key className="h-3 w-3 mr-2" />
+      重置密码
+    </DropdownMenuItem>
+    <DropdownMenuItem onClick={() => handleDeleteUser(user.username)} className="text-red-600">
+      <Trash2 className="h-3 w-3 mr-2" />
+      删除
+    </DropdownMenuItem>
   </DropdownMenuContent>
 </DropdownMenu>
 ```
 
-## With keyboard shortcuts
+## 节点管理行操作（带 Separator）
+
+节点列表页 `/boss/clusters/[id]/edge-nodes` 操作菜单，带条件禁用和分隔线。
+
+<Preview bgColor="#EFF4F9">
+  <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+        <MoreHorizontal className="h-4 w-4" />
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem>
+        <Users className="h-3 w-3 mr-2" />
+        分配节点组
+      </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>
+        <Edit className="h-3 w-3 mr-2" />
+        编辑信息
+      </DropdownMenuItem>
+      <DropdownMenuItem className="text-red-600">
+        <Trash2 className="h-3 w-3 mr-2" />
+        删除
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</Preview>
 
 ```tsx
-<DropdownMenuContent>
-  <DropdownMenuItem>
-    New Tab
-    <DropdownMenuShortcut>⌘T</DropdownMenuShortcut>
-  </DropdownMenuItem>
-  <DropdownMenuItem>
-    New Window
-    <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
-  </DropdownMenuItem>
-</DropdownMenuContent>
+import { MoreHorizontal, Users, Edit, Trash2 } from 'lucide-react'
+
+{/* 节点列表页 — 行操作，带 Separator */}
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+      <MoreHorizontal className="h-4 w-4" />
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent align="end">
+    <DropdownMenuItem
+      onClick={() => setAssignmentModalOpen(true)}
+      disabled={node.nodeGroup && node.nodeGroup !== '-'}
+    >
+      <Users className="h-3 w-3 mr-2" />
+      分配节点组
+    </DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem onClick={() => handleEditInfo(node)}>
+      <Edit className="h-3 w-3 mr-2" />
+      编辑信息
+    </DropdownMenuItem>
+    <DropdownMenuItem
+      onClick={() => handleDeleteNode(node)}
+      className="text-red-600 focus:text-red-600"
+    >
+      <Trash2 className="h-3 w-3 mr-2" />
+      删除
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
 ```
 
 ## With checkboxes
@@ -64,17 +166,17 @@ import { MoreHorizontal } from 'lucide-react'
 ```tsx
 import { useState } from 'react'
 
-function CheckboxMenu() {
+function ViewOptionsMenu() {
   const [showStatus, setShowStatus] = useState(true)
   return (
     <DropdownMenuContent>
-      <DropdownMenuLabel>View Options</DropdownMenuLabel>
+      <DropdownMenuLabel>视图选项</DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuCheckboxItem
         checked={showStatus}
         onCheckedChange={setShowStatus}
       >
-        Show Status
+        显示状态列
       </DropdownMenuCheckboxItem>
     </DropdownMenuContent>
   )
@@ -85,12 +187,12 @@ function CheckboxMenu() {
 
 ```tsx
 <DropdownMenuContent>
-  <DropdownMenuLabel>Sort By</DropdownMenuLabel>
+  <DropdownMenuLabel>排序方式</DropdownMenuLabel>
   <DropdownMenuSeparator />
   <DropdownMenuRadioGroup value="name" onValueChange={() => {}}>
-    <DropdownMenuRadioItem value="name">Name</DropdownMenuRadioItem>
-    <DropdownMenuRadioItem value="created">Created</DropdownMenuRadioItem>
-    <DropdownMenuRadioItem value="status">Status</DropdownMenuRadioItem>
+    <DropdownMenuRadioItem value="name">名称</DropdownMenuRadioItem>
+    <DropdownMenuRadioItem value="created">创建时间</DropdownMenuRadioItem>
+    <DropdownMenuRadioItem value="status">状态</DropdownMenuRadioItem>
   </DropdownMenuRadioGroup>
 </DropdownMenuContent>
 ```
@@ -100,10 +202,10 @@ function CheckboxMenu() {
 ```tsx
 <DropdownMenuContent>
   <DropdownMenuSub>
-    <DropdownMenuSubTrigger>More Options</DropdownMenuSubTrigger>
+    <DropdownMenuSubTrigger>更多操作</DropdownMenuSubTrigger>
     <DropdownMenuSubContent>
-      <DropdownMenuItem>Scale Up</DropdownMenuItem>
-      <DropdownMenuItem>Scale Down</DropdownMenuItem>
+      <DropdownMenuItem>扩容</DropdownMenuItem>
+      <DropdownMenuItem>缩容</DropdownMenuItem>
     </DropdownMenuSubContent>
   </DropdownMenuSub>
 </DropdownMenuContent>

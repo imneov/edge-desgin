@@ -1,3 +1,7 @@
+import { Button } from '@edge/ui'
+import { Plus, RotateCw, Trash2, MoreHorizontal } from 'lucide-react'
+import { Preview } from '../../../components/Preview'
+
 # Button
 
 A button component with multiple variants and sizes, built on HTML `<button>` with support for links via `asChild`.
@@ -10,32 +14,96 @@ import { Button, buttonVariants } from '@edge/ui'
 
 ## Usage
 
+列表页标准工具栏按钮组合（来自用户管理、PVC、ConfigMap 等页面）。
+
+<Preview bgColor="#EFF4F9">
+  <Button variant="outline" size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white"><Plus className="mr-2 h-4 w-4" /> 新建用户</Button>
+  <Button variant="outline" size="sm" className="h-8 w-8 p-0"><RotateCw className="h-4 w-4" /></Button>
+  <Button variant="ghost" size="sm" className="h-6 w-6 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
+</Preview>
+
 ```tsx
-<Button>Default</Button>
-<Button variant="destructive">Delete</Button>
-<Button variant="outline">Cancel</Button>
-<Button variant="secondary">Secondary</Button>
-<Button variant="ghost">Ghost</Button>
-<Button variant="link">Link</Button>
+import { Plus, RotateCw, MoreHorizontal } from 'lucide-react'
+
+{/* 列表页主操作按钮 — 用户管理 / PVC / ConfigMap 等页面 */}
+<Button variant="outline" size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white">
+  <Plus className="mr-2 h-4 w-4" /> 新建用户
+</Button>
+
+{/* 图标刷新按钮 */}
+<Button variant="outline" size="sm" className="h-8 w-8 p-0" onClick={refetch}>
+  <RotateCw className="h-4 w-4" />
+</Button>
+
+{/* 表格行操作触发按钮 */}
+<Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+  <MoreHorizontal className="h-4 w-4" />
+</Button>
+```
+
+## 资源创建场景
+
+<Preview bgColor="#EFF4F9">
+  <Button variant="outline" size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white"><Plus className="mr-2 h-4 w-4" /> 创建持久卷</Button>
+  <Button variant="outline" size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white"><Plus className="mr-2 h-4 w-4" /> 创建配置字典</Button>
+  <Button size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white"><Plus className="mr-2 h-4 w-4" /> 创建节点组</Button>
+</Preview>
+
+```tsx
+{/* PVC 页面 */}
+<Button variant="outline" size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white">
+  <Plus className="mr-2 h-4 w-4" /> 创建持久卷
+</Button>
+
+{/* ConfigMap 页面 */}
+<Button variant="outline" size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white">
+  <Plus className="mr-2 h-4 w-4" /> 创建配置字典
+</Button>
+
+{/* 节点组列表页 */}
+<Button size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white">
+  <Plus className="mr-2 h-4 w-4" /> 创建节点组
+</Button>
+```
+
+## 对话框按钮组
+
+<Preview bgColor="#EFF4F9">
+  <Button variant="outline">取消</Button>
+  <Button>确定</Button>
+</Preview>
+
+```tsx
+{/* Dialog Footer 标准按钮组 */}
+<Button variant="outline">取消</Button>
+<Button>确定</Button>
 ```
 
 ## Sizes
 
+<Preview bgColor="#EFF4F9">
+  <Button size="sm">小</Button>
+  <Button size="default">默认</Button>
+  <Button size="lg">大</Button>
+</Preview>
+
 ```tsx
-<Button size="sm">Small</Button>
-<Button size="default">Default</Button>
-<Button size="lg">Large</Button>
-<Button size="icon"><Icon /></Button>
+<Button size="sm">小</Button>
+<Button size="default">默认</Button>
+<Button size="lg">大</Button>
+<Button size="icon"><MoreHorizontal /></Button>
 ```
 
-## With Icon
+## Disabled
+
+<Preview bgColor="#EFF4F9">
+  <Button variant="outline" size="sm" disabled className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white"><Plus className="mr-2 h-4 w-4" /> 新建用户</Button>
+  <Button variant="outline" size="sm" disabled className="h-8 w-8 p-0"><RotateCw className="h-4 w-4" /></Button>
+</Preview>
 
 ```tsx
-import { Plus } from 'lucide-react'
-
-<Button>
-  <Plus className="mr-2 h-4 w-4" />
-  Create Resource
+<Button variant="outline" size="sm" disabled className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white">
+  <Plus className="mr-2 h-4 w-4" /> 新建用户
 </Button>
 ```
 
@@ -47,14 +115,8 @@ Use the `asChild` prop to render as a different element:
 import Link from 'next/link'
 
 <Button asChild>
-  <Link href="/dashboard">Go to Dashboard</Link>
+  <Link href="/boss/users/new">新建用户</Link>
 </Button>
-```
-
-## Disabled
-
-```tsx
-<Button disabled>Disabled</Button>
 ```
 
 ## API
@@ -79,7 +141,7 @@ Utility function for applying button styles to non-button elements:
 import { buttonVariants } from '@edge/ui'
 import Link from 'next/link'
 
-<Link href="/new" className={buttonVariants({ variant: 'outline' })}>
-  Create New
+<Link href="/boss/users/new" className={buttonVariants({ variant: 'outline' })}>
+  新建用户
 </Link>
 ```
