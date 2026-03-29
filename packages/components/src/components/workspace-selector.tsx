@@ -29,6 +29,13 @@ export interface WorkspaceSelectorProps {
   width?: string | number
   /** Whether to include "All Workspaces" option */
   includeAllOption?: boolean
+  // ── Server-side pagination (optional) ────────────────────────────────────
+  /** Server-side search callback. When provided, client-side filtering is disabled. */
+  onSearch?: (query: string) => void
+  /** Server-side load-more callback */
+  onLoadMore?: () => void
+  /** Whether there are more items to load server-side */
+  hasMore?: boolean
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -46,7 +53,7 @@ function workspacesToOptions(
   return options.concat(
     workspaces.map((workspace) => ({
       value: workspace.metadata.name,
-      label: workspace.metadata.name,
+      label: workspace.metadata.annotations?.['theriseunion.io/alias-name'] || workspace.metadata.name,
     }))
   )
 }
@@ -60,7 +67,8 @@ function filterWorkspaces(
   const lowerQuery = query.toLowerCase()
   return workspaces.filter((workspace) => {
     const name = workspace.metadata.name.toLowerCase()
-    return name.includes(lowerQuery)
+    const alias = (workspace.metadata.annotations?.['theriseunion.io/alias-name'] || '').toLowerCase()
+    return name.includes(lowerQuery) || alias.includes(lowerQuery)
   })
 }
 
@@ -75,20 +83,24 @@ export function WorkspaceSelector({
   className,
   width,
   includeAllOption = true,
+  onSearch,
+  onLoadMore,
+  hasMore,
 }: WorkspaceSelectorProps) {
   const [searchQuery, setSearchQuery] = React.useState("")
 
-  // Filter workspaces based on search query
+  // Server-side mode: use workspaces directly (parent handles filtering)
+  // Static mode: filter workspaces client-side
   const filteredWorkspaces = React.useMemo(() => {
+    if (onSearch) return workspaces
     return filterWorkspaces(workspaces, searchQuery)
-  }, [workspaces, searchQuery])
+  }, [workspaces, searchQuery, onSearch])
 
-  // Convert to options
   const options = React.useMemo(() => {
     return workspacesToOptions(filteredWorkspaces, includeAllOption)
   }, [filteredWorkspaces, includeAllOption])
 
-  const handleSearch = React.useCallback((query: string) => {
+  const handleLocalSearch = React.useCallback((query: string) => {
     setSearchQuery(query)
   }, [])
 
@@ -97,7 +109,9 @@ export function WorkspaceSelector({
       value={value}
       onValueChange={onValueChange}
       options={options}
-      onSearch={handleSearch}
+      onSearch={onSearch ?? handleLocalSearch}
+      onLoadMore={onLoadMore}
+      hasMore={hasMore}
       loading={loading}
       placeholder={placeholder}
       searchPlaceholder="搜索工作空间名称..."

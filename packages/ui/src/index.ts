@@ -200,7 +200,4 @@ export type { KPICardProps } from './components/kpi-card'
 export { ResourceChart } from './components/resource-chart'
 export type { ResourceChartProps, ResourceChartDataPoint } from './components/resource-chart'
 
-// ─── Events ───────────────────────────────────────────────────────────────────
-export { EventsTable } from './components/events-table'
-export type { EventsTableProps, EventInfo } from './components/events-table'
 

@@ -20,8 +20,8 @@ import { Activity } from 'lucide-react'
 
 ### Preview
 
-<Preview>
-  <div className="grid grid-cols-3 gap-4 p-4">
+<Preview center={false}>
+  <div className="grid grid-cols-3 gap-4 p-4 w-full">
     <KPICard
       icon={Activity}
       title="活跃节点"
@@ -75,8 +75,8 @@ import { Cpu } from 'lucide-react'
 
 ### Preview
 
-<Preview>
-  <div className="space-y-4 p-4">
+<Preview center={false}>
+  <div className="space-y-4 p-4 w-full">
     <MetricCard icon={Cpu} title="CPU 使用率" value={0.625} format="percentage" trend="stable" />
     <MetricCard icon={Server} title="内存使用" value={2147483648} format="bytes" />
     <MetricCard icon={Activity} title="网络速率" value={1048576} format="rate" />
@@ -111,8 +111,8 @@ import { NamespaceStatsCards } from '@edge/components'
 
 ### Preview
 
-<Preview>
-  <div className="p-4">
+<Preview center={false}>
+  <div className="p-4 w-full">
     <NamespaceStatsCards
       namespaces={[
         { status: '活跃', quotas: { pods: { used: 12 }, services: { used: 4 } } },
@@ -157,8 +157,8 @@ import { NodeStatsCards } from '@edge/components'
 
 ### Preview
 
-<Preview>
-  <div className="p-4">
+<Preview center={false}>
+  <div className="p-4 w-full">
     <NodeStatsCards
       stats={{
         totalNodes: 8,

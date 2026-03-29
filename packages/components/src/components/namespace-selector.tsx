@@ -29,6 +29,13 @@ export interface NamespaceSelectorProps {
   width?: string | number
   /** Whether to include "All Namespaces" option */
   includeAllOption?: boolean
+  // ── Server-side pagination (optional) ────────────────────────────────────
+  /** Server-side search callback. When provided, client-side filtering is disabled. */
+  onSearch?: (query: string) => void
+  /** Server-side load-more callback */
+  onLoadMore?: () => void
+  /** Whether there are more items to load server-side */
+  hasMore?: boolean
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -46,7 +53,7 @@ function namespacesToOptions(
   return options.concat(
     namespaces.map((namespace) => ({
       value: namespace.metadata.name,
-      label: namespace.metadata.name,
+      label: namespace.metadata.annotations?.['theriseunion.io/alias-name'] || namespace.metadata.name,
     }))
   )
 }
@@ -60,7 +67,8 @@ function filterNamespaces(
   const lowerQuery = query.toLowerCase()
   return namespaces.filter((namespace) => {
     const name = namespace.metadata.name.toLowerCase()
-    return name.includes(lowerQuery)
+    const alias = (namespace.metadata.annotations?.['theriseunion.io/alias-name'] || '').toLowerCase()
+    return name.includes(lowerQuery) || alias.includes(lowerQuery)
   })
 }
 
@@ -75,20 +83,24 @@ export function NamespaceSelector({
   className,
   width,
   includeAllOption = true,
+  onSearch,
+  onLoadMore,
+  hasMore,
 }: NamespaceSelectorProps) {
   const [searchQuery, setSearchQuery] = React.useState("")
 
-  // Filter namespaces based on search query
+  // Server-side mode: use namespaces directly (parent handles filtering)
+  // Static mode: filter namespaces client-side
   const filteredNamespaces = React.useMemo(() => {
+    if (onSearch) return namespaces
     return filterNamespaces(namespaces, searchQuery)
-  }, [namespaces, searchQuery])
+  }, [namespaces, searchQuery, onSearch])
 
-  // Convert to options
   const options = React.useMemo(() => {
     return namespacesToOptions(filteredNamespaces, includeAllOption)
   }, [filteredNamespaces, includeAllOption])
 
-  const handleSearch = React.useCallback((query: string) => {
+  const handleLocalSearch = React.useCallback((query: string) => {
     setSearchQuery(query)
   }, [])
 
@@ -97,7 +109,9 @@ export function NamespaceSelector({
       value={value}
       onValueChange={onValueChange}
       options={options}
-      onSearch={handleSearch}
+      onSearch={onSearch ?? handleLocalSearch}
+      onLoadMore={onLoadMore}
+      hasMore={hasMore}
       loading={loading}
       placeholder={placeholder}
       searchPlaceholder="搜索命名空间名称..."

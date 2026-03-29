@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react'
-import { EventsTable } from '@edge/ui'
-import type { EventInfo } from '@edge/ui'
+import { EventsTable } from './events-table'
+import type { EventInfo } from './events-table'
 
 export type { EventInfo }
 

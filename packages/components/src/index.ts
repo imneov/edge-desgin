@@ -52,6 +52,9 @@ export type { NamespaceStatsCardsProps, NamespaceItem } from './components/names
 export { NodeStatsCards } from './components/node-stats-cards'
 export type { NodeStatsCardsProps, NodeStats } from './components/node-stats-cards'
 
+export { EventsTable } from './components/events-table'
+export type { EventsTableProps, EventInfo } from './components/events-table'
+
 export { EventsViewer } from './components/events-viewer'
 export type { EventsViewerProps } from './components/events-viewer'
 

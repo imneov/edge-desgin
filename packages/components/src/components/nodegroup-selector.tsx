@@ -29,6 +29,13 @@ export interface NodeGroupSelectorProps {
   width?: string | number
   /** Whether to include "All Node Groups" option */
   includeAllOption?: boolean
+  // ── Server-side pagination (optional) ────────────────────────────────────
+  /** Server-side search callback. When provided, client-side filtering is disabled. */
+  onSearch?: (query: string) => void
+  /** Server-side load-more callback */
+  onLoadMore?: () => void
+  /** Whether there are more items to load server-side */
+  hasMore?: boolean
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

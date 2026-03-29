@@ -1,5 +1,4 @@
-import { EventsTable } from '@edge/ui'
-import { EventsViewer, AlertList, AlertListContainer } from '@edge/components'
+import { EventsTable, EventsViewer, AlertList, AlertListContainer } from '@edge/components'
 import { Preview } from '../../../components/Preview'
 
 # Events & Alerts
@@ -8,61 +7,67 @@ Components for displaying Kubernetes events and firing alerts.
 
 ## EventsTable
 
-Generic events table from `@edge/ui`. Accepts event data through props with no domain knowledge.
+K8s-aware events table from `@edge/components`. Accepts event data through props — no direct API calls.
 
 ### Import
 
 ```tsx
-import { EventsTable } from '@edge/ui'
-import type { EventInfo } from '@edge/ui'
+import { EventsTable } from '@edge/components'
+import type { EventInfo } from '@edge/components'
 ```
 
 ### Preview
 
-<Preview>
-  <EventsTable
-    events={[
-      {
-        id: 1,
-        type: 'Normal',
-        reason: 'Scheduled',
-        message: 'Successfully assigned default/my-pod to node-1',
-        timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-        count: 1,
-        source: 'default-scheduler',
-      },
-      {
-        id: 2,
-        type: 'Warning',
-        reason: 'BackOff',
-        message: 'Back-off restarting failed container',
-        timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
-        count: 3,
-        source: 'kubelet',
-      },
-      {
-        id: 3,
-        type: 'Normal',
-        reason: 'Pulled',
-        message: 'Successfully pulled image "nginx:latest"',
-        timestamp: new Date(Date.now() - 60 * 1000).toISOString(),
-        count: 1,
-        source: 'kubelet',
-      },
-    ]}
-  />
+<Preview center={false}>
+  <div className="p-4 w-full">
+    <EventsTable
+      events={[
+        {
+          id: 1,
+          type: 'Normal',
+          reason: 'Scheduled',
+          message: 'Successfully assigned default/my-pod to node-1',
+          timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+          count: 1,
+          source: 'default-scheduler',
+        },
+        {
+          id: 2,
+          type: 'Warning',
+          reason: 'BackOff',
+          message: 'Back-off restarting failed container',
+          timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+          count: 3,
+          source: 'kubelet',
+        },
+        {
+          id: 3,
+          type: 'Normal',
+          reason: 'Pulled',
+          message: 'Successfully pulled image "nginx:latest"',
+          timestamp: new Date(Date.now() - 60 * 1000).toISOString(),
+          count: 1,
+          source: 'kubelet',
+        },
+      ]}
+    />
+  </div>
 </Preview>
 
 ### Loading State
 
-<Preview>
-  <EventsTable events={[]} loading={true} />
+<Preview center={false}>
+  <div className="p-4 w-full">
+    <EventsTable events={[]} loading={true} />
+  </div>
 </Preview>
 
 ### Empty State
 
-<Preview>
-  <EventsTable events={[]} emptyMessage="暂无事件" emptyDescription="该资源暂未产生任何事件" />
+<Preview center={false}>
+  <div className="p-4 w-full">
+    <EventsTable events={[]} emptyMessage="暂无事件" emptyDescription="该资源暂未产生任何事件" />
+  </div>
 </Preview>
 
 ### Props
@@ -138,37 +143,41 @@ import type { AlertItem } from '@edge/components'
 
 ### Preview
 
-<Preview>
-  <AlertList
-    alerts={[
-      {
-        id: '1',
-        title: 'CPU 使用率过高',
-        severity: 'critical',
-        status: 'firing',
-        description: '节点 node-1 的 CPU 使用率超过 90% 持续 5 分钟',
-        duration: '15m',
-        severityText: '严重',
-        labels: { namespace: 'production', pod: 'api-server-xxx' },
-      },
-      {
-        id: '2',
-        title: '内存使用率警告',
-        severity: 'warning',
-        status: 'firing',
-        description: '容器内存使用率超过 80%',
-        duration: '3m',
-        severityText: '警告',
-        labels: { namespace: 'staging' },
-      },
-    ]}
-  />
+<Preview center={false}>
+  <div className="p-4 w-full">
+    <AlertList
+      alerts={[
+        {
+          id: '1',
+          title: 'CPU 使用率过高',
+          severity: 'critical',
+          status: 'firing',
+          description: '节点 node-1 的 CPU 使用率超过 90% 持续 5 分钟',
+          duration: '15m',
+          severityText: '严重',
+          labels: { namespace: 'production', pod: 'api-server-xxx' },
+        },
+        {
+          id: '2',
+          title: '内存使用率警告',
+          severity: 'warning',
+          status: 'firing',
+          description: '容器内存使用率超过 80%',
+          duration: '3m',
+          severityText: '警告',
+          labels: { namespace: 'staging' },
+        },
+      ]}
+    />
+  </div>
 </Preview>
 
 ### Empty State
 
-<Preview>
-  <AlertList alerts={[]} />
+<Preview center={false}>
+  <div className="p-4 w-full">
+    <AlertList alerts={[]} />
+  </div>
 </Preview>
 
 ### Props
@@ -213,8 +222,8 @@ import { AlertListContainer } from '@edge/components'
 
 ### Preview
 
-<Preview>
-  <div className="p-4">
+<Preview center={false}>
+  <div className="p-4 w-full">
     <AlertListContainer
       alerts={[
         {
