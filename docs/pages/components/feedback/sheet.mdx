@@ -1,3 +1,16 @@
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+  Button,
+} from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Sheet (Drawer)
 
 A panel that slides in from the edge of the screen, built on Radix UI Dialog.
@@ -18,6 +31,31 @@ import {
 ```
 
 ## Usage
+
+<Preview>
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button variant="outline">Open Panel</Button>
+    </SheetTrigger>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>Edit Configuration</SheetTitle>
+        <SheetDescription>
+          Adjust resource limits and environment variables.
+        </SheetDescription>
+      </SheetHeader>
+      <div className="flex-1" />
+      <SheetFooter>
+        <SheetClose asChild>
+          <Button variant="outline">Cancel</Button>
+        </SheetClose>
+        <SheetClose asChild>
+          <Button>Save Changes</Button>
+        </SheetClose>
+      </SheetFooter>
+    </SheetContent>
+  </Sheet>
+</Preview>
 
 ```tsx
 <Sheet>
@@ -43,6 +81,19 @@ import {
 ```
 
 ## Slide direction
+
+<Preview>
+  <Sheet>
+    <SheetTrigger asChild>
+      <Button>From Left</Button>
+    </SheetTrigger>
+    <SheetContent side="left">
+      <SheetHeader>
+        <SheetTitle>Navigation</SheetTitle>
+      </SheetHeader>
+    </SheetContent>
+  </Sheet>
+</Preview>
 
 ```tsx
 <Sheet>

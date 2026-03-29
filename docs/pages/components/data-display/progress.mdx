@@ -1,3 +1,6 @@
+import { Progress } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Progress
 
 A horizontal progress bar indicating completion of a task or operation, built on Radix UI Progress.
@@ -10,11 +13,25 @@ import { Progress } from '@edge/ui'
 
 ## Usage
 
+<Preview center={false}>
+  <Progress value={60} className="w-80" />
+</Preview>
+
 ```tsx
 <Progress value={60} />
 ```
 
 ## Values
+
+<Preview center={false}>
+  <div className="space-y-3 w-80">
+    <Progress value={0} />
+    <Progress value={25} />
+    <Progress value={50} />
+    <Progress value={75} />
+    <Progress value={100} />
+  </div>
+</Preview>
 
 ```tsx
 <Progress value={0} />
@@ -34,11 +51,25 @@ Omit `value` or pass `null` for indeterminate state (no indicator position):
 
 ## Custom colors
 
+<Preview center={false}>
+  <Progress value={80} className="h-2 w-80 [&>div]:bg-green-500" />
+</Preview>
+
 ```tsx
 <Progress value={80} className="h-2 [&>div]:bg-green-500" />
 ```
 
 ## With label
+
+<Preview center={false}>
+  <div className="space-y-1 w-80">
+    <div className="flex justify-between text-sm">
+      <span>Uploading...</span>
+      <span>60%</span>
+    </div>
+    <Progress value={60} className="h-2" />
+  </div>
+</Preview>
 
 ```tsx
 <div className="space-y-1">

@@ -1,3 +1,6 @@
+import { Label, Input } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Label
 
 An accessible form label that pairs with form controls, built on Radix UI Label.
@@ -10,6 +13,13 @@ import { Label } from '@edge/ui'
 
 ## Usage
 
+<Preview center={false}>
+  <div className="flex flex-col gap-1.5 w-64">
+    <Label htmlFor="email-preview">Email address</Label>
+    <Input id="email-preview" type="email" placeholder="you@example.com" />
+  </div>
+</Preview>
+
 ```tsx
 import { Input } from '@edge/ui'
 
@@ -21,6 +31,15 @@ import { Input } from '@edge/ui'
 
 ## With required indicator
 
+<Preview center={false}>
+  <div className="flex flex-col gap-1.5 w-64">
+    <Label htmlFor="name-preview">
+      Name <span className="text-destructive">*</span>
+    </Label>
+    <Input id="name-preview" placeholder="Your name" />
+  </div>
+</Preview>
+
 ```tsx
 <Label htmlFor="name">
   Name <span className="text-destructive">*</span>
@@ -30,6 +49,13 @@ import { Input } from '@edge/ui'
 ## Disabled state
 
 When the associated control is disabled, the label is automatically styled as disabled:
+
+<Preview center={false}>
+  <div className="flex flex-col gap-1.5 w-64">
+    <Label htmlFor="disabled-preview">Disabled Field</Label>
+    <Input id="disabled-preview" disabled />
+  </div>
+</Preview>
 
 ```tsx
 <div className="flex flex-col gap-1.5">

@@ -1,3 +1,6 @@
+import { Switch, Label } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Switch
 
 A toggle switch for binary on/off states.
@@ -10,11 +13,23 @@ import { Switch } from '@edge/ui'
 
 ## Usage
 
+<Preview>
+  <Switch />
+  <Switch defaultChecked />
+</Preview>
+
 ```tsx
 <Switch />
 ```
 
 ## With label
+
+<Preview>
+  <div className="flex items-center gap-2">
+    <Switch id="notifications-preview" />
+    <Label htmlFor="notifications-preview">Enable notifications</Label>
+  </div>
+</Preview>
 
 ```tsx
 import { Label } from '@edge/ui'
@@ -42,6 +57,11 @@ function ControlledSwitch() {
 ```
 
 ## Disabled
+
+<Preview>
+  <Switch disabled />
+  <Switch disabled defaultChecked />
+</Preview>
 
 ```tsx
 <Switch disabled />

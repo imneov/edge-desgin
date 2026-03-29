@@ -1,3 +1,6 @@
+import { Spinner, Loading, Button } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Spinner
 
 An animated loading indicator. Also exports `Loading`, a spinner combined with a text label.
@@ -10,11 +13,21 @@ import { Spinner, Loading } from '@edge/ui'
 
 ## Spinner — Usage
 
+<Preview>
+  <Spinner />
+</Preview>
+
 ```tsx
 <Spinner />
 ```
 
 ## Spinner — Sizes
+
+<Preview>
+  <Spinner size="sm" />
+  <Spinner size="md" />
+  <Spinner size="lg" />
+</Preview>
 
 ```tsx
 <Spinner size="sm" />
@@ -24,17 +37,32 @@ import { Spinner, Loading } from '@edge/ui'
 
 ## Loading — Usage
 
+<Preview>
+  <Loading />
+</Preview>
+
 ```tsx
 <Loading />
 ```
 
 ## Loading — Custom text
 
+<Preview>
+  <Loading text="Fetching resources..." />
+</Preview>
+
 ```tsx
 <Loading text="Fetching resources..." />
 ```
 
 ## Inline loading state
+
+<Preview>
+  <Button disabled>
+    <Spinner size="sm" className="mr-2" />
+    Saving...
+  </Button>
+</Preview>
 
 ```tsx
 <Button disabled>

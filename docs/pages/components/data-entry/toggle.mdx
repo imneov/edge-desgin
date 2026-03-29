@@ -1,3 +1,7 @@
+import { Toggle, ToggleGroup, ToggleGroupItem } from '@edge/ui'
+import { Bold, AlignLeft, AlignCenter, AlignRight } from 'lucide-react'
+import { Preview } from '../../../components/Preview'
+
 # Toggle / ToggleGroup
 
 A two-state button that can be toggled on or off. `ToggleGroup` allows grouping multiple toggles with shared state.
@@ -11,6 +15,12 @@ import { ToggleGroup, ToggleGroupItem } from '@edge/ui'
 
 ## Toggle — Basic Usage
 
+<Preview>
+  <Toggle aria-label="Bold">
+    <Bold className="h-4 w-4" />
+  </Toggle>
+</Preview>
+
 ```tsx
 import { Bold } from 'lucide-react'
 
@@ -21,12 +31,23 @@ import { Bold } from 'lucide-react'
 
 ## Toggle — Variants
 
+<Preview>
+  <Toggle variant="default">Default</Toggle>
+  <Toggle variant="outline">Outline</Toggle>
+</Preview>
+
 ```tsx
 <Toggle variant="default">Default</Toggle>
 <Toggle variant="outline">Outline</Toggle>
 ```
 
 ## Toggle — Sizes
+
+<Preview>
+  <Toggle size="sm">Small</Toggle>
+  <Toggle size="default">Default</Toggle>
+  <Toggle size="lg">Large</Toggle>
+</Preview>
 
 ```tsx
 <Toggle size="sm">Small</Toggle>
@@ -35,6 +56,20 @@ import { Bold } from 'lucide-react'
 ```
 
 ## ToggleGroup — Single selection
+
+<Preview>
+  <ToggleGroup type="single" defaultValue="left">
+    <ToggleGroupItem value="left" aria-label="Left">
+      <AlignLeft className="h-4 w-4" />
+    </ToggleGroupItem>
+    <ToggleGroupItem value="center" aria-label="Center">
+      <AlignCenter className="h-4 w-4" />
+    </ToggleGroupItem>
+    <ToggleGroupItem value="right" aria-label="Right">
+      <AlignRight className="h-4 w-4" />
+    </ToggleGroupItem>
+  </ToggleGroup>
+</Preview>
 
 ```tsx
 import { AlignLeft, AlignCenter, AlignRight } from 'lucide-react'
@@ -53,6 +88,14 @@ import { AlignLeft, AlignCenter, AlignRight } from 'lucide-react'
 ```
 
 ## ToggleGroup — Multiple selection
+
+<Preview>
+  <ToggleGroup type="multiple" defaultValue={["bold"]}>
+    <ToggleGroupItem value="bold" className="font-bold">B</ToggleGroupItem>
+    <ToggleGroupItem value="italic" className="italic">I</ToggleGroupItem>
+    <ToggleGroupItem value="underline" className="underline">U</ToggleGroupItem>
+  </ToggleGroup>
+</Preview>
 
 ```tsx
 <ToggleGroup type="multiple">

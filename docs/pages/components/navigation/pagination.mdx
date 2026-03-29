@@ -1,3 +1,6 @@
+import { Pagination } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Pagination
 
 A pagination control with page navigation and an optional page size selector.
@@ -9,6 +12,16 @@ import { Pagination } from '@edge/ui'
 ```
 
 ## Usage
+
+<Preview center={false}>
+  <Pagination
+    currentPage={3}
+    pageSize={10}
+    totalItems={128}
+    onPageChange={() => {}}
+    onPageSizeChange={() => {}}
+  />
+</Preview>
 
 ```tsx
 import { useState } from 'react'
@@ -36,6 +49,15 @@ function PaginatedList() {
 ## Without page size selector
 
 Omit `onPageSizeChange` to hide the page size dropdown:
+
+<Preview center={false}>
+  <Pagination
+    currentPage={2}
+    pageSize={10}
+    totalItems={50}
+    onPageChange={() => {}}
+  />
+</Preview>
 
 ```tsx
 <Pagination

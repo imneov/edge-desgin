@@ -1,3 +1,6 @@
+import { RadioGroup, RadioGroupItem, Label } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Radio Group
 
 A group of radio buttons allowing single selection from a list of options.
@@ -9,6 +12,19 @@ import { RadioGroup, RadioGroupItem } from '@edge/ui'
 ```
 
 ## Usage
+
+<Preview center={false}>
+  <RadioGroup defaultValue="option-a">
+    <div className="flex items-center gap-2">
+      <RadioGroupItem value="option-a" id="rg-option-a" />
+      <Label htmlFor="rg-option-a">Option A</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <RadioGroupItem value="option-b" id="rg-option-b" />
+      <Label htmlFor="rg-option-b">Option B</Label>
+    </div>
+  </RadioGroup>
+</Preview>
 
 ```tsx
 import { Label } from '@edge/ui'
@@ -48,6 +64,23 @@ function ControlledRadioGroup() {
 ```
 
 ## Horizontal layout
+
+<Preview>
+  <RadioGroup defaultValue="sm" className="flex gap-4">
+    <div className="flex items-center gap-2">
+      <RadioGroupItem value="sm" id="rg-size-sm" />
+      <Label htmlFor="rg-size-sm">Small</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <RadioGroupItem value="md" id="rg-size-md" />
+      <Label htmlFor="rg-size-md">Medium</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <RadioGroupItem value="lg" id="rg-size-lg" />
+      <Label htmlFor="rg-size-lg">Large</Label>
+    </div>
+  </RadioGroup>
+</Preview>
 
 ```tsx
 <RadioGroup defaultValue="sm" className="flex gap-4">

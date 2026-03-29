@@ -1,3 +1,6 @@
+import { Textarea, Label } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Textarea
 
 A multi-line text input field for longer content.
@@ -10,11 +13,22 @@ import { Textarea } from '@edge/ui'
 
 ## Usage
 
+<Preview center={false}>
+  <Textarea placeholder="Enter a description..." className="w-80" />
+</Preview>
+
 ```tsx
 <Textarea placeholder="Enter a description..." />
 ```
 
 ## With label
+
+<Preview center={false}>
+  <div className="flex flex-col gap-1.5 w-80">
+    <Label htmlFor="description-preview">Description</Label>
+    <Textarea id="description-preview" placeholder="Describe your resource..." />
+  </div>
+</Preview>
 
 ```tsx
 import { Label } from '@edge/ui'
@@ -43,6 +57,10 @@ function ControlledTextarea() {
 ```
 
 ## Disabled
+
+<Preview center={false}>
+  <Textarea disabled placeholder="This field is read-only" className="w-80" />
+</Preview>
 
 ```tsx
 <Textarea disabled placeholder="This field is read-only" />

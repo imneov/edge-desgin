@@ -1,3 +1,6 @@
+import { Checkbox, Label } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Checkbox
 
 A controlled checkbox input with custom styling.
@@ -10,11 +13,23 @@ import { Checkbox } from '@edge/ui'
 
 ## Usage
 
+<Preview>
+  <Checkbox />
+  <Checkbox defaultChecked />
+</Preview>
+
 ```tsx
 <Checkbox />
 ```
 
 ## With label
+
+<Preview>
+  <div className="flex items-center gap-2">
+    <Checkbox id="terms-preview" />
+    <Label htmlFor="terms-preview">Accept terms and conditions</Label>
+  </div>
+</Preview>
 
 ```tsx
 import { Label } from '@edge/ui'
@@ -42,6 +57,11 @@ function ControlledCheckbox() {
 ```
 
 ## Disabled
+
+<Preview>
+  <Checkbox disabled />
+  <Checkbox disabled defaultChecked />
+</Preview>
 
 ```tsx
 <Checkbox disabled />

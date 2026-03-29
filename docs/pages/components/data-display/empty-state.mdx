@@ -1,3 +1,7 @@
+import { EmptyState } from '@edge/ui'
+import { Server } from 'lucide-react'
+import { Preview } from '../../../components/Preview'
+
 # Empty State
 
 A placeholder component displayed when a list or data view has no items to show.
@@ -10,17 +14,32 @@ import { EmptyState } from '@edge/ui'
 
 ## Usage
 
+<Preview>
+  <EmptyState />
+</Preview>
+
 ```tsx
 <EmptyState />
 ```
 
 ## Custom title
 
+<Preview>
+  <EmptyState title="No deployments found" />
+</Preview>
+
 ```tsx
 <EmptyState title="No deployments found" />
 ```
 
 ## Custom icon
+
+<Preview>
+  <EmptyState
+    title="No nodes available"
+    icon={Server}
+  />
+</Preview>
 
 ```tsx
 import { Server } from 'lucide-react'
@@ -32,6 +51,10 @@ import { Server } from 'lucide-react'
 ```
 
 ## Loading state
+
+<Preview>
+  <EmptyState loading title="Loading data..." />
+</Preview>
 
 ```tsx
 <EmptyState loading title="Loading data..." />

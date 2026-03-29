@@ -1,3 +1,6 @@
+import { LoadingOverlay } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # LoadingOverlay
 
 An absolutely-positioned overlay that covers a container while data is loading. Renders nothing when not active.
@@ -12,6 +15,13 @@ import { LoadingOverlay } from '@edge/ui'
 
 Place inside a `relative`-positioned container:
 
+<Preview center={false}>
+  <div className="relative min-h-[120px] w-full border rounded">
+    <LoadingOverlay loading={true} />
+    <div className="p-4 text-sm text-muted-foreground">Content underneath</div>
+  </div>
+</Preview>
+
 ```tsx
 <div className="relative min-h-[200px]">
   <LoadingOverlay loading={isLoading} />
@@ -20,6 +30,12 @@ Place inside a `relative`-positioned container:
 ```
 
 ## Custom text
+
+<Preview center={false}>
+  <div className="relative min-h-[120px] w-full border rounded">
+    <LoadingOverlay loading={true} text="Fetching cluster data..." />
+  </div>
+</Preview>
 
 ```tsx
 <div className="relative min-h-[200px]">

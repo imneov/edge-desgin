@@ -1,3 +1,7 @@
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, Button } from '@edge/ui'
+import { Info } from 'lucide-react'
+import { Preview } from '../../../components/Preview'
+
 # Tooltip
 
 A popup that displays informative text when users hover or focus an element, built on Radix UI Tooltip.
@@ -23,6 +27,21 @@ export default function RootLayout({ children }) {
 
 ## Usage
 
+<Preview>
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <Info className="h-4 w-4" />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>View cluster details</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+</Preview>
+
 ```tsx
 <Tooltip>
   <TooltipTrigger asChild>
@@ -37,6 +56,19 @@ export default function RootLayout({ children }) {
 ```
 
 ## Positioning
+
+<Preview>
+  <TooltipProvider delayDuration={0}>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button variant="outline" size="sm">Hover me (right)</Button>
+      </TooltipTrigger>
+      <TooltipContent side="right">
+        Shows on the right
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+</Preview>
 
 ```tsx
 <Tooltip>

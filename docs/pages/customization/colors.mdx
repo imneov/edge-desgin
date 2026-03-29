@@ -1,3 +1,5 @@
+import { SemanticTokenRow, HexSwatchRow, ThemePreview } from '../../components/ColorSwatch'
+
 # Colors & Themes
 
 Edge Design uses a two-tier color system:
@@ -27,46 +29,88 @@ All semantic colors are defined as HSL channel values on `:root` and `.dark`, en
 
 ### Color Tokens
 
-| Token | Light | Dark | Usage |
-|-------|-------|------|-------|
-| `background` | `0 0% 100%` | `222.2 84% 4.9%` | Page background |
-| `foreground` | `222.2 84% 4.9%` | `210 40% 98%` | Default text |
-| `primary` | `221.2 83.2% 53.3%` | `217.2 91.2% 59.8%` | Primary actions, links |
-| `secondary` | `210 40% 96%` | `217.2 32.6% 17.5%` | Secondary backgrounds |
-| `muted` | `210 40% 96%` | `217.2 32.6% 17.5%` | Muted backgrounds |
-| `muted-foreground` | `215.4 16.3% 46.9%` | `215 20.2% 65.1%` | Subtle text |
-| `accent` | `210 40% 96%` | `217.2 32.6% 17.5%` | Hover/focus highlights |
-| `destructive` | `0 84.2% 60.2%` | `0 62.8% 30.6%` | Destructive actions |
-| `border` | `214.3 31.8% 91.4%` | `217.2 32.6% 17.5%` | Borders |
-| `ring` | `221.2 83.2% 53.3%` | `224.3 76.3% 94.1%` | Focus rings |
+<div className="overflow-x-auto my-4 not-prose">
+  <table className="w-full text-sm border-collapse">
+    <thead>
+      <tr className="border-b border-border">
+        <th className="px-3 py-2 text-left font-semibold">Token</th>
+        <th className="px-3 py-2 text-left font-semibold">Light</th>
+        <th className="px-3 py-2 text-left font-semibold">Dark</th>
+        <th className="px-3 py-2 text-left font-semibold">Usage</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-border">
+      <SemanticTokenRow token="background" light="0 0% 100%" dark="222.2 84% 4.9%" usage="Page background" />
+      <SemanticTokenRow token="foreground" light="222.2 84% 4.9%" dark="210 40% 98%" usage="Default text" />
+      <SemanticTokenRow token="primary" light="221.2 83.2% 53.3%" dark="217.2 91.2% 59.8%" usage="Primary actions, links" />
+      <SemanticTokenRow token="secondary" light="210 40% 96%" dark="217.2 32.6% 17.5%" usage="Secondary backgrounds" />
+      <SemanticTokenRow token="muted" light="210 40% 96%" dark="217.2 32.6% 17.5%" usage="Muted backgrounds" />
+      <SemanticTokenRow token="muted-foreground" light="215.4 16.3% 46.9%" dark="215 20.2% 65.1%" usage="Subtle text" />
+      <SemanticTokenRow token="accent" light="210 40% 96%" dark="217.2 32.6% 17.5%" usage="Hover/focus highlights" />
+      <SemanticTokenRow token="destructive" light="0 84.2% 60.2%" dark="0 62.8% 30.6%" usage="Destructive actions" />
+      <SemanticTokenRow token="border" light="214.3 31.8% 91.4%" dark="217.2 32.6% 17.5%" usage="Borders" />
+      <SemanticTokenRow token="ring" light="221.2 83.2% 53.3%" dark="224.3 76.3% 94.1%" usage="Focus rings" />
+    </tbody>
+  </table>
+</div>
 
 ### Cockpit Colors
 
 The cockpit (monitoring dashboard) uses a separate set of hex-based color tokens:
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `--cockpit-accent` | `#3B82F6` | Primary accent (blue) |
-| `--cockpit-success` | `#14B8A6` | Success / healthy state |
-| `--cockpit-warning` | `#F59E0B` | Warning state |
-| `--cockpit-danger` | `#EF4444` | Danger / error state |
-| `--cockpit-purple` | `#8B5CF6` | Purple accent |
-
-Each has a `-muted` variant at 10% opacity for background fills.
+<div className="overflow-x-auto my-4 not-prose">
+  <table className="w-full text-sm border-collapse">
+    <thead>
+      <tr className="border-b border-border">
+        <th className="px-3 py-2 text-left font-semibold">Token</th>
+        <th className="px-3 py-2 text-left font-semibold">Color</th>
+        <th className="px-3 py-2 text-left font-semibold">Muted (10%)</th>
+        <th className="px-3 py-2 text-left font-semibold">Usage</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-border">
+      <HexSwatchRow token="--cockpit-accent" hex="#3B82F6" usage="Primary accent (blue)" muted />
+      <HexSwatchRow token="--cockpit-success" hex="#14B8A6" usage="Success / healthy state" muted />
+      <HexSwatchRow token="--cockpit-warning" hex="#F59E0B" usage="Warning state" muted />
+      <HexSwatchRow token="--cockpit-danger" hex="#EF4444" usage="Danger / error state" muted />
+      <HexSwatchRow token="--cockpit-purple" hex="#8B5CF6" usage="Purple accent" muted />
+    </tbody>
+  </table>
+</div>
 
 ### Status Colors
 
-| State | Color | Hex |
-|-------|-------|-----|
-| Success | Teal | `#14B8A6` |
-| Warning | Amber | `#F59E0B` |
-| Error | Red | `#EF4444` |
-| Info | Blue | `#3B82F6` |
-| Neutral | Gray | `#6B7280` |
+<div className="overflow-x-auto my-4 not-prose">
+  <table className="w-full text-sm border-collapse">
+    <thead>
+      <tr className="border-b border-border">
+        <th className="px-3 py-2 text-left font-semibold">State</th>
+        <th className="px-3 py-2 text-left font-semibold">Color</th>
+        <th className="px-3 py-2 text-left font-semibold">Usage</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-border">
+      <HexSwatchRow token="Success" hex="#14B8A6" usage="Teal — healthy / running" />
+      <HexSwatchRow token="Warning" hex="#F59E0B" usage="Amber — degraded / pending" />
+      <HexSwatchRow token="Error" hex="#EF4444" usage="Red — failed / error" />
+      <HexSwatchRow token="Info" hex="#3B82F6" usage="Blue — informational" />
+      <HexSwatchRow token="Neutral" hex="#6B7280" usage="Gray — unknown / inactive" />
+    </tbody>
+  </table>
+</div>
 
 ## Themes
 
 Edge Design ships with 6 built-in themes that control header, sidebar, and menu styling:
+
+<div className="flex flex-wrap gap-4 my-6 not-prose">
+  <ThemePreview name="default" label="经典蓝" headerBg="#1e293b" sidebarBg="#0f172a" accent="#3B82F6" />
+  <ThemePreview name="purple" label="优雅紫色" headerBg="#2d1b3d" sidebarBg="#1a0f2e" accent="#8B5CF6" />
+  <ThemePreview name="green" label="清新绿色" headerBg="#1a2f2a" sidebarBg="#0f1f1a" accent="#14B8A6" />
+  <ThemePreview name="orange" label="活力橙色" headerBg="#2d1f1a" sidebarBg="#1f110e" accent="#F59E0B" />
+  <ThemePreview name="dark" label="暗夜黑色" headerBg="#0f1419" sidebarBg="#080c10" accent="#6B7280" />
+  <ThemePreview name="cyan" label="科技青色" headerBg="#0f2a2e" sidebarBg="#071a1e" accent="#06B6D4" />
+</div>
 
 | Theme | Label | Header Background |
 |-------|-------|-------------------|

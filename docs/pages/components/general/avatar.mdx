@@ -1,3 +1,6 @@
+import { Avatar, AvatarImage, AvatarFallback } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Avatar
 
 A user avatar component with image support and a text fallback, built on Radix UI Avatar.
@@ -9,6 +12,16 @@ import { Avatar, AvatarImage, AvatarFallback } from '@edge/ui'
 ```
 
 ## Usage
+
+<Preview>
+  <Avatar>
+    <AvatarImage src="https://github.com/shadcn.png" alt="User" />
+    <AvatarFallback>LF</AvatarFallback>
+  </Avatar>
+  <Avatar>
+    <AvatarFallback>JD</AvatarFallback>
+  </Avatar>
+</Preview>
 
 ```tsx
 <Avatar>
@@ -31,6 +44,18 @@ When no image is available, the fallback is displayed:
 
 Use Tailwind utility classes to control size:
 
+<Preview>
+  <Avatar className="h-8 w-8">
+    <AvatarFallback className="text-xs">SM</AvatarFallback>
+  </Avatar>
+  <Avatar>
+    <AvatarFallback>MD</AvatarFallback>
+  </Avatar>
+  <Avatar className="h-16 w-16">
+    <AvatarFallback className="text-xl">LG</AvatarFallback>
+  </Avatar>
+</Preview>
+
 ```tsx
 <Avatar className="h-8 w-8">
   <AvatarImage src="/avatar.png" alt="Small" />
@@ -44,6 +69,20 @@ Use Tailwind utility classes to control size:
 ```
 
 ## Avatar group
+
+<Preview>
+  <div className="flex -space-x-2">
+    <Avatar className="border-2 border-background">
+      <AvatarFallback>A</AvatarFallback>
+    </Avatar>
+    <Avatar className="border-2 border-background">
+      <AvatarFallback>B</AvatarFallback>
+    </Avatar>
+    <Avatar className="border-2 border-background">
+      <AvatarFallback>+3</AvatarFallback>
+    </Avatar>
+  </div>
+</Preview>
 
 ```tsx
 <div className="flex -space-x-2">

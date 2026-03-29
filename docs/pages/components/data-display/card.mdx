@@ -1,3 +1,6 @@
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Button } from '@edge/ui'
+import { Preview } from '../../../components/Preview'
+
 # Card
 
 A container component for grouping related content with optional header, content, and footer sections.
@@ -17,6 +20,21 @@ import {
 
 ## Usage
 
+<Preview center={false}>
+  <Card className="w-80">
+    <CardHeader>
+      <CardTitle>Deployment</CardTitle>
+      <CardDescription>edge-console v1.4.2</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <p className="text-sm">3 replicas running in us-east cluster.</p>
+    </CardContent>
+    <CardFooter>
+      <Button variant="outline" size="sm">View Details</Button>
+    </CardFooter>
+  </Card>
+</Preview>
+
 ```tsx
 <Card>
   <CardHeader>
@@ -34,6 +52,14 @@ import {
 
 ## Simple card
 
+<Preview center={false}>
+  <Card className="w-80">
+    <CardContent className="pt-4">
+      <p>This card has no header or footer.</p>
+    </CardContent>
+  </Card>
+</Preview>
+
 ```tsx
 <Card>
   <CardContent className="pt-4">
@@ -43,6 +69,21 @@ import {
 ```
 
 ## Stats card
+
+<Preview>
+  <Card className="w-40">
+    <CardHeader>
+      <CardDescription>Total Nodes</CardDescription>
+      <CardTitle className="text-3xl">42</CardTitle>
+    </CardHeader>
+  </Card>
+  <Card className="w-40">
+    <CardHeader>
+      <CardDescription>Active Pods</CardDescription>
+      <CardTitle className="text-3xl">128</CardTitle>
+    </CardHeader>
+  </Card>
+</Preview>
 
 ```tsx
 <Card>

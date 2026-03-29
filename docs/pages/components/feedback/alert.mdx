@@ -1,3 +1,7 @@
+import { Alert, AlertTitle, AlertDescription } from '@edge/ui'
+import { Info, AlertCircle } from 'lucide-react'
+import { Preview } from '../../../components/Preview'
+
 # Alert
 
 A contextual message container for displaying important information, warnings, or errors.
@@ -9,6 +13,16 @@ import { Alert, AlertTitle, AlertDescription } from '@edge/ui'
 ```
 
 ## Usage
+
+<Preview center={false}>
+  <Alert className="w-full max-w-md">
+    <Info className="h-4 w-4" />
+    <AlertTitle>Info</AlertTitle>
+    <AlertDescription>
+      This namespace is shared across multiple teams.
+    </AlertDescription>
+  </Alert>
+</Preview>
 
 ```tsx
 import { Info } from 'lucide-react'
@@ -24,6 +38,16 @@ import { Info } from 'lucide-react'
 
 ## Variants
 
+<Preview center={false}>
+  <Alert variant="destructive" className="w-full max-w-md">
+    <AlertCircle className="h-4 w-4" />
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>
+      Deployment failed: insufficient resources.
+    </AlertDescription>
+  </Alert>
+</Preview>
+
 ```tsx
 import { AlertCircle } from 'lucide-react'
 
@@ -37,6 +61,15 @@ import { AlertCircle } from 'lucide-react'
 ```
 
 ## Without icon
+
+<Preview center={false}>
+  <Alert className="w-full max-w-md">
+    <AlertTitle>Maintenance Window</AlertTitle>
+    <AlertDescription>
+      Scheduled maintenance from 02:00–04:00 UTC on Saturday.
+    </AlertDescription>
+  </Alert>
+</Preview>
 
 ```tsx
 <Alert>
