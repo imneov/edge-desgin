@@ -135,6 +135,9 @@ importers:
       '@edge/tokens':
         specifier: workspace:*
         version: link:../tokens
+      '@monaco-editor/react':
+        specifier: ^4.7.0
+        version: 4.7.0(monaco-editor@0.55.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-alert-dialog':
         specifier: ^1.1.4
         version: 1.1.15(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -198,6 +201,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      js-yaml:
+        specifier: ^4.1.1
+        version: 4.1.1
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@18.3.1)
@@ -238,6 +244,9 @@ importers:
       '@storybook/test':
         specifier: ^8.6.0
         version: 8.6.15(storybook@8.6.18(prettier@2.8.8))
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.28
@@ -826,6 +835,16 @@ packages:
 
   '@mermaid-js/parser@1.0.1':
     resolution: {integrity: sha512-opmV19kN1JsK0T6HhhokHpcVkqKpF+x2pPDKKM2ThHtZAB5F4PROopk0amuVYK5qMrIA4erzpNm8gmPNJgMDxQ==}
+
+  '@monaco-editor/loader@1.7.0':
+    resolution: {integrity: sha512-gIwR1HrJrrx+vfyOhYmCZ0/JcWqG5kbfG7+d3f/C1LXk2EvzAbHSg3MQ5lO2sMlo9izoAZ04shohfKLVT6crVA==}
+
+  '@monaco-editor/react@4.7.0':
+    resolution: {integrity: sha512-cyzXQCtO47ydzxpQtCGSQGOC8Gk3ZUeBXFAxD+CWXYFo5OqZyZUonFl0DwUlTyAfRHntBfw2p3w4s9R6oe1eCA==}
+    peerDependencies:
+      monaco-editor: '>= 0.25.0 < 1'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@napi-rs/simple-git-android-arm-eabi@0.1.22':
     resolution: {integrity: sha512-JQZdnDNm8o43A5GOzwN/0Tz3CDBQtBUNqzVwEopm32uayjdjxev1Csp1JeaqF3v9djLDIvsSE39ecsN2LhCKKQ==}
@@ -2118,6 +2137,9 @@ packages:
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
+  '@types/js-yaml@4.0.9':
+    resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
+
   '@types/katex@0.16.8':
     resolution: {integrity: sha512-trgaNyfU+Xh2Tc+ABIb44a5AYUpicB3uwirOioeOkNPPbmgRNtcWyDeeFRzjPZENO9Vq8gvVqfhaaXWLlevVwg==}
 
@@ -2734,6 +2756,9 @@ packages:
   dom-accessibility-api@0.6.3:
     resolution: {integrity: sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==}
 
+  dompurify@3.2.7:
+    resolution: {integrity: sha512-WhL/YuveyGXJaerVlMYGWhvQswa7myDG17P7Vu65EWC05o8vfeNbvNf4d/BOvH99+ZW+LlQsc1GDKMa1vNK6dw==}
+
   dompurify@3.3.3:
     resolution: {integrity: sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==}
 
@@ -3337,6 +3362,11 @@ packages:
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
 
+  marked@14.0.0:
+    resolution: {integrity: sha512-uIj4+faQ+MgHgwUW1l2PsPglZLOLOT1uErt06dAPtx2kjteLAkbsd/0FiYg/MGS+i7ZKLb7w2WClxHkzOOuryQ==}
+    engines: {node: '>= 18'}
+    hasBin: true
+
   marked@16.4.2:
     resolution: {integrity: sha512-TI3V8YYWvkVf3KJe1dRkpnjs68JUPyEa5vjKrp1XEEJUAOaQc+Qj+L1qWbPd0SJuAdQkFU0h73sXXqwDYxsiDA==}
     engines: {node: '>= 20'}
@@ -3559,6 +3589,9 @@ packages:
 
   mlly@1.8.2:
     resolution: {integrity: sha512-d+ObxMQFmbt10sretNDytwt85VrbkhhUA/JBGm1MPaWJ65Cl4wOgLaB1NYvJSZ0Ef03MMEU/0xpPMXUIQ29UfA==}
+
+  monaco-editor@0.55.1:
+    resolution: {integrity: sha512-jz4x+TJNFHwHtwuV9vA9rMujcZRb0CEilTEwG2rRSpe/A7Jdkuj8xPKttCgOh+v/lkHy7HsZ64oj+q3xoAFl9A==}
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -4161,6 +4194,9 @@ packages:
 
   sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
+
+  state-local@1.0.7:
+    resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
 
   storybook@8.6.18:
     resolution: {integrity: sha512-p8seiSI6FiVY6P3V0pG+5v7c8pDMehMAFRWEhG5XqIBSQszzOjDnW2rNvm3odoLKfo3V3P6Cs6Hv9ILzymULyQ==}
@@ -5191,6 +5227,17 @@ snapshots:
   '@mermaid-js/parser@1.0.1':
     dependencies:
       langium: 4.2.1
+
+  '@monaco-editor/loader@1.7.0':
+    dependencies:
+      state-local: 1.0.7
+
+  '@monaco-editor/react@4.7.0(monaco-editor@0.55.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@monaco-editor/loader': 1.7.0
+      monaco-editor: 0.55.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@napi-rs/simple-git-android-arm-eabi@0.1.22':
     optional: true
@@ -6513,6 +6560,8 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
+  '@types/js-yaml@4.0.9': {}
+
   '@types/katex@0.16.8': {}
 
   '@types/mdast@4.0.4':
@@ -7130,6 +7179,10 @@ snapshots:
   dom-accessibility-api@0.5.16: {}
 
   dom-accessibility-api@0.6.3: {}
+
+  dompurify@3.2.7:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
 
   dompurify@3.3.3:
     optionalDependencies:
@@ -7842,6 +7895,8 @@ snapshots:
 
   markdown-table@3.0.4: {}
 
+  marked@14.0.0: {}
+
   marked@16.4.2: {}
 
   math-intrinsics@1.1.0: {}
@@ -8379,6 +8434,11 @@ snapshots:
       pathe: 2.0.3
       pkg-types: 1.3.1
       ufo: 1.6.3
+
+  monaco-editor@0.55.1:
+    dependencies:
+      dompurify: 3.2.7
+      marked: 14.0.0
 
   mri@1.2.0: {}
 
@@ -9139,6 +9199,8 @@ snapshots:
       wicked-good-xpath: 1.3.0
 
   sprintf-js@1.0.3: {}
+
+  state-local@1.0.7: {}
 
   storybook@8.6.18(prettier@2.8.8):
     dependencies:

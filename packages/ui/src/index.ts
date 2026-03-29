@@ -149,6 +149,15 @@ export type { ConfirmDialogProps } from './components/confirm-dialog'
 export { ConfirmDeleteDialog } from './components/confirm-delete-dialog'
 export type { ConfirmDeleteDialogProps } from './components/confirm-delete-dialog'
 
+export { NameConfirmDeleteDialog } from './components/name-confirm-delete-dialog'
+export type { NameConfirmDeleteDialogProps } from './components/name-confirm-delete-dialog'
+
+export { CreateResourceDialog } from './components/create-resource-dialog'
+export type { CreateResourceDialogProps } from './components/create-resource-dialog'
+
+export { YamlEditDialog } from './components/yaml-edit-dialog'
+export type { YamlEditDialogProps } from './components/yaml-edit-dialog'
+
 export { ProgressRing } from './components/progress-ring'
 export type { ProgressRingProps } from './components/progress-ring'
 
