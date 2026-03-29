@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Minus, Plus } from "lucide-react"
-import { Button } from "./button"
+import { Button } from "@edge/ui"
 
 export interface ReplicaAdjustmentCardProps {
   currentReplicas: number

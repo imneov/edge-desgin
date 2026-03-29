@@ -1,0 +1,51 @@
+# Separator
+
+A visual divider between content sections, supporting horizontal and vertical orientations.
+
+## Import
+
+```tsx
+import { Separator } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<div>
+  <p>Above the separator</p>
+  <Separator />
+  <p>Below the separator</p>
+</div>
+```
+
+## Orientation
+
+```tsx
+<div className="flex items-center gap-4">
+  <span>Left</span>
+  <Separator orientation="vertical" className="h-4" />
+  <span>Right</span>
+</div>
+```
+
+## In a card header
+
+```tsx
+<div>
+  <h3>Section Title</h3>
+  <Separator className="my-2" />
+  <p>Section content goes here.</p>
+</div>
+```
+
+## API
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Direction of the separator |
+| `decorative` | `boolean` | `true` | If true, hidden from accessibility tree |
+| `className` | `string` | — | Additional CSS classes |
+
+All standard HTML `div` attributes are also supported.

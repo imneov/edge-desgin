@@ -1,0 +1,139 @@
+# Dropdown Menu
+
+A contextual menu that appears below a trigger, supporting items, checkboxes, radio buttons, and submenus, built on Radix UI DropdownMenu.
+
+## Import
+
+```tsx
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+} from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+import { MoreHorizontal } from 'lucide-react'
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="ghost" size="icon">
+      <MoreHorizontal className="h-4 w-4" />
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent align="end">
+    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem>View Details</DropdownMenuItem>
+    <DropdownMenuItem>Edit</DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## With keyboard shortcuts
+
+```tsx
+<DropdownMenuContent>
+  <DropdownMenuItem>
+    New Tab
+    <DropdownMenuShortcut>⌘T</DropdownMenuShortcut>
+  </DropdownMenuItem>
+  <DropdownMenuItem>
+    New Window
+    <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
+  </DropdownMenuItem>
+</DropdownMenuContent>
+```
+
+## With checkboxes
+
+```tsx
+import { useState } from 'react'
+
+function CheckboxMenu() {
+  const [showStatus, setShowStatus] = useState(true)
+  return (
+    <DropdownMenuContent>
+      <DropdownMenuLabel>View Options</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuCheckboxItem
+        checked={showStatus}
+        onCheckedChange={setShowStatus}
+      >
+        Show Status
+      </DropdownMenuCheckboxItem>
+    </DropdownMenuContent>
+  )
+}
+```
+
+## With radio group
+
+```tsx
+<DropdownMenuContent>
+  <DropdownMenuLabel>Sort By</DropdownMenuLabel>
+  <DropdownMenuSeparator />
+  <DropdownMenuRadioGroup value="name" onValueChange={() => {}}>
+    <DropdownMenuRadioItem value="name">Name</DropdownMenuRadioItem>
+    <DropdownMenuRadioItem value="created">Created</DropdownMenuRadioItem>
+    <DropdownMenuRadioItem value="status">Status</DropdownMenuRadioItem>
+  </DropdownMenuRadioGroup>
+</DropdownMenuContent>
+```
+
+## With submenu
+
+```tsx
+<DropdownMenuContent>
+  <DropdownMenuSub>
+    <DropdownMenuSubTrigger>More Options</DropdownMenuSubTrigger>
+    <DropdownMenuSubContent>
+      <DropdownMenuItem>Scale Up</DropdownMenuItem>
+      <DropdownMenuItem>Scale Down</DropdownMenuItem>
+    </DropdownMenuSubContent>
+  </DropdownMenuSub>
+</DropdownMenuContent>
+```
+
+## API
+
+### DropdownMenu (Root) Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Controlled open state |
+| `defaultOpen` | `boolean` | `false` | Initial open state |
+| `onOpenChange` | `(open: boolean) => void` | — | Callback when open state changes |
+| `modal` | `boolean` | `true` | Whether to render in a modal context |
+
+### DropdownMenuContent Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `align` | `'start' \| 'center' \| 'end'` | `'center'` | Alignment relative to trigger |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'bottom'` | Preferred side |
+| `sideOffset` | `number` | `4` | Distance from trigger (px) |
+| `className` | `string` | — | Additional CSS classes |
+
+### DropdownMenuItem Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `inset` | `boolean` | `false` | Add left padding to align with items that have icons |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `onSelect` | `(event: Event) => void` | — | Called when the item is selected |
+| `className` | `string` | — | Additional CSS classes |

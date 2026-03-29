@@ -1,0 +1,80 @@
+# Tooltip
+
+A popup that displays informative text when users hover or focus an element, built on Radix UI Tooltip.
+
+## Import
+
+```tsx
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@edge/ui'
+```
+
+## Setup
+
+Wrap your app (or page) with `TooltipProvider` once:
+
+```tsx
+// app/layout.tsx
+import { TooltipProvider } from '@edge/ui'
+
+export default function RootLayout({ children }) {
+  return <TooltipProvider>{children}</TooltipProvider>
+}
+```
+
+## Usage
+
+```tsx
+<Tooltip>
+  <TooltipTrigger asChild>
+    <Button variant="ghost" size="icon">
+      <InfoIcon className="h-4 w-4" />
+    </Button>
+  </TooltipTrigger>
+  <TooltipContent>
+    <p>View cluster details</p>
+  </TooltipContent>
+</Tooltip>
+```
+
+## Positioning
+
+```tsx
+<Tooltip>
+  <TooltipTrigger>Hover me</TooltipTrigger>
+  <TooltipContent side="right">
+    Shows on the right
+  </TooltipContent>
+</Tooltip>
+```
+
+## API
+
+### TooltipProvider Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `delayDuration` | `number` | `700` | Delay before tooltip opens (ms) |
+| `skipDelayDuration` | `number` | `300` | Delay to re-open without waiting (ms) |
+
+### Tooltip (Root) Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Controlled open state |
+| `defaultOpen` | `boolean` | `false` | Initial open state |
+| `onOpenChange` | `(open: boolean) => void` | — | Callback when open state changes |
+
+### TooltipTrigger Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `asChild` | `boolean` | `false` | Render as child element |
+
+### TooltipContent Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Preferred side |
+| `sideOffset` | `number` | `4` | Distance from trigger (px) |
+| `align` | `'start' \| 'center' \| 'end'` | `'center'` | Alignment relative to trigger |
+| `className` | `string` | — | Additional CSS classes |

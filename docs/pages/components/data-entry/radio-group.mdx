@@ -1,0 +1,86 @@
+# Radio Group
+
+A group of radio buttons allowing single selection from a list of options.
+
+## Import
+
+```tsx
+import { RadioGroup, RadioGroupItem } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+import { Label } from '@edge/ui'
+
+<RadioGroup defaultValue="option-a">
+  <div className="flex items-center gap-2">
+    <RadioGroupItem value="option-a" id="option-a" />
+    <Label htmlFor="option-a">Option A</Label>
+  </div>
+  <div className="flex items-center gap-2">
+    <RadioGroupItem value="option-b" id="option-b" />
+    <Label htmlFor="option-b">Option B</Label>
+  </div>
+</RadioGroup>
+```
+
+## Controlled
+
+```tsx
+import { useState } from 'react'
+
+function ControlledRadioGroup() {
+  const [value, setValue] = useState('option-a')
+  return (
+    <RadioGroup value={value} onValueChange={setValue}>
+      <div className="flex items-center gap-2">
+        <RadioGroupItem value="option-a" id="r-a" />
+        <Label htmlFor="r-a">Option A</Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <RadioGroupItem value="option-b" id="r-b" />
+        <Label htmlFor="r-b">Option B</Label>
+      </div>
+    </RadioGroup>
+  )
+}
+```
+
+## Horizontal layout
+
+```tsx
+<RadioGroup defaultValue="sm" className="flex gap-4">
+  <div className="flex items-center gap-2">
+    <RadioGroupItem value="sm" id="size-sm" />
+    <Label htmlFor="size-sm">Small</Label>
+  </div>
+  <div className="flex items-center gap-2">
+    <RadioGroupItem value="md" id="size-md" />
+    <Label htmlFor="size-md">Medium</Label>
+  </div>
+  <div className="flex items-center gap-2">
+    <RadioGroupItem value="lg" id="size-lg" />
+    <Label htmlFor="size-lg">Large</Label>
+  </div>
+</RadioGroup>
+```
+
+## API
+
+### RadioGroup Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Controlled selected value |
+| `defaultValue` | `string` | — | Initial value (uncontrolled) |
+| `onValueChange` | `(value: string) => void` | — | Callback when selection changes |
+| `className` | `string` | — | Additional CSS classes (default: `space-y-2`) |
+
+### RadioGroupItem Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | The value this radio button represents |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `className` | `string` | — | Additional CSS classes |

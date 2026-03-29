@@ -1,0 +1,62 @@
+# Typography
+
+Edge Design System typography tokens define font families, sizes, weights, and letter spacing.
+
+## Font Families
+
+| Token | Stack |
+|-------|-------|
+| `font-sans` | Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial |
+| `font-mono` | JetBrains Mono, SF Mono, Monaco, Cascadia Code, Fira Code, Consolas |
+
+```tsx
+<p className="font-sans">Body text uses Inter.</p>
+<code className="font-mono">Monospaced code</code>
+```
+
+## Font Sizes
+
+| Token | Size | Line Height |
+|-------|------|-------------|
+| `text-xs` | 0.75rem (12px) | 1rem |
+| `text-sm` | 0.875rem (14px) | 1.25rem |
+| `text-base` | 1rem (16px) | 1.5rem |
+| `text-lg` | 1.125rem (18px) | 1.75rem |
+| `text-xl` | 1.25rem (20px) | 1.75rem |
+| `text-2xl` | 1.5rem (24px) | 2rem |
+| `text-3xl` | 1.875rem (30px) | 2.25rem |
+| `text-4xl` | 2.25rem (36px) | 2.5rem |
+
+```tsx
+<h1 className="text-3xl font-bold">Page Title</h1>
+<h2 className="text-2xl font-semibold">Section Heading</h2>
+<h3 className="text-lg font-semibold">Card Title</h3>
+<p className="text-sm text-muted-foreground">Caption text</p>
+```
+
+## Font Weights
+
+| Token | Value |
+|-------|-------|
+| `font-normal` | 400 |
+| `font-medium` | 500 |
+| `font-semibold` | 600 |
+| `font-bold` | 700 |
+
+## Letter Spacing
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `tracking-tight` | -0.025em | Large headings |
+| `tracking-normal` | 0em | Body text |
+| `tracking-wide` | 0.025em | Buttons, labels |
+| `tracking-wider` | 0.05em | Uppercase labels |
+| `tracking-widest` | 0.1em | Keyboard shortcuts |
+
+## Usage in CSS
+
+The typography tokens are available as Tailwind utility classes and are registered via the `@edge/tokens/tailwind-preset`.
+
+```ts
+import { fontFamily, fontSize, fontWeight } from '@edge/tokens'
+```

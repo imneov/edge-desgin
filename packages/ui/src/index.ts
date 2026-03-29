@@ -18,6 +18,9 @@ export { Avatar, AvatarImage, AvatarFallback } from './components/avatar'
 export { Label } from './components/label'
 
 // ─── Data Entry ───────────────────────────────────────────────────────────────
+export { SearchableSelect } from './components/searchable-select'
+export type { SearchableSelectProps, SearchableSelectOption } from './components/searchable-select'
+
 export { Input } from './components/input'
 export type { InputProps } from './components/input'
 
@@ -137,6 +140,18 @@ export type { LoadingOverlayProps } from './components/loading-overlay'
 export { Skeleton } from './components/skeleton'
 export type { SkeletonProps } from './components/skeleton'
 
+export { StatusIndicator } from './components/status-indicator'
+export type { StatusIndicatorProps, StatusVariant } from './components/status-indicator'
+
+export { ConfirmDialog } from './components/confirm-dialog'
+export type { ConfirmDialogProps } from './components/confirm-dialog'
+
+export { ProgressRing } from './components/progress-ring'
+export type { ProgressRingProps } from './components/progress-ring'
+
+export { CollapsibleSection } from './components/collapsible-section'
+export type { CollapsibleSectionProps } from './components/collapsible-section'
+
 // ─── Navigation ───────────────────────────────────────────────────────────────
 export {
   DropdownMenu,
@@ -162,15 +177,7 @@ export type { PaginationProps } from './components/pagination'
 // ─── Overlay ──────────────────────────────────────────────────────────────────
 export { Popover, PopoverTrigger, PopoverAnchor, PopoverContent } from './components/popover'
 
-// ─── Edge Platform Components ─────────────────────────────────────────────────
-export { ContainerStatus } from './components/container-status'
-export type { ContainerStatusInfo, PodStatusInfo, ContainerStatusProps } from './components/container-status'
+// ─── Charts ──────────────────────────────────────────────────────────────────
+export { ChartContainer, ChartTooltip, ChartTooltipContent } from './components/chart'
+export type { ChartConfig } from './components/chart'
 
-export { ResourceNameDescription, extractResourceDisplayData } from './components/resource-name-description'
-export type { ResourceNameDescriptionProps } from './components/resource-name-description'
-
-export { ReplicaAdjustmentCard } from './components/replica-adjustment-card'
-export type { ReplicaAdjustmentCardProps } from './components/replica-adjustment-card'
-
-export { ReplicaConfirmationDialog } from './components/replica-confirmation-dialog'
-export type { ReplicaConfirmationDialogProps } from './components/replica-confirmation-dialog'

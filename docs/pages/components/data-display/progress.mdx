@@ -1,0 +1,63 @@
+# Progress
+
+A horizontal progress bar indicating completion of a task or operation, built on Radix UI Progress.
+
+## Import
+
+```tsx
+import { Progress } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<Progress value={60} />
+```
+
+## Values
+
+```tsx
+<Progress value={0} />
+<Progress value={25} />
+<Progress value={50} />
+<Progress value={75} />
+<Progress value={100} />
+```
+
+## Indeterminate
+
+Omit `value` or pass `null` for indeterminate state (no indicator position):
+
+```tsx
+<Progress />
+```
+
+## Custom colors
+
+```tsx
+<Progress value={80} className="h-2 [&>div]:bg-green-500" />
+```
+
+## With label
+
+```tsx
+<div className="space-y-1">
+  <div className="flex justify-between text-sm">
+    <span>Uploading...</span>
+    <span>60%</span>
+  </div>
+  <Progress value={60} className="h-2" />
+</div>
+```
+
+## API
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number \| null` | — | Current progress (0–100). Omit for indeterminate |
+| `max` | `number` | `100` | Maximum value |
+| `className` | `string` | — | Additional CSS classes |
+
+All Radix UI Progress Root props are supported.

@@ -1,0 +1,74 @@
+# Pagination
+
+A pagination control with page navigation and an optional page size selector.
+
+## Import
+
+```tsx
+import { Pagination } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react'
+
+function PaginatedList() {
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const totalItems = 128
+
+  return (
+    <>
+      {/* list content */}
+      <Pagination
+        currentPage={page}
+        pageSize={pageSize}
+        totalItems={totalItems}
+        onPageChange={setPage}
+        onPageSizeChange={setPageSize}
+      />
+    </>
+  )
+}
+```
+
+## Without page size selector
+
+Omit `onPageSizeChange` to hide the page size dropdown:
+
+```tsx
+<Pagination
+  currentPage={page}
+  pageSize={10}
+  totalItems={50}
+  onPageChange={setPage}
+/>
+```
+
+## Custom page size options
+
+```tsx
+<Pagination
+  currentPage={1}
+  pageSize={20}
+  totalItems={200}
+  onPageChange={setPage}
+  onPageSizeChange={setPageSize}
+  pageSizeOptions={[10, 20, 50]}
+/>
+```
+
+## API
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `currentPage` | `number` | — | Current active page (1-based) |
+| `pageSize` | `number` | — | Number of items per page |
+| `totalItems` | `number` | — | Total number of items across all pages |
+| `onPageChange` | `(page: number) => void` | — | Callback when page changes |
+| `onPageSizeChange` | `(size: number) => void` | — | Callback when page size changes; hides the selector if omitted |
+| `pageSizeOptions` | `number[]` | `[5, 10, 15, 20, 50, 100]` | Available page size choices |
+| `className` | `string` | `''` | Additional CSS classes |

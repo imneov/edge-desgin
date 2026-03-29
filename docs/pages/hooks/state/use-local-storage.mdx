@@ -1,0 +1,67 @@
+# useLocalStorage
+
+Persist state to `localStorage` with automatic JSON serialization and cross-tab sync.
+
+## Import
+
+```tsx
+import { useLocalStorage } from '@edge/hooks'
+```
+
+## Usage
+
+```tsx
+const [theme, setTheme, removeTheme] = useLocalStorage('theme', 'light')
+
+return (
+  <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+    Current theme: {theme}
+  </button>
+)
+```
+
+## With functional update
+
+```tsx
+const [count, setCount] = useLocalStorage('counter', 0)
+
+// Functional update (same as useState)
+setCount(prev => prev + 1)
+```
+
+## Custom serializer
+
+```tsx
+const dateSerializer = {
+  read: (value: string) => new Date(value),
+  write: (value: Date) => value.toISOString(),
+}
+
+const [date, setDate] = useLocalStorage('lastVisit', new Date(), dateSerializer)
+```
+
+## API
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `key` | `string` | — | localStorage key |
+| `initialValue` | `T` | — | Default value when key is absent |
+| `serializer` | `Serializer<T>` | JSON | Custom read/write serializer |
+
+### Returns
+
+`[value, setValue, removeValue]`
+
+| Value | Type | Description |
+|-------|------|-------------|
+| `value` | `T` | Current stored value |
+| `setValue` | `(value: T \| ((prev: T) => T)) => void` | Update stored value |
+| `removeValue` | `() => void` | Remove from localStorage and reset to initialValue |
+
+### Notes
+
+- Automatically syncs across browser tabs via the `storage` event
+- SSR-safe: returns `initialValue` when `window` is undefined
+- Ignores serialization errors silently

@@ -1,0 +1,52 @@
+# useMediaQuery
+
+Tracks whether a CSS media query matches. Reactive and SSR-safe.
+
+## Import
+
+```tsx
+import { useMediaQuery, breakpoints } from '@edge/hooks'
+```
+
+## Usage
+
+```tsx
+const isMobile = useMediaQuery('(max-width: 767px)')
+
+return isMobile ? <MobileLayout /> : <DesktopLayout />
+```
+
+## With breakpoint presets
+
+```tsx
+import { useMediaQuery, breakpoints } from '@edge/hooks'
+
+const isDesktop = useMediaQuery(breakpoints.lg)
+```
+
+## Available breakpoints
+
+| Key | Query |
+|-----|-------|
+| `sm` | `(min-width: 640px)` |
+| `md` | `(min-width: 768px)` |
+| `lg` | `(min-width: 1024px)` |
+| `xl` | `(min-width: 1280px)` |
+| `2xl` | `(min-width: 1536px)` |
+
+## API
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `query` | `string` | CSS media query string |
+
+### Returns
+
+`boolean` — `true` if the media query currently matches
+
+### Notes
+
+- Returns `false` during SSR (no `window`)
+- Updates reactively when viewport changes

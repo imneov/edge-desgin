@@ -1,0 +1,90 @@
+# Sheet (Drawer)
+
+A panel that slides in from the edge of the screen, built on Radix UI Dialog.
+
+## Import
+
+```tsx
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  SheetClose,
+} from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button variant="outline">Open Panel</Button>
+  </SheetTrigger>
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle>Edit Configuration</SheetTitle>
+      <SheetDescription>
+        Adjust resource limits and environment variables.
+      </SheetDescription>
+    </SheetHeader>
+    {/* form content */}
+    <SheetFooter>
+      <SheetClose asChild>
+        <Button variant="outline">Cancel</Button>
+      </SheetClose>
+      <Button>Save Changes</Button>
+    </SheetFooter>
+  </SheetContent>
+</Sheet>
+```
+
+## Slide direction
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild>
+    <Button>From Left</Button>
+  </SheetTrigger>
+  <SheetContent side="left">
+    <SheetHeader>
+      <SheetTitle>Navigation</SheetTitle>
+    </SheetHeader>
+  </SheetContent>
+</Sheet>
+```
+
+## Without close button
+
+```tsx
+<SheetContent showCloseButton={false}>
+  {/* manage closing yourself */}
+</SheetContent>
+```
+
+## API
+
+### Sheet (Root) Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Controlled open state |
+| `defaultOpen` | `boolean` | `false` | Initial open state (uncontrolled) |
+| `onOpenChange` | `(open: boolean) => void` | — | Callback when open state changes |
+
+### SheetContent Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'right'` | Direction the sheet slides in from |
+| `showCloseButton` | `boolean` | `true` | Show the X close button |
+| `className` | `string` | — | Additional CSS classes |
+
+### SheetTrigger / SheetClose Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `asChild` | `boolean` | `false` | Render as child element |

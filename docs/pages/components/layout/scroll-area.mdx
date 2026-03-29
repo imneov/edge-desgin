@@ -1,0 +1,52 @@
+# ScrollArea
+
+A custom scrollable container with styled scrollbars, built on Radix UI ScrollArea.
+
+## Import
+
+```tsx
+import { ScrollArea, ScrollBar } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<ScrollArea className="h-72 w-48 rounded-md border">
+  <div className="p-4">
+    {items.map((item) => (
+      <div key={item} className="py-2 text-sm">{item}</div>
+    ))}
+  </div>
+</ScrollArea>
+```
+
+## Horizontal scrolling
+
+```tsx
+<ScrollArea className="w-96 whitespace-nowrap rounded-md border">
+  <div className="flex gap-4 p-4">
+    {items.map((item) => (
+      <div key={item} className="w-24 shrink-0">{item}</div>
+    ))}
+  </div>
+  <ScrollBar orientation="horizontal" />
+</ScrollArea>
+```
+
+## API
+
+### ScrollArea Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes |
+| `children` | `ReactNode` | — | Scrollable content |
+
+All Radix UI ScrollArea Root props are supported.
+
+### ScrollBar Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Scrollbar direction |
+| `className` | `string` | — | Additional CSS classes |

@@ -1,0 +1,96 @@
+# Toggle / ToggleGroup
+
+A two-state button that can be toggled on or off. `ToggleGroup` allows grouping multiple toggles with shared state.
+
+## Import
+
+```tsx
+import { Toggle } from '@edge/ui'
+import { ToggleGroup, ToggleGroupItem } from '@edge/ui'
+```
+
+## Toggle — Basic Usage
+
+```tsx
+import { Bold } from 'lucide-react'
+
+<Toggle aria-label="Bold">
+  <Bold className="h-4 w-4" />
+</Toggle>
+```
+
+## Toggle — Variants
+
+```tsx
+<Toggle variant="default">Default</Toggle>
+<Toggle variant="outline">Outline</Toggle>
+```
+
+## Toggle — Sizes
+
+```tsx
+<Toggle size="sm">Small</Toggle>
+<Toggle size="default">Default</Toggle>
+<Toggle size="lg">Large</Toggle>
+```
+
+## ToggleGroup — Single selection
+
+```tsx
+import { AlignLeft, AlignCenter, AlignRight } from 'lucide-react'
+
+<ToggleGroup type="single" defaultValue="left">
+  <ToggleGroupItem value="left" aria-label="Left">
+    <AlignLeft className="h-4 w-4" />
+  </ToggleGroupItem>
+  <ToggleGroupItem value="center" aria-label="Center">
+    <AlignCenter className="h-4 w-4" />
+  </ToggleGroupItem>
+  <ToggleGroupItem value="right" aria-label="Right">
+    <AlignRight className="h-4 w-4" />
+  </ToggleGroupItem>
+</ToggleGroup>
+```
+
+## ToggleGroup — Multiple selection
+
+```tsx
+<ToggleGroup type="multiple">
+  <ToggleGroupItem value="bold">B</ToggleGroupItem>
+  <ToggleGroupItem value="italic">I</ToggleGroupItem>
+  <ToggleGroupItem value="underline">U</ToggleGroupItem>
+</ToggleGroup>
+```
+
+## API
+
+### Toggle Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' \| 'outline'` | `'default'` | Visual style variant |
+| `size` | `'default' \| 'sm' \| 'lg'` | `'default'` | Size of the toggle |
+| `pressed` | `boolean` | — | Controlled pressed state |
+| `defaultPressed` | `boolean` | `false` | Initial pressed state (uncontrolled) |
+| `onPressedChange` | `(pressed: boolean) => void` | — | Callback when state changes |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `className` | `string` | — | Additional CSS classes |
+
+### ToggleGroup Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `type` | `'single' \| 'multiple'` | — | Selection mode |
+| `value` | `string \| string[]` | — | Controlled value(s) |
+| `onValueChange` | `(value: string \| string[]) => void` | — | Callback when value changes |
+| `variant` | `'default' \| 'outline'` | `'default'` | Applied to all items |
+| `size` | `'default' \| 'sm' \| 'lg'` | `'default'` | Applied to all items |
+| `className` | `string` | — | Additional CSS classes |
+
+### ToggleGroupItem Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | The value this item represents |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `className` | `string` | — | Additional CSS classes (overrides group variant/size) |

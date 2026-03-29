@@ -1,0 +1,71 @@
+# Textarea
+
+A multi-line text input field for longer content.
+
+## Import
+
+```tsx
+import { Textarea } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<Textarea placeholder="Enter a description..." />
+```
+
+## With label
+
+```tsx
+import { Label } from '@edge/ui'
+
+<div className="flex flex-col gap-1.5">
+  <Label htmlFor="description">Description</Label>
+  <Textarea id="description" placeholder="Describe your resource..." />
+</div>
+```
+
+## Controlled
+
+```tsx
+import { useState } from 'react'
+
+function ControlledTextarea() {
+  const [value, setValue] = useState('')
+  return (
+    <Textarea
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder="Type something..."
+    />
+  )
+}
+```
+
+## Disabled
+
+```tsx
+<Textarea disabled placeholder="This field is read-only" />
+```
+
+## Resize control
+
+Use Tailwind classes to control resize behavior:
+
+```tsx
+<Textarea className="resize-none" placeholder="No resize" />
+<Textarea className="resize-y" placeholder="Vertical resize only" />
+```
+
+## API
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `placeholder` | `string` | — | Placeholder text |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `rows` | `number` | — | Number of visible text lines |
+| `className` | `string` | — | Additional CSS classes |
+
+All standard HTML `textarea` attributes are supported. Default `min-height` is `80px`.

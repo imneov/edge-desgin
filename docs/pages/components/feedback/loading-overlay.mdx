@@ -1,0 +1,51 @@
+# LoadingOverlay
+
+An absolutely-positioned overlay that covers a container while data is loading. Renders nothing when not active.
+
+## Import
+
+```tsx
+import { LoadingOverlay } from '@edge/ui'
+```
+
+## Usage
+
+Place inside a `relative`-positioned container:
+
+```tsx
+<div className="relative min-h-[200px]">
+  <LoadingOverlay loading={isLoading} />
+  {/* content */}
+</div>
+```
+
+## Custom text
+
+```tsx
+<div className="relative min-h-[200px]">
+  <LoadingOverlay loading={isLoading} text="Fetching cluster data..." />
+</div>
+```
+
+## Conditional rendering
+
+`LoadingOverlay` returns `null` when `loading` is `false`, so no extra conditional is needed:
+
+```tsx
+<div className="relative">
+  <LoadingOverlay loading={isFetching} />
+  <Table>{/* ... */}</Table>
+</div>
+```
+
+## API
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `loading` | `boolean` | — | Show the overlay when `true`; render nothing when `false` |
+| `text` | `string` | `'加载中...'` | Loading label text |
+| `className` | `string` | — | Additional CSS classes applied to the overlay wrapper |
+
+The overlay is positioned `absolute` with `top-12` offset (leaving room for a header row), `z-10`, and `pointer-events-none`.

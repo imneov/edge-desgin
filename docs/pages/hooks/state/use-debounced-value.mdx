@@ -1,0 +1,41 @@
+# useDebouncedValue
+
+Returns a debounced copy of a value that only updates after a specified delay has elapsed without changes.
+
+## Import
+
+```tsx
+import { useDebouncedValue } from '@edge/hooks'
+```
+
+## Usage
+
+```tsx
+const [search, setSearch] = useState('')
+const debouncedSearch = useDebouncedValue(search, 300)
+
+// Only fires query after user stops typing for 300ms
+useEffect(() => {
+  fetchResults(debouncedSearch)
+}, [debouncedSearch])
+
+return <Input value={search} onChange={e => setSearch(e.target.value)} />
+```
+
+## API
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `value` | `T` | The value to debounce |
+| `delay` | `number` | Delay in milliseconds |
+
+### Returns
+
+`T` — the debounced value
+
+### Notes
+
+- The debounced value updates only after `delay` ms without a new value arriving
+- Cleans up the timeout on unmount automatically

@@ -1,0 +1,60 @@
+# Spinner
+
+An animated loading indicator. Also exports `Loading`, a spinner combined with a text label.
+
+## Import
+
+```tsx
+import { Spinner, Loading } from '@edge/ui'
+```
+
+## Spinner — Usage
+
+```tsx
+<Spinner />
+```
+
+## Spinner — Sizes
+
+```tsx
+<Spinner size="sm" />
+<Spinner size="md" />
+<Spinner size="lg" />
+```
+
+## Loading — Usage
+
+```tsx
+<Loading />
+```
+
+## Loading — Custom text
+
+```tsx
+<Loading text="Fetching resources..." />
+```
+
+## Inline loading state
+
+```tsx
+<Button disabled>
+  <Spinner size="sm" className="mr-2" />
+  Saving...
+</Button>
+```
+
+## API
+
+### Spinner Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Spinner size (`h-4/w-4`, `h-6/w-6`, `h-8/w-8`) |
+| `className` | `string` | — | Additional CSS classes |
+
+### Loading Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `text` | `string` | `'加载中...'` | Label displayed below the spinner |
+| `className` | `string` | — | Additional CSS classes |

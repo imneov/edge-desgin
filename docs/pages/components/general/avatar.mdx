@@ -1,0 +1,85 @@
+# Avatar
+
+A user avatar component with image support and a text fallback, built on Radix UI Avatar.
+
+## Import
+
+```tsx
+import { Avatar, AvatarImage, AvatarFallback } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<Avatar>
+  <AvatarImage src="https://example.com/avatar.png" alt="User" />
+  <AvatarFallback>LF</AvatarFallback>
+</Avatar>
+```
+
+## Fallback only
+
+When no image is available, the fallback is displayed:
+
+```tsx
+<Avatar>
+  <AvatarFallback>JD</AvatarFallback>
+</Avatar>
+```
+
+## Sizes
+
+Use Tailwind utility classes to control size:
+
+```tsx
+<Avatar className="h-8 w-8">
+  <AvatarImage src="/avatar.png" alt="Small" />
+  <AvatarFallback className="text-xs">SM</AvatarFallback>
+</Avatar>
+
+<Avatar className="h-16 w-16">
+  <AvatarImage src="/avatar.png" alt="Large" />
+  <AvatarFallback className="text-xl">LG</AvatarFallback>
+</Avatar>
+```
+
+## Avatar group
+
+```tsx
+<div className="flex -space-x-2">
+  <Avatar className="border-2 border-background">
+    <AvatarFallback>A</AvatarFallback>
+  </Avatar>
+  <Avatar className="border-2 border-background">
+    <AvatarFallback>B</AvatarFallback>
+  </Avatar>
+  <Avatar className="border-2 border-background">
+    <AvatarFallback>+3</AvatarFallback>
+  </Avatar>
+</div>
+```
+
+## API
+
+### Avatar Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes (default: `h-10 w-10` circle) |
+
+### AvatarImage Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `src` | `string` | — | Image URL |
+| `alt` | `string` | — | Accessible alt text |
+| `className` | `string` | — | Additional CSS classes |
+
+### AvatarFallback Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes |
+| `delayMs` | `number` | — | Delay before fallback appears (ms) |
+
+All standard HTML attributes are supported on each sub-component.

@@ -1,0 +1,64 @@
+# Badge
+
+A small status label used to highlight information such as counts, tags, or states.
+
+## Import
+
+```tsx
+import { Badge, badgeVariants } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<Badge>Default</Badge>
+<Badge variant="secondary">Secondary</Badge>
+<Badge variant="destructive">Error</Badge>
+<Badge variant="outline">Outline</Badge>
+```
+
+## Variants
+
+```tsx
+<div className="flex gap-2">
+  <Badge variant="default">Running</Badge>
+  <Badge variant="secondary">Pending</Badge>
+  <Badge variant="destructive">Failed</Badge>
+  <Badge variant="outline">Draft</Badge>
+</div>
+```
+
+## With icon
+
+```tsx
+import { CheckCircle } from 'lucide-react'
+
+<Badge variant="secondary">
+  <CheckCircle className="mr-1 h-3 w-3" />
+  Healthy
+</Badge>
+```
+
+## As a link
+
+Use `badgeVariants` to apply badge styles to non-badge elements:
+
+```tsx
+import Link from 'next/link'
+import { badgeVariants } from '@edge/ui'
+
+<Link href="/status" className={badgeVariants({ variant: 'outline' })}>
+  View Status
+</Link>
+```
+
+## API
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' \| 'secondary' \| 'destructive' \| 'outline'` | `'default'` | Visual style variant |
+| `className` | `string` | — | Additional CSS classes |
+
+All standard HTML `div` attributes are also supported.

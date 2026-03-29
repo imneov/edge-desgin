@@ -1,0 +1,79 @@
+# Alert
+
+A contextual message container for displaying important information, warnings, or errors.
+
+## Import
+
+```tsx
+import { Alert, AlertTitle, AlertDescription } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+import { Info } from 'lucide-react'
+
+<Alert>
+  <Info className="h-4 w-4" />
+  <AlertTitle>Info</AlertTitle>
+  <AlertDescription>
+    This namespace is shared across multiple teams.
+  </AlertDescription>
+</Alert>
+```
+
+## Variants
+
+```tsx
+import { AlertCircle } from 'lucide-react'
+
+<Alert variant="destructive">
+  <AlertCircle className="h-4 w-4" />
+  <AlertTitle>Error</AlertTitle>
+  <AlertDescription>
+    Deployment failed: insufficient resources.
+  </AlertDescription>
+</Alert>
+```
+
+## Without icon
+
+```tsx
+<Alert>
+  <AlertTitle>Maintenance Window</AlertTitle>
+  <AlertDescription>
+    Scheduled maintenance from 02:00–04:00 UTC on Saturday.
+  </AlertDescription>
+</Alert>
+```
+
+## Description only
+
+```tsx
+<Alert variant="destructive">
+  <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
+</Alert>
+```
+
+## API
+
+### Alert Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'default' \| 'destructive'` | `'default'` | Visual style variant |
+| `className` | `string` | — | Additional CSS classes |
+
+When an SVG icon is placed as a direct child, it is positioned absolutely at the top-left and sibling text is offset to the right.
+
+### AlertTitle Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes |
+
+### AlertDescription Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes |

@@ -1,0 +1,62 @@
+# Collapsible
+
+An interactive component that expands or collapses content, built on Radix UI Collapsible.
+
+## Import
+
+```tsx
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+import { useState } from 'react'
+import { Button } from '@edge/ui'
+import { ChevronsUpDown } from 'lucide-react'
+
+export function CollapsibleDemo() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Collapsible open={open} onOpenChange={setOpen} className="w-64">
+      <div className="flex items-center justify-between px-4">
+        <h4 className="text-sm font-semibold">Repositories</h4>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <ChevronsUpDown className="h-4 w-4" />
+          </Button>
+        </CollapsibleTrigger>
+      </div>
+      <div className="rounded-md border px-4 py-2 text-sm">
+        @edge/ui
+      </div>
+      <CollapsibleContent>
+        <div className="mt-2 space-y-2">
+          <div className="rounded-md border px-4 py-2 text-sm">@edge/tokens</div>
+          <div className="rounded-md border px-4 py-2 text-sm">@edge/icons</div>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  )
+}
+```
+
+## API
+
+### Collapsible Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Controlled open state |
+| `defaultOpen` | `boolean` | `false` | Initial open state (uncontrolled) |
+| `onOpenChange` | `(open: boolean) => void` | — | Callback when open state changes |
+| `disabled` | `boolean` | `false` | Prevent opening/closing |
+
+### CollapsibleTrigger Props
+
+Renders the toggle button. Accepts all standard button attributes plus `asChild`.
+
+### CollapsibleContent Props
+
+Renders the expandable content area. Accepts all standard div attributes.

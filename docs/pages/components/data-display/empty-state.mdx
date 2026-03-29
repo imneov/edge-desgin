@@ -1,0 +1,72 @@
+# Empty State
+
+A placeholder component displayed when a list or data view has no items to show.
+
+## Import
+
+```tsx
+import { EmptyState } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<EmptyState />
+```
+
+## Custom title
+
+```tsx
+<EmptyState title="No deployments found" />
+```
+
+## Custom icon
+
+```tsx
+import { Server } from 'lucide-react'
+
+<EmptyState
+  title="No nodes available"
+  icon={Server}
+/>
+```
+
+## Loading state
+
+```tsx
+<EmptyState loading title="Loading data..." />
+```
+
+## In a table
+
+```tsx
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Name</TableHead>
+      <TableHead>Status</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {data.length === 0 ? (
+      <TableRow>
+        <TableCell colSpan={2}>
+          <EmptyState title="No resources found" />
+        </TableCell>
+      </TableRow>
+    ) : (
+      data.map(row => ...)
+    )}
+  </TableBody>
+</Table>
+```
+
+## API
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | `'暂无数据'` | Message text displayed below the icon |
+| `icon` | `React.ComponentType<{ className?: string }>` | `Package` (Lucide) | Icon component to display |
+| `loading` | `boolean` | `false` | Apply reduced opacity and disable pointer events |

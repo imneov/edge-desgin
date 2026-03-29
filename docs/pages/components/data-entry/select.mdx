@@ -1,0 +1,123 @@
+# Select
+
+A dropdown selection control with keyboard navigation, built on Radix UI Select.
+
+## Import
+
+```tsx
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  SelectGroup,
+  SelectLabel,
+  SelectSeparator,
+} from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<Select>
+  <SelectTrigger className="w-48">
+    <SelectValue placeholder="Select a region" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="us-east">US East</SelectItem>
+    <SelectItem value="us-west">US West</SelectItem>
+    <SelectItem value="eu-west">EU West</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+## With groups
+
+```tsx
+<Select>
+  <SelectTrigger className="w-48">
+    <SelectValue placeholder="Select environment" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectGroup>
+      <SelectLabel>Production</SelectLabel>
+      <SelectItem value="prod-us">US Production</SelectItem>
+      <SelectItem value="prod-eu">EU Production</SelectItem>
+    </SelectGroup>
+    <SelectSeparator />
+    <SelectGroup>
+      <SelectLabel>Staging</SelectLabel>
+      <SelectItem value="staging">Staging</SelectItem>
+    </SelectGroup>
+  </SelectContent>
+</Select>
+```
+
+## Controlled
+
+```tsx
+import { useState } from 'react'
+
+function ControlledSelect() {
+  const [value, setValue] = useState('')
+  return (
+    <Select value={value} onValueChange={setValue}>
+      <SelectTrigger className="w-48">
+        <SelectValue placeholder="Pick one" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="a">Option A</SelectItem>
+        <SelectItem value="b">Option B</SelectItem>
+      </SelectContent>
+    </Select>
+  )
+}
+```
+
+## Disabled
+
+```tsx
+<Select disabled>
+  <SelectTrigger className="w-48">
+    <SelectValue placeholder="Disabled" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="x">Option X</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+## API
+
+### Select (Root) Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Controlled selected value |
+| `defaultValue` | `string` | — | Initial value (uncontrolled) |
+| `onValueChange` | `(value: string) => void` | — | Callback when selection changes |
+| `disabled` | `boolean` | `false` | Disable the entire select |
+| `open` | `boolean` | — | Controlled open state |
+| `onOpenChange` | `(open: boolean) => void` | — | Callback when open state changes |
+
+### SelectTrigger Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes |
+
+### SelectContent Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `position` | `'popper' \| 'item-aligned'` | `'popper'` | Positioning strategy |
+| `className` | `string` | — | Additional CSS classes |
+
+### SelectItem Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | The value returned on selection |
+| `disabled` | `boolean` | `false` | Disable this item |
+| `className` | `string` | — | Additional CSS classes |

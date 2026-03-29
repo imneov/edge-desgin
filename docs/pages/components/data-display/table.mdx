@@ -1,0 +1,104 @@
+# Table
+
+A semantic HTML table with styled rows, headers, and cells.
+
+## Import
+
+```tsx
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Name</TableHead>
+      <TableHead>Status</TableHead>
+      <TableHead>Cluster</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>edge-console</TableCell>
+      <TableCell>Running</TableCell>
+      <TableCell>us-east</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>edge-apiserver</TableCell>
+      <TableCell>Running</TableCell>
+      <TableCell>us-east</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+## With caption
+
+```tsx
+<Table>
+  <TableCaption>Active workloads in the current namespace.</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Name</TableHead>
+      <TableHead>Replicas</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>my-deployment</TableCell>
+      <TableCell>3</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+## With footer
+
+```tsx
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Resource</TableHead>
+      <TableHead className="text-right">Count</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>Pods</TableCell>
+      <TableCell className="text-right">12</TableCell>
+    </TableRow>
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell>Total</TableCell>
+      <TableCell className="text-right">12</TableCell>
+    </TableRow>
+  </TableFooter>
+</Table>
+```
+
+## API
+
+All components accept standard HTML table element attributes plus `className`.
+
+| Component | HTML Element | Description |
+|-----------|-------------|-------------|
+| `Table` | `table` (wrapped in `div`) | Root container with overflow scroll |
+| `TableHeader` | `thead` | Table header section |
+| `TableBody` | `tbody` | Table body section |
+| `TableFooter` | `tfoot` | Table footer section |
+| `TableRow` | `tr` | Table row with hover state |
+| `TableHead` | `th` | Header cell |
+| `TableCell` | `td` | Data cell |
+| `TableCaption` | `caption` | Accessible table caption |

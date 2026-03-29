@@ -1,0 +1,46 @@
+# useClickOutside
+
+Fires a callback when the user clicks or touches outside a referenced element. Useful for closing dropdowns, modals, and popovers.
+
+## Import
+
+```tsx
+import { useClickOutside } from '@edge/hooks'
+```
+
+## Usage
+
+```tsx
+const ref = useRef<HTMLDivElement>(null)
+const [open, setOpen] = useState(false)
+
+useClickOutside(ref, () => setOpen(false))
+
+return (
+  <div ref={ref}>
+    {open && <Dropdown />}
+  </div>
+)
+```
+
+## Conditional activation
+
+```tsx
+// Only listen when the dropdown is open
+useClickOutside(ref, () => setOpen(false), open)
+```
+
+## API
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `ref` | `RefObject<T>` | — | Ref to the element to watch |
+| `handler` | `(event: MouseEvent \| TouchEvent) => void` | — | Callback fired on outside click |
+| `enabled` | `boolean` | `true` | Whether the listener is active |
+
+### Notes
+
+- Listens to both `mousedown` and `touchstart` for mobile support
+- Cleans up event listeners on unmount or when `enabled` changes to `false`

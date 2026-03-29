@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@edge/ui"
 
 export interface ContainerStatusInfo {
   name: string

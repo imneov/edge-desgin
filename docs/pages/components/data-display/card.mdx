@@ -1,0 +1,94 @@
+# Card
+
+A container component for grouping related content with optional header, content, and footer sections.
+
+## Import
+
+```tsx
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<Card>
+  <CardHeader>
+    <CardTitle>Deployment</CardTitle>
+    <CardDescription>edge-console v1.4.2</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p className="text-sm">3 replicas running in us-east cluster.</p>
+  </CardContent>
+  <CardFooter>
+    <Button variant="outline" size="sm">View Details</Button>
+  </CardFooter>
+</Card>
+```
+
+## Simple card
+
+```tsx
+<Card>
+  <CardContent className="pt-4">
+    <p>This card has no header or footer.</p>
+  </CardContent>
+</Card>
+```
+
+## Stats card
+
+```tsx
+<Card>
+  <CardHeader>
+    <CardDescription>Total Nodes</CardDescription>
+    <CardTitle className="text-3xl">42</CardTitle>
+  </CardHeader>
+</Card>
+```
+
+## API
+
+### Card Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes |
+
+### CardHeader Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes (default: `flex flex-col space-y-1.5 p-4`) |
+
+### CardTitle Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes |
+
+### CardDescription Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes |
+
+### CardContent Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes (default: `p-4 pt-0`) |
+
+### CardFooter Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes (default: `flex items-center p-4 pt-0`) |
+
+All components accept standard HTML `div` attributes.

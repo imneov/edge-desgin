@@ -1,0 +1,94 @@
+# Tabs
+
+A tabbed interface for switching between related content panels, built on Radix UI Tabs.
+
+## Import
+
+```tsx
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<Tabs defaultValue="overview">
+  <TabsList>
+    <TabsTrigger value="overview">Overview</TabsTrigger>
+    <TabsTrigger value="pods">Pods</TabsTrigger>
+    <TabsTrigger value="logs">Logs</TabsTrigger>
+  </TabsList>
+  <TabsContent value="overview">
+    <p>Overview content</p>
+  </TabsContent>
+  <TabsContent value="pods">
+    <p>Pod list here</p>
+  </TabsContent>
+  <TabsContent value="logs">
+    <p>Log viewer here</p>
+  </TabsContent>
+</Tabs>
+```
+
+## Controlled
+
+```tsx
+import { useState } from 'react'
+
+function ControlledTabs() {
+  const [tab, setTab] = useState('overview')
+  return (
+    <Tabs value={tab} onValueChange={setTab}>
+      <TabsList>
+        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="settings">Settings</TabsTrigger>
+      </TabsList>
+      <TabsContent value="overview">Overview</TabsContent>
+      <TabsContent value="settings">Settings</TabsContent>
+    </Tabs>
+  )
+}
+```
+
+## Disabled tab
+
+```tsx
+<Tabs defaultValue="active">
+  <TabsList>
+    <TabsTrigger value="active">Active</TabsTrigger>
+    <TabsTrigger value="disabled" disabled>Disabled</TabsTrigger>
+  </TabsList>
+  <TabsContent value="active">Active content</TabsContent>
+</Tabs>
+```
+
+## API
+
+### Tabs (Root) Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Controlled active tab |
+| `defaultValue` | `string` | — | Initial active tab (uncontrolled) |
+| `onValueChange` | `(value: string) => void` | — | Callback when tab changes |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Tab orientation |
+
+### TabsList Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Additional CSS classes |
+
+### TabsTrigger Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | The tab value this trigger activates |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `className` | `string` | — | Additional CSS classes |
+
+### TabsContent Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | The tab value this panel belongs to |
+| `className` | `string` | — | Additional CSS classes |

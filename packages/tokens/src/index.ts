@@ -12,12 +12,16 @@ export {
   cockpitColors,
   topologyColors,
   statusColors,
+  surfaceColors,
+  chartColors,
 } from './colors'
 export type {
   SemanticColorKey,
   CockpitColorKey,
   TopologyColorKey,
   StatusColorKey,
+  SurfaceColorKey,
+  ChartColorKey,
 } from './colors'
 
 // Typography

@@ -1,0 +1,80 @@
+# Quick Start
+
+Get from zero to a working UI in under 5 minutes.
+
+## 1. Install
+
+```bash
+pnpm add @edge/tokens @edge/ui
+```
+
+## 2. Configure Tailwind
+
+Add the Edge Design preset to `tailwind.config.js` (or `tailwind.config.ts`):
+
+```js
+const edgePreset = require('@edge/tokens/tailwind-preset')
+
+module.exports = {
+  presets: [edgePreset],
+  content: [
+    './src/**/*.{ts,tsx}',
+    './node_modules/@edge/ui/src/**/*.{ts,tsx}',
+  ],
+}
+```
+
+## 3. Apply CSS variables
+
+Import the base styles in your global CSS file (e.g. `app/globals.css`):
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+The Edge Design Tailwind preset injects CSS custom properties (`--background`, `--foreground`, `--primary`, etc.) for both light and dark themes.
+
+## 4. Use your first component
+
+```tsx
+import { Button } from '@edge/ui'
+
+export default function Page() {
+  return (
+    <div className="p-8">
+      <Button>Create Resource</Button>
+      <Button variant="outline" className="ml-2">Cancel</Button>
+    </div>
+  )
+}
+```
+
+## 5. Add a form
+
+```tsx
+import { Input, Label, Button } from '@edge/ui'
+
+export default function CreateForm() {
+  return (
+    <form className="flex flex-col gap-4 w-80">
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="name">Resource Name</Label>
+        <Input id="name" placeholder="my-deployment" />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <Label htmlFor="namespace">Namespace</Label>
+        <Input id="namespace" placeholder="default" />
+      </div>
+      <Button type="submit">Create</Button>
+    </form>
+  )
+}
+```
+
+## What's next?
+
+- Browse the [component reference](/components) for all available components
+- Customize the [color theme](/customization/colors)
+- Explore [typography tokens](/customization/typography) and [spacing tokens](/customization/spacing)

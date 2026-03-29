@@ -1,0 +1,64 @@
+# useAutoRefresh
+
+Calls a callback on a configurable interval. Supports enabling/disabling and immediate execution on mount.
+
+## Import
+
+```tsx
+import { useAutoRefresh } from '@edge/hooks'
+```
+
+## Usage
+
+```tsx
+const { refresh } = useAutoRefresh(() => {
+  refetchData()
+}, { interval: 30_000 })
+
+return <button onClick={refresh}>Refresh now</button>
+```
+
+## Conditional refresh
+
+```tsx
+const { refresh } = useAutoRefresh(fetchMetrics, {
+  interval: 10_000,
+  enabled: isLive,       // pause when not viewing live data
+  immediate: true,       // fire once on mount before first interval
+})
+```
+
+## Disable auto-refresh
+
+```tsx
+// Pass interval: null or enabled: false to stop polling
+useAutoRefresh(callback, { interval: null })
+```
+
+## API
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `callback` | `() => void` | Function to call on each interval |
+| `options` | `UseAutoRefreshOptions` | Configuration |
+
+### `UseAutoRefreshOptions`
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `interval` | `number \| null` | — | Interval in milliseconds. `null` disables. |
+| `enabled` | `boolean` | `true` | Whether polling is active |
+| `immediate` | `boolean` | `false` | Fire immediately on mount before first interval |
+
+### Returns
+
+| Value | Type | Description |
+|-------|------|-------------|
+| `refresh` | `() => void` | Manually trigger the callback |
+
+### Notes
+
+- Always uses the latest callback reference (no stale closure issues)
+- Changing `interval` or `enabled` restarts the interval cleanly

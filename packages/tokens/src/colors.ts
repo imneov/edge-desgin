@@ -109,7 +109,56 @@ export const statusColors = {
   neutral: '#6B7280',
 } as const
 
+// ---------------------------------------------------------------------------
+// Surface / background colors
+// ---------------------------------------------------------------------------
+// These are the high-frequency background colors used across edge-console.
+// #EFF4F9 (page), #F9FBFD (toolbar/form), #F5F7FA (section) account for 650+
+// hardcoded inline styles in the console codebase.
+
+export const surfaceColors = {
+  /** Primary page background — cool blue-gray wash */
+  page: '#EFF4F9',
+  /** Toolbar / form-section background */
+  toolbar: '#F9FBFD',
+  /** Content-section / divider background */
+  section: '#F5F7FA',
+  /** Dialog-header background */
+  dialogHeader: '#F9FBFF',
+  /** System base background (same as cockpitColors.bg) */
+  base: '#F8FAFC',
+  /** Pure white elevated surface */
+  elevated: '#FFFFFF',
+} as const
+
+// ---------------------------------------------------------------------------
+// Chart / data-visualization palette
+// ---------------------------------------------------------------------------
+// Unified palette for recharts, monitoring dashboards, and topology edges.
+// Avoids scattering hex literals across individual chart components.
+
+export const chartColors = {
+  blue: '#3B82F6',
+  green: '#10B981',
+  teal: '#14B8A6',
+  amber: '#F59E0B',
+  red: '#EF4444',
+  purple: '#8B5CF6',
+  pink: '#EC4899',
+  cyan: '#06B6D4',
+  /** Chart axis / grid line */
+  grid: '#E5E7EB',
+  /** Chart tick / label text */
+  text: '#374151',
+  /** Topology edge / connection line */
+  connection: '#64748B',
+  /** Default monitoring line color */
+  monitoring: '#059669',
+} as const
+
 export type SemanticColorKey = keyof typeof lightColors
 export type CockpitColorKey = keyof typeof cockpitColors
 export type TopologyColorKey = keyof typeof topologyColors
 export type StatusColorKey = keyof typeof statusColors
+export type SurfaceColorKey = keyof typeof surfaceColors
+export type ChartColorKey = keyof typeof chartColors

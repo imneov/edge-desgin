@@ -3,80 +3,47 @@
 import React from "react"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts"
-import { ChartContainer, type ChartConfig } from "./chart"
-import { cn } from "../utils"
+import { ChartContainer, cn } from "@edge/ui"
+import type { ChartConfig } from "@edge/ui"
 
-// ==================== 类型定义 ====================
+// ==================== Types ====================
 
-/**
- * 通用数据点接口
- */
 export interface DataPoint {
-  /** 时间戳（秒或毫秒） */
   time: number
-  /** 数值 */
   value: number
 }
 
-/**
- * 图表配置接口
- */
 export interface MonitoringChartConfig {
-  /** 数据标签 */
   label: string
-  /** 可选，默认使用统一颜色 */
   color?: string
-  /** 数值单位 */
   unit?: string
-  /** 自定义 Tooltip 格式化 */
   formatTooltip?: (value: number, timestamp: number) => React.ReactNode
 }
 
-/**
- * 监控图表组件属性接口
- */
 export interface MonitoringChartProps {
-  /** 图表标题 */
   title: string
-  /** 图表图标 */
   icon: React.ReactNode
-  /** 当前值（带单位） */
   currentValue: string
-  /** 时间序列数据 */
   data: DataPoint[]
-  /** 图表配置 */
   config: MonitoringChartConfig
-  /** 是否展开 */
   expanded: boolean
-  /** 展开/收起回调 */
   onToggle: () => void
-  /** 时间范围（影响时间显示格式） */
   timeRange?: string
-  /** 图表高度（默认 200） */
   height?: number
-  /** 是否加载中 */
   loading?: boolean
-  /** 额外类名 */
   className?: string
 }
 
-// ==================== 常量 ====================
+// ==================== Constants ====================
 
-/** 默认监控颜色 */
 export const DEFAULT_MONITORING_COLOR = '#059669'
 
-// ==================== 工具函数 ====================
+// ==================== Utilities ====================
 
-/**
- * 时间格式化函数
- * @param timestamp - 时间戳（秒或毫秒）
- * @param timeRange - 时间范围（影响格式）
- */
 export const formatTime = (timestamp: number, timeRange: string = '24h'): string => {
   const realTimestamp = timestamp < 10000000000 ? timestamp * 1000 : timestamp
   const date = new Date(realTimestamp)
 
-  // 如果时间范围大于24小时，显示日期+时间
   if (timeRange === '7d') {
     return date.toLocaleString('zh-CN', {
       month: '2-digit',
@@ -86,7 +53,6 @@ export const formatTime = (timestamp: number, timeRange: string = '24h'): string
     })
   }
 
-  // 否则只显示时间
   return date.toLocaleTimeString('zh-CN', {
     hour: '2-digit',
     minute: '2-digit',
@@ -94,14 +60,12 @@ export const formatTime = (timestamp: number, timeRange: string = '24h'): string
   })
 }
 
-/** 默认时间轴格式化 */
 const defaultTickFormatter = (value: any): string => {
   let timestamp = value
   if (typeof value === 'string') {
     timestamp = parseInt(value)
   }
 
-  // 如果是秒级时间戳，转换为毫秒
   if (timestamp < 10000000000) {
     timestamp = timestamp * 1000
   }
@@ -114,14 +78,10 @@ const defaultTickFormatter = (value: any): string => {
   return date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
 }
 
-/** 默认Y轴格式化 */
 const defaultYTickFormatter = (value: number): string => {
   return Number(value).toFixed(2)
 }
 
-/**
- * 默认Tooltip内容
- */
 const defaultTooltipContent = (
   config: MonitoringChartConfig,
   timeRange: string
@@ -157,12 +117,8 @@ const defaultTooltipContent = (
   return TooltipComponent
 }
 
-// ==================== 组件 ====================
+// ==================== Component ====================
 
-/**
- * 监控图表组件
- * 用于展示边缘平台资源的时间序列监控数据
- */
 export function MonitoringChart({
   title,
   icon,
@@ -176,10 +132,8 @@ export function MonitoringChart({
   loading = false,
   className
 }: MonitoringChartProps) {
-  // 使用默认颜色或配置的颜色
   const chartColor = config.color || DEFAULT_MONITORING_COLOR
 
-  // 创建图表配置
   const chartConfig: ChartConfig = {
     value: {
       label: config.label,
@@ -189,7 +143,6 @@ export function MonitoringChart({
 
   return (
     <div className={cn("bg-white rounded border border-gray-200", className)}>
-      {/* 标题栏 */}
       <div
         className="p-4 cursor-pointer flex items-center justify-between hover:bg-gray-50 transition-colors"
         style={{backgroundColor: expanded ? '#F9FBFD' : 'white'}}
@@ -210,7 +163,6 @@ export function MonitoringChart({
         )}
       </div>
 
-      {/* 图表内容 */}
       {expanded && (
         <div className="px-4 pb-4" style={{backgroundColor: 'white'}}>
           <ChartContainer config={chartConfig}>

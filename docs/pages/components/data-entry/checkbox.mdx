@@ -1,0 +1,62 @@
+# Checkbox
+
+A controlled checkbox input with custom styling.
+
+## Import
+
+```tsx
+import { Checkbox } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+<Checkbox />
+```
+
+## With label
+
+```tsx
+import { Label } from '@edge/ui'
+
+<div className="flex items-center gap-2">
+  <Checkbox id="terms" />
+  <Label htmlFor="terms">Accept terms and conditions</Label>
+</div>
+```
+
+## Controlled
+
+```tsx
+import { useState } from 'react'
+
+function ControlledCheckbox() {
+  const [checked, setChecked] = useState(false)
+  return (
+    <Checkbox
+      checked={checked}
+      onCheckedChange={setChecked}
+    />
+  )
+}
+```
+
+## Disabled
+
+```tsx
+<Checkbox disabled />
+<Checkbox disabled checked />
+```
+
+## API
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `checked` | `boolean` | — | Controlled checked state |
+| `onCheckedChange` | `(checked: boolean) => void` | — | Callback when checked state changes |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `className` | `string` | — | Additional CSS classes (applied to the visual indicator) |
+
+All standard HTML `input` attributes (except `checked` and `onCheckedChange`) are also supported.

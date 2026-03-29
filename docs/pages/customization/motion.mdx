@@ -1,0 +1,61 @@
+# Motion
+
+Edge Design System motion tokens define durations, easing curves, keyframes, and named animations.
+
+## Duration
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `fast` | 150ms | Micro-interactions (hover, focus rings) |
+| `normal` | 200ms | Default transitions (fade, scale) |
+| `slow` | 300ms | Drawer/panel slide-in |
+| `slower` | 500ms | Page transitions |
+| `slowest` | 800ms | Progress ring fill |
+
+```css
+transition-duration: 150ms; /* fast */
+transition-duration: 200ms; /* normal */
+```
+
+## Easing
+
+| Token | Curve | Usage |
+|-------|-------|-------|
+| `default` | `cubic-bezier(0.4, 0, 0.2, 1)` | General transitions |
+| `in` | `cubic-bezier(0.4, 0, 1, 1)` | Elements entering |
+| `out` | `cubic-bezier(0, 0, 0.2, 1)` | Elements leaving |
+| `inOut` | `cubic-bezier(0.4, 0, 0.2, 1)` | Symmetric transitions |
+| `spring` | `cubic-bezier(0.34, 1.56, 0.64, 1)` | Bouncy/springy effects |
+
+## Named Animations
+
+These are registered in the Tailwind preset and usable as utility classes:
+
+| Class | Description |
+|-------|-------------|
+| `animate-fade-in` | Fade from opacity 0 to 1 (200ms) |
+| `animate-fade-out` | Fade from opacity 1 to 0 (200ms) |
+| `animate-scale-in` | Scale from 95% + fade in (200ms) |
+| `animate-slide-in-from-top` | Slide down from above (200ms) |
+| `animate-slide-in-from-bottom` | Slide up from below (200ms) |
+| `animate-accordion-down` | Expand accordion panel (200ms) |
+| `animate-accordion-up` | Collapse accordion panel (200ms) |
+| `animate-status-pulse` | Repeating opacity pulse (2s) |
+| `animate-count-fade-in` | Fade + slight upward slide (300ms) |
+| `animate-ring-fill` | SVG stroke fill animation (800ms) |
+
+```tsx
+<div className="animate-fade-in">Fades in on mount</div>
+```
+
+## Usage in TypeScript
+
+```ts
+import { duration, easing, keyframes, animation } from '@edge/tokens'
+
+// Use in CSS-in-JS or inline styles
+const style = {
+  transitionDuration: duration.normal,
+  transitionTimingFunction: easing.default,
+}
+```

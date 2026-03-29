@@ -1,0 +1,50 @@
+# Label
+
+An accessible form label that pairs with form controls, built on Radix UI Label.
+
+## Import
+
+```tsx
+import { Label } from '@edge/ui'
+```
+
+## Usage
+
+```tsx
+import { Input } from '@edge/ui'
+
+<div className="flex flex-col gap-1.5">
+  <Label htmlFor="email">Email address</Label>
+  <Input id="email" type="email" placeholder="you@example.com" />
+</div>
+```
+
+## With required indicator
+
+```tsx
+<Label htmlFor="name">
+  Name <span className="text-destructive">*</span>
+</Label>
+```
+
+## Disabled state
+
+When the associated control is disabled, the label is automatically styled as disabled:
+
+```tsx
+<div className="flex flex-col gap-1.5">
+  <Label htmlFor="disabled-field">Disabled Field</Label>
+  <Input id="disabled-field" disabled />
+</div>
+```
+
+## API
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `htmlFor` | `string` | — | Associates the label with a form control by id |
+| `className` | `string` | — | Additional CSS classes |
+
+All standard HTML `label` attributes are also supported. The label inherits `peer-disabled` styles to match the disabled state of its paired control.

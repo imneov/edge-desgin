@@ -1,0 +1,85 @@
+# useKeyboardShortcut
+
+Registers a keyboard shortcut handler. Supports modifier keys and custom event targets.
+
+## Import
+
+```tsx
+import { useKeyboardShortcut } from '@edge/hooks'
+```
+
+## Usage
+
+```tsx
+useKeyboardShortcut(
+  { key: 'k', metaKey: true },
+  () => setCommandPaletteOpen(true)
+)
+```
+
+## With Ctrl+S save
+
+```tsx
+useKeyboardShortcut(
+  { key: 's', ctrlKey: true },
+  (event) => {
+    event.preventDefault()
+    handleSave()
+  }
+)
+```
+
+## Conditional activation
+
+```tsx
+useKeyboardShortcut(
+  { key: 'Escape' },
+  () => setOpen(false),
+  { enabled: isOpen }
+)
+```
+
+## Scoped to a specific element
+
+```tsx
+const inputRef = useRef<HTMLInputElement>(null)
+
+useKeyboardShortcut(
+  { key: 'Enter' },
+  handleSubmit,
+  { target: inputRef.current ?? undefined }
+)
+```
+
+## API
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `shortcut` | `KeyboardShortcut` | Key combination to match |
+| `handler` | `(event: KeyboardEvent) => void` | Called when shortcut matches |
+| `options` | `object` | Optional configuration |
+
+### `KeyboardShortcut`
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `key` | `string` | — | Key name (case-insensitive, e.g. `'k'`, `'Escape'`, `'Enter'`) |
+| `ctrlKey` | `boolean` | `false` | Requires Ctrl |
+| `metaKey` | `boolean` | `false` | Requires Meta (⌘ on Mac) |
+| `shiftKey` | `boolean` | `false` | Requires Shift |
+| `altKey` | `boolean` | `false` | Requires Alt/Option |
+
+### `options`
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `enabled` | `boolean` | `true` | Whether the listener is active |
+| `target` | `EventTarget` | `window` | Element to attach the listener to |
+
+### Notes
+
+- Always uses the latest handler reference (no stale closure issues)
+- Key comparison is case-insensitive
+- Cleans up on unmount or when `enabled` / `target` changes
