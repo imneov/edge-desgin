@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+
+    /* Surface Colors — Edge Console page backgrounds */
+    --surface-page: #EFF4F9;
+    --surface-toolbar: #F9FBFD;
+    --surface-section: #F5F7FA;
+    --surface-monitoring: #F3F4F6;
+
+    /* Cockpit Theme — Industrial Monitoring Dashboard (Light Mode) */
+    --cockpit-bg: #F8FAFC;
+    --cockpit-bg-secondary: #FFFFFF;
+    --cockpit-bg-tertiary: #F9FAFB;
+    --cockpit-bg-elevated: #FFFFFF;
+    --cockpit-border: #E2E8F0;
+    --cockpit-border-subtle: #F1F5F9;
+    --cockpit-border-hover: #CBD5E1;
+    --cockpit-text: #1E293B;
+    --cockpit-text-secondary: #475569;
+    --cockpit-text-muted: #6B7280;
+    --cockpit-accent: #3B82F6;
+    --cockpit-accent-muted: rgba(59, 130, 246, 0.1);
+    --cockpit-success: #14B8A6;
+    --cockpit-success-muted: rgba(20, 184, 166, 0.1);
+    --cockpit-warning: #F59E0B;
+    --cockpit-warning-muted: rgba(245, 158, 11, 0.1);
+    --cockpit-danger: #EF4444;
+    --cockpit-danger-muted: rgba(239, 68, 68, 0.1);
+    --cockpit-purple: #8B5CF6;
+    --cockpit-purple-muted: rgba(139, 92, 246, 0.1);
+
+    /* Topology Colors */
+    --topology-bg: #F5F7FA;
+    --cluster: #2D3748;
+    --cluster-foreground: #FFFFFF;
+    --node-group: #10B981;
+    --node-group-foreground: #FFFFFF;
+    --node: #10B981;
+    --node-foreground: #065F46;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
