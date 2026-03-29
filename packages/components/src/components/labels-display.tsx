@@ -46,10 +46,14 @@ export function LabelsDisplay({
     <div className={`flex flex-wrap gap-2 ${className}`}>
       {Object.entries(labels).map(([key, value]) => (
         <div key={key} className="inline-flex">
-          <span className="bg-gray-800 text-white px-2 py-1 text-xs rounded-l border">
+          <span
+            style={{ backgroundColor: "#1e293b", color: "white", padding: "0.25rem 0.5rem", fontSize: "0.75rem", borderRadius: "0.25rem 0 0 0.25rem" }}
+          >
             {key}
           </span>
-          <span className="bg-gray-100 text-gray-800 px-2 py-1 text-xs rounded-r border border-l-0">
+          <span
+            style={{ backgroundColor: "#f1f5f9", color: "#1e293b", padding: "0.25rem 0.5rem", fontSize: "0.75rem", borderRadius: "0 0.25rem 0.25rem 0" }}
+          >
             {value}
           </span>
         </div>
