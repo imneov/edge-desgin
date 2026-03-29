@@ -1,3 +1,328 @@
 # Terminal
 
-Coming soon.
+基于 xterm.js + WebSocket 的交互式终端组件，支持节点终端、Pod 终端和设备终端三种场景。
+
+> **注意**：Terminal 组件依赖 xterm.js 运行时和 WebSocket 连接，暂不抽取到 `@edge/components`，仅在 `edge-console` 内部使用。
+
+---
+
+## 组件概览
+
+| 文件 | 类型 | 用途 |
+|------|------|------|
+| `WebTerminal.tsx` | React 组件 | 核心终端，内嵌 xterm.js + WebSocket 连接 |
+| `DynamicWebTerminal.tsx` | 包装器 | Next.js 动态加载（禁用 SSR） |
+| `TerminalPage.tsx` | 布局组件 | 全页终端，含顶部导航栏和命令参考面板 |
+| `TerminalModal.tsx` | 弹窗组件 | 全屏遮罩终端（createPortal） |
+| `PodLogModal.tsx` | 弹窗组件 | Pod 容器日志查看器（HTTP 流式读取） |
+| `CommandReference.tsx` | 面板组件 | kubectl 命令参考，支持搜索和复制 |
+| `TerminalWebSocket.ts` | 工具类 | WebSocket 连接管理（含重连逻辑） |
+| `types.ts` | 类型定义 | 消息协议、主题配置、连接状态等 |
+| `index.ts` | 入口文件 | 统一导出 |
+
+---
+
+## 架构
+
+### WebSocket 连接流程
+
+```
+浏览器 WebTerminal
+     │
+     │  WebSocket 连接
+     ▼
+edge-apiserver  /oapis/terminal.theriseunion.io/v1alpha1/...
+     │
+     │  反向代理 + 权限校验
+     ▼
+目标节点 / Pod 容器 (exec)
+```
+
+WebSocket URL 规则：
+
+```
+节点终端：{ws|wss}://{host}[/clusters/{clusterId}]/oapis/terminal.theriseunion.io/v1alpha1/nodes/{nodeName}/exec
+
+Pod 终端：{ws|wss}://{host}[/clusters/{clusterId}]/oapis/terminal.theriseunion.io/v1alpha1/namespaces/{namespace}/pods/{podName}/exec?container={container}&shell={shell}
+```
+
+`NEXT_PUBLIC_API_SERVER` 环境变量控制后端地址；未设置时自动回退到浏览器当前 host。
+
+### 消息协议
+
+WebSocket 消息均为 JSON 格式：
+
+```ts
+interface TerminalMessage {
+  Op: 'stdout' | 'stdin' | 'stderr' | 'resize'
+  Data?: string   // stdout / stdin / stderr 内容
+  Rows?: number   // resize 时的行数
+  Cols?: number   // resize 时的列数
+}
+```
+
+| Op | 方向 | 说明 |
+|----|------|------|
+| `stdin` | 客户端 → 服务端 | 用户键盘输入 |
+| `stdout` | 服务端 → 客户端 | 终端输出 |
+| `stderr` | 服务端 → 客户端 | 错误输出 |
+| `resize` | 客户端 → 服务端 | 终端窗口大小变化 |
+
+### Pod 日志流
+
+`PodLogModal` 通过 Kubernetes API 代理路径以 HTTP ReadableStream 获取日志，不使用 WebSocket：
+
+```
+GET /clusters/{clusterId}/api/v1/namespaces/{namespace}/pods/{podName}/log?container={container}&follow=false
+```
+
+---
+
+## 组件 API
+
+### WebTerminal
+
+核心终端组件，直接管理 xterm.js 实例和 WebSocket 生命周期。
+
+```tsx
+import WebTerminal from '@/components/terminal/WebTerminal'
+```
+
+| Prop | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `nodeName` | `string` | ✅ | — | 节点名称（node 类型）或 Pod 名称（pod 类型） |
+| `type` | `'node' \| 'pod'` | ✅ | — | 终端连接类型 |
+| `onClose` | `() => void` | — | — | 关闭回调，传入时显示关闭按钮 |
+| `className` | `string` | — | — | 额外样式类 |
+| `namespace` | `string` | pod 类型必填 | — | Pod 所在命名空间 |
+| `podName` | `string` | pod 类型必填 | — | Pod 名称 |
+| `container` | `string` | — | — | 容器名称 |
+| `shell` | `string` | — | — | Shell 类型（如 `sh`、`bash`） |
+| `clusterId` | `string` | — | — | 多集群环境下的集群 ID，生成 `/clusters/{id}` 路径前缀 |
+
+**功能特性：**
+- 连接状态指示（黄色=连接中，绿色=已连接，红色=断开）
+- 复制选中文本
+- 下载终端缓冲区为 `.log` 文件
+- 手动重连按钮（断开状态时显示）
+- 窗口 resize 自动同步终端尺寸
+
+### DynamicWebTerminal
+
+Next.js 动态导入包装，禁用 SSR 以避免 xterm.js 访问浏览器 API 报错。
+
+```tsx
+import WebTerminal from '@/components/terminal/DynamicWebTerminal'
+// 接口与 WebTerminal 相同，加载中显示占位符
+```
+
+### TerminalPage
+
+全页终端布局，包含顶部导航栏和可折叠的命令参考面板。
+
+```tsx
+import { TerminalPage } from '@/components/terminal'
+```
+
+| Prop | 类型 | 必填 | 默认值 | 说明 |
+|------|------|------|--------|------|
+| `nodeName` | `string` | ✅ | — | 节点或 Pod 名称 |
+| `backUrl` | `string` | — | `'/nodes'` | 返回链接地址 |
+| `minimal` | `boolean` | — | `false` | 最小化模式：隐藏顶部导航，保留命令参考面板 |
+| `type` | `'node' \| 'pod'` | — | `'node'` | 终端类型，影响标题和返回文本 |
+| `namespace` | `string` | — | — | Pod 命名空间 |
+| `podName` | `string` | — | — | Pod 名称 |
+| `container` | `string` | — | — | 容器名称 |
+| `shell` | `string` | — | — | Shell 类型 |
+| `clusterId` | `string` | — | — | 集群 ID |
+
+**两种模式对比：**
+
+| | `minimal={false}` （默认） | `minimal={true}` |
+|--|--|--|
+| 顶部导航栏 | 显示（含返回链接、标题） | 隐藏 |
+| 命令参考面板 | 默认显示，可折叠 | 默认显示，可折叠 |
+| 适用场景 | 独立终端页面 | 内嵌于 iframe 或分屏布局 |
+
+### TerminalModal
+
+全屏终端弹窗，通过 `createPortal` 挂载到 `document.body`，`z-index: 9999`。
+
+```tsx
+import TerminalModal from '@/components/terminal/TerminalModal'
+```
+
+| Prop | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `isOpen` | `boolean` | ✅ | 控制弹窗显隐 |
+| `nodeName` | `string` | ✅ | 节点或 Pod 名称 |
+| `type` | `'node' \| 'pod'` | ✅ | 终端类型 |
+| `namespace` | `string` | — | Pod 命名空间 |
+| `podName` | `string` | — | Pod 名称 |
+| `container` | `string` | — | 容器名称 |
+| `shell` | `string` | — | Shell 类型 |
+| `onClose` | `() => void` | ✅ | 关闭回调 |
+
+布局：左侧 `flex-1` 为终端区域，右侧固定 `w-80` 为命令参考面板。
+
+### PodLogModal
+
+Pod 容器日志查看器，通过 Kubernetes API 代理路径流式读取日志。
+
+```tsx
+import PodLogModal from '@/components/terminal/PodLogModal'
+```
+
+| Prop | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `isOpen` | `boolean` | ✅ | 控制弹窗显隐 |
+| `clusterId` | `string` | ✅ | 集群 ID |
+| `namespace` | `string` | ✅ | 命名空间 |
+| `podName` | `string` | ✅ | Pod 名称 |
+| `containerName` | `string` | ✅ | 容器名称 |
+| `onClose` | `() => void` | ✅ | 关闭回调 |
+
+**功能特性：**
+- 流式读取（ReadableStream），首帧到达时结束 loading 状态
+- 自动滚动到底部
+- 下载日志为 `{podName}-{containerName}-logs.txt`
+- 重新加载按钮（abort 当前流后重新发起请求）
+- 解析 Kubernetes API 错误格式（`{ message, reason }`）
+
+### CommandReference
+
+kubectl 命令速查面板，支持搜索和一键复制。
+
+```tsx
+import CommandReference from '@/components/terminal/CommandReference'
+```
+
+| Prop | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `onCommandClick` | `(command: string) => void` | — | 点击命令条目时的回调（传入 example 或 usage） |
+| `className` | `string` | — | 额外样式类 |
+
+内置命令分类：命令参考、自定义输出、执行操作、查看源、查看节点详情。默认展开前两个分类。
+
+### TerminalWebSocket（工具类）
+
+可复用的 WebSocket 连接管理类，含指数退避重连（最多 3 次）。
+
+```ts
+import { TerminalWebSocket } from '@/components/terminal'
+
+const ws = new TerminalWebSocket({
+  nodeName: 'node-01',
+  onMessage: (msg) => { /* TerminalMessage */ },
+  onConnectionChange: (connected) => { /* boolean */ },
+  onError: (error) => { /* string */ },
+})
+
+await ws.connect()
+ws.sendInput('ls -la\n')
+ws.sendResize(40, 120)
+ws.disconnect()
+```
+
+| 方法 | 说明 |
+|------|------|
+| `connect()` | 建立 WebSocket 连接（返回 Promise） |
+| `sendInput(data)` | 发送键盘输入（Op: stdin） |
+| `sendResize(rows, cols)` | 发送窗口大小变化（Op: resize） |
+| `disconnect()` | 正常关闭连接（code 1000），禁止自动重连 |
+| `isConnected()` | 返回当前连接状态 |
+
+> **注意**：`WebTerminal.tsx` 自行管理 WebSocket 连接（内联实现），并未使用 `TerminalWebSocket` 类。该类为可复用工具，供未来抽取或自定义集成使用。
+
+---
+
+## 使用场景
+
+### 场景 1：节点终端页面（Boss 视图）
+
+路由：`/boss/clusters/[id]/nodes/[nodeId]/terminal`
+
+```tsx
+// 路由组件通过动态导入加载 TerminalPage（禁用 SSR）
+const TerminalPage = dynamic(
+  () => import('@/components/terminal').then(mod => ({ default: mod.TerminalPage })),
+  { ssr: false }
+)
+
+<TerminalPage
+  nodeName={params.nodeId}
+  backUrl={`/boss/clusters/${params.id}/nodes`}
+  minimal={searchParams.get('minimal') === '1'}
+  clusterId={params.id}
+/>
+```
+
+### 场景 2：Pod 终端页面
+
+路由：`/boss/clusters/[id]/namespaces/[namespace]/pods/[podId]/terminal`
+
+```tsx
+<TerminalPage
+  nodeName={params.podId}
+  type="pod"
+  namespace={params.namespace}
+  podName={params.podId}
+  container={searchParams.get('container')}
+  shell={searchParams.get('shell') || 'sh'}
+  clusterId={params.id}
+/>
+```
+
+### 场景 3：Express 租户节点终端
+
+路由：`/express/clusters/[id]/workspaces/[workspaceId]/nodegroups/[nodeGroupId]/nodes/[nodeId]/terminal`
+
+```tsx
+<TerminalPage
+  nodeName={params.nodeId}
+  backUrl={`/express/clusters/${params.id}/workspaces/${params.workspaceId}/nodegroups/${params.nodeGroupId}/nodes`}
+  minimal={searchParams.get('minimal') === '1'}
+/>
+```
+
+### 场景 4：Pod 日志（内嵌弹窗）
+
+```tsx
+<PodLogModal
+  isOpen={showLogs}
+  clusterId="hw101"
+  namespace="default"
+  podName="nginx-abc"
+  containerName="nginx"
+  onClose={() => setShowLogs(false)}
+/>
+```
+
+---
+
+## 路由覆盖
+
+共 7 个终端路由页面：
+
+| 视图层 | 路由 | 类型 |
+|--------|------|------|
+| boss | `/boss/clusters/[id]/nodes/[nodeId]/terminal` | 节点终端 |
+| boss | `/boss/clusters/[id]/edge-nodes/[nodeId]/terminal` | 边缘节点终端 |
+| boss | `/boss/clusters/[id]/namespaces/[namespace]/pods/[podId]/terminal` | Pod 终端 |
+| namespace | `/boss/clusters/[id]/workspaces/[workspaceId]/namespaces/[namespace]/pods/[podId]/terminal` | Pod 终端 |
+| nodegroup | `/boss/clusters/[id]/nodegroups/[nodeGroupId]/nodes/[nodeId]/terminal` | 节点组节点终端 |
+| express | `/express/clusters/[id]/workspaces/[workspaceId]/nodegroups/[nodeGroupId]/nodes/[nodeId]/terminal` | 租户节点终端 |
+| express | `/express/clusters/[id]/workspaces/[workspaceId]/nodegroups/[nodeGroupId]/device-profile/[deviceProfileId]/terminal` | 设备终端 |
+
+所有路由均通过 `?minimal=1` query 参数切换为最小化模式。
+
+---
+
+## 后续计划
+
+Terminal 组件依赖 xterm.js（纯浏览器运行时）和 WebSocket，不满足 `@edge/components` 的 SSR 兼容要求，当前保留在 `edge-console` 内部。
+
+待条件成熟后可考虑：
+1. 将 `TerminalWebSocket`、`types.ts` 提取到 `@edge/utils`
+2. 将 `CommandReference` 提取到 `@edge/components`（无运行时依赖）
+3. `WebTerminal` / `TerminalPage` / `TerminalModal` 以 CSR-only package 形式单独发布
