@@ -30,7 +30,7 @@ All selectors share these features:
 
 Select clusters with support for alias names.
 
-<Preview>
+<Preview className="min-h-[260px] items-start">
   <ClusterSelector
     value="hw101"
     onValueChange={(value) => console.log('Selected:', value)}
@@ -105,7 +105,7 @@ interface ClusterData {
 
 Select workspaces within the platform.
 
-<Preview>
+<Preview className="min-h-[220px] items-start">
   <WorkspaceSelector
     value="workspace-prod"
     onValueChange={(value) => console.log('Selected:', value)}
@@ -157,7 +157,7 @@ function WorkspaceFilter() {
 
 Select Kubernetes namespaces within a cluster or workspace.
 
-<Preview>
+<Preview className="min-h-[260px] items-start">
   <NamespaceSelector
     value="default"
     onValueChange={(value) => console.log('Selected:', value)}
@@ -210,7 +210,7 @@ function NamespaceFilter() {
 
 Select edge node groups for edge resource management.
 
-<Preview>
+<Preview className="min-h-[220px] items-start">
   <NodeGroupSelector
     value="node-group-edge-01"
     onValueChange={(value) => console.log('Selected:', value)}

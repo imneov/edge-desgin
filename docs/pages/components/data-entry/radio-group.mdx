@@ -11,33 +11,198 @@ A group of radio buttons allowing single selection from a list of options.
 import { RadioGroup, RadioGroupItem } from '@edge/ui'
 ```
 
-## Usage
+## 集群类型选择
+
+卡片式单选，用于创建集群向导 Step 0（来自 `CreateClusterWizard.tsx`）。
 
 <Preview center={false}>
-  <RadioGroup defaultValue="option-a">
-    <div className="flex items-center gap-2">
-      <RadioGroupItem value="option-a" id="rg-option-a" />
-      <Label htmlFor="rg-option-a">Option A</Label>
-    </div>
-    <div className="flex items-center gap-2">
-      <RadioGroupItem value="option-b" id="rg-option-b" />
-      <Label htmlFor="rg-option-b">Option B</Label>
-    </div>
+  <RadioGroup defaultValue="manual" className="grid grid-cols-2 gap-3 w-full max-w-sm">
+    <label className="flex cursor-pointer rounded-lg border border-blue-500 bg-blue-50 p-3">
+      <RadioGroupItem value="manual" className="sr-only" />
+      <div>
+        <div className="font-medium text-blue-900 text-sm">手动导入</div>
+        <div className="text-xs text-gray-500 mt-0.5">提供 kubeconfig 导入已有集群</div>
+      </div>
+    </label>
+    <label className="flex cursor-pointer rounded-lg border border-gray-200 bg-white p-3">
+      <RadioGroupItem value="auto" className="sr-only" />
+      <div>
+        <div className="font-medium text-gray-900 text-sm">自动创建</div>
+        <div className="text-xs text-gray-500 mt-0.5">使用 vCluster 创建虚拟集群</div>
+      </div>
+    </label>
   </RadioGroup>
 </Preview>
 
 ```tsx
-import { Label } from '@edge/ui'
+import { useState } from 'react'
 
-<RadioGroup defaultValue="option-a">
-  <div className="flex items-center gap-2">
-    <RadioGroupItem value="option-a" id="option-a" />
-    <Label htmlFor="option-a">Option A</Label>
-  </div>
-  <div className="flex items-center gap-2">
-    <RadioGroupItem value="option-b" id="option-b" />
-    <Label htmlFor="option-b">Option B</Label>
-  </div>
+type ClusterType = 'manual' | 'auto'
+
+function ClusterTypeStep() {
+  const [clusterType, setClusterType] = useState<ClusterType>('manual')
+  return (
+    <RadioGroup
+      value={clusterType}
+      onValueChange={(v) => setClusterType(v as ClusterType)}
+      className="grid grid-cols-2 gap-4"
+    >
+      <label className={cn(
+        "flex cursor-pointer rounded-lg border p-4 transition-colors",
+        clusterType === 'manual'
+          ? "border-blue-600 bg-blue-50"
+          : "border-gray-200 hover:border-gray-300"
+      )}>
+        <RadioGroupItem value="manual" className="sr-only" />
+        <div>
+          <div className={cn("font-medium", clusterType === 'manual' ? "text-blue-900" : "text-gray-900")}>
+            手动导入
+          </div>
+          <div className="text-sm text-gray-500 mt-1">提供 kubeconfig 配置，导入已有的 Kubernetes 集群</div>
+        </div>
+      </label>
+      <label className={cn(
+        "flex cursor-pointer rounded-lg border p-4 transition-colors",
+        clusterType === 'auto'
+          ? "border-blue-600 bg-blue-50"
+          : "border-gray-200 hover:border-gray-300"
+      )}>
+        <RadioGroupItem value="auto" className="sr-only" />
+        <div>
+          <div className={cn("font-medium", clusterType === 'auto' ? "text-blue-900" : "text-gray-900")}>
+            自动创建
+          </div>
+          <div className="text-sm text-gray-500 mt-1">使用 vCluster 自动创建轻量级虚拟集群</div>
+        </div>
+      </label>
+    </RadioGroup>
+  )
+}
+```
+
+## 边缘运行时选择
+
+列表式单选带推荐标签，用于创建集群向导 Step 2（来自 `CreateClusterWizard.tsx`）。
+
+<Preview center={false}>
+  <RadioGroup defaultValue="openyurt" className="space-y-2 w-full max-w-sm">
+    <label className="flex items-center gap-3 cursor-pointer rounded-lg border border-gray-200 bg-white p-2.5">
+      <RadioGroupItem value="none" id="rt-none" />
+      <div>
+        <Label htmlFor="rt-none" className="font-medium text-sm cursor-pointer">不安装边缘组件</Label>
+        <div className="text-xs text-gray-500">作为普通 Kubernetes 集群使用</div>
+      </div>
+    </label>
+    <label className="flex items-center gap-3 cursor-pointer rounded-lg border border-blue-300 bg-blue-50 p-2.5">
+      <RadioGroupItem value="openyurt" id="rt-openyurt" />
+      <div className="flex-1">
+        <div className="flex items-center gap-1.5">
+          <Label htmlFor="rt-openyurt" className="font-medium text-sm cursor-pointer text-blue-900">OpenYurt</Label>
+          <span className="text-xs px-1.5 py-0.5 bg-green-100 text-green-700 rounded">推荐</span>
+        </div>
+        <div className="text-xs text-gray-500">阿里巴巴开源的云边协同平台</div>
+      </div>
+    </label>
+    <label className="flex items-center gap-3 cursor-pointer rounded-lg border border-gray-200 bg-white p-2.5">
+      <RadioGroupItem value="kubeedge" id="rt-kubeedge" />
+      <div>
+        <Label htmlFor="rt-kubeedge" className="font-medium text-sm cursor-pointer">KubeEdge</Label>
+        <div className="text-xs text-gray-500">CNCF 边缘计算项目</div>
+      </div>
+    </label>
+  </RadioGroup>
+</Preview>
+
+```tsx
+type EdgeRuntime = 'none' | 'openyurt' | 'kubeedge'
+
+function EdgeRuntimeStep() {
+  const [edgeRuntime, setEdgeRuntime] = useState<EdgeRuntime>('openyurt')
+  return (
+    <RadioGroup
+      value={edgeRuntime}
+      onValueChange={(v) => setEdgeRuntime(v as EdgeRuntime)}
+      className="space-y-3"
+    >
+      {[
+        { value: 'none', label: '不安装边缘组件', desc: '作为普通 Kubernetes 集群使用' },
+        { value: 'openyurt', label: 'OpenYurt', desc: '阿里巴巴开源的云边协同平台', recommended: true },
+        { value: 'kubeedge', label: 'KubeEdge', desc: 'CNCF 边缘计算项目' },
+      ].map(({ value, label, desc, recommended }) => (
+        <label key={value} className={cn(
+          "flex items-center gap-3 cursor-pointer rounded-lg border p-3 transition-colors",
+          edgeRuntime === value ? "border-blue-300 bg-blue-50" : "border-gray-200 hover:border-gray-300"
+        )}>
+          <RadioGroupItem value={value} id={`rt-${value}`} />
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <Label htmlFor={`rt-${value}`} className="font-medium cursor-pointer">
+                {label}
+              </Label>
+              {recommended && (
+                <span className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded">推荐</span>
+              )}
+            </div>
+            <div className="text-sm text-gray-500 mt-0.5">{desc}</div>
+          </div>
+        </label>
+      ))}
+    </RadioGroup>
+  )
+}
+```
+
+## 节点组选择对话框
+
+在对话框中从列表选择节点组（来自 `NodeGroupSelectDialog.tsx`）。
+
+<Preview center={false}>
+  <RadioGroup defaultValue="node-group-edge-01" className="space-y-1 w-full max-w-sm">
+    <label className="flex items-start gap-3 cursor-pointer rounded p-2.5 bg-blue-50 border border-blue-200">
+      <RadioGroupItem value="node-group-edge-01" id="ng-01" className="mt-0.5" />
+      <Label htmlFor="ng-01" className="flex-1 cursor-pointer">
+        <div className="font-medium text-gray-900 text-sm">edge-group-01</div>
+        <div className="text-xs text-gray-500 mt-0.5">节点数: 3 · 状态: Ready</div>
+      </Label>
+    </label>
+    <label className="flex items-start gap-3 cursor-pointer rounded p-2.5 hover:bg-gray-50">
+      <RadioGroupItem value="node-group-edge-02" id="ng-02" className="mt-0.5" />
+      <Label htmlFor="ng-02" className="flex-1 cursor-pointer">
+        <div className="font-medium text-gray-900 text-sm">edge-group-02</div>
+        <div className="text-xs text-gray-500 mt-0.5">节点数: 5 · 状态: Ready</div>
+      </Label>
+    </label>
+    <label className="flex items-start gap-3 cursor-pointer rounded p-2.5 hover:bg-gray-50">
+      <RadioGroupItem value="node-group-factory" id="ng-factory" className="mt-0.5" />
+      <Label htmlFor="ng-factory" className="flex-1 cursor-pointer">
+        <div className="font-medium text-gray-900 text-sm">factory-group</div>
+        <div className="text-xs text-gray-500 mt-0.5">节点数: 12 · 状态: Ready</div>
+      </Label>
+    </label>
+  </RadioGroup>
+</Preview>
+
+```tsx
+<RadioGroup
+  value={selectedNodeGroup}
+  onValueChange={setSelectedNodeGroup}
+  className="p-2"
+>
+  {nodeGroups.map((ng) => (
+    <label
+      key={ng.name}
+      className={cn(
+        "flex items-start gap-3 cursor-pointer rounded p-3 transition-colors",
+        selectedNodeGroup === ng.name ? "bg-blue-50 border border-blue-200" : "hover:bg-gray-50"
+      )}
+    >
+      <RadioGroupItem value={ng.name} id={ng.name} className="mt-0.5" />
+      <Label htmlFor={ng.name} className="flex-1 cursor-pointer">
+        <div className="font-medium text-gray-900">{ng.displayName}</div>
+        <div className="text-sm text-gray-500 mt-1">节点数: {ng.nodeCount} · 状态: {ng.status}</div>
+      </Label>
+    </label>
+  ))}
 </RadioGroup>
 ```
 
@@ -47,56 +212,20 @@ import { Label } from '@edge/ui'
 import { useState } from 'react'
 
 function ControlledRadioGroup() {
-  const [value, setValue] = useState('option-a')
+  const [value, setValue] = useState('manual')
   return (
     <RadioGroup value={value} onValueChange={setValue}>
       <div className="flex items-center gap-2">
-        <RadioGroupItem value="option-a" id="r-a" />
-        <Label htmlFor="r-a">Option A</Label>
+        <RadioGroupItem value="manual" id="r-manual" />
+        <Label htmlFor="r-manual">手动导入</Label>
       </div>
       <div className="flex items-center gap-2">
-        <RadioGroupItem value="option-b" id="r-b" />
-        <Label htmlFor="r-b">Option B</Label>
+        <RadioGroupItem value="auto" id="r-auto" />
+        <Label htmlFor="r-auto">自动创建</Label>
       </div>
     </RadioGroup>
   )
 }
-```
-
-## Horizontal layout
-
-<Preview>
-  <RadioGroup defaultValue="sm" className="flex gap-4">
-    <div className="flex items-center gap-2">
-      <RadioGroupItem value="sm" id="rg-size-sm" />
-      <Label htmlFor="rg-size-sm">Small</Label>
-    </div>
-    <div className="flex items-center gap-2">
-      <RadioGroupItem value="md" id="rg-size-md" />
-      <Label htmlFor="rg-size-md">Medium</Label>
-    </div>
-    <div className="flex items-center gap-2">
-      <RadioGroupItem value="lg" id="rg-size-lg" />
-      <Label htmlFor="rg-size-lg">Large</Label>
-    </div>
-  </RadioGroup>
-</Preview>
-
-```tsx
-<RadioGroup defaultValue="sm" className="flex gap-4">
-  <div className="flex items-center gap-2">
-    <RadioGroupItem value="sm" id="size-sm" />
-    <Label htmlFor="size-sm">Small</Label>
-  </div>
-  <div className="flex items-center gap-2">
-    <RadioGroupItem value="md" id="size-md" />
-    <Label htmlFor="size-md">Medium</Label>
-  </div>
-  <div className="flex items-center gap-2">
-    <RadioGroupItem value="lg" id="size-lg" />
-    <Label htmlFor="size-lg">Large</Label>
-  </div>
-</RadioGroup>
 ```
 
 ## API

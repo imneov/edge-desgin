@@ -11,23 +11,67 @@ A controlled checkbox input with custom styling.
 import { Checkbox } from '@edge/ui'
 ```
 
-## Usage
+## 表格全选
 
-<Preview>
-  <Checkbox />
-  <Checkbox defaultChecked />
+集群列表、工作负载列表等表格的全选 / 行选模式（来自 `cluster-list.tsx`、`WorkloadsList.tsx`）。
+
+<Preview center={false}>
+  <div className="space-y-2 w-64">
+    <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
+      <Checkbox id="table-select-all" defaultChecked />
+      <Label htmlFor="table-select-all" className="text-sm font-medium cursor-pointer">全选</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Checkbox id="table-row-1" defaultChecked />
+      <Label htmlFor="table-row-1" className="text-sm cursor-pointer">hw101</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Checkbox id="table-row-2" defaultChecked />
+      <Label htmlFor="table-row-2" className="text-sm cursor-pointer">hk-test</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Checkbox id="table-row-3" />
+      <Label htmlFor="table-row-3" className="text-sm cursor-pointer">staging-01</Label>
+    </div>
+  </div>
 </Preview>
 
 ```tsx
-<Checkbox />
+{/* 表格 Header — 全选 */}
+<Checkbox
+  checked={selectedItems.length === items.length && items.length > 0}
+  onCheckedChange={handleSelectAll}
+/>
+
+{/* 表格 Row — 单行 */}
+<Checkbox
+  checked={selectedItems.includes(item.id)}
+  onCheckedChange={(checked) => handleSelectItem(item.id, !!checked)}
+/>
 ```
 
-## With label
+## 配置开关
 
-<Preview>
-  <div className="flex items-center gap-2">
-    <Checkbox id="terms-preview" />
-    <Label htmlFor="terms-preview">Accept terms and conditions</Label>
+表单内联配置项（来自 `CreateSecretModal.tsx`、`AppDeploymentModal.tsx`、`AddNodeDialog.tsx`）。
+
+<Preview center={false}>
+  <div className="space-y-3">
+    <div className="flex items-center gap-2">
+      <Checkbox id="skip-tls" />
+      <Label htmlFor="skip-tls" className="text-sm cursor-pointer">跳过证书验证</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Checkbox id="auto-runtime" defaultChecked />
+      <Label htmlFor="auto-runtime" className="text-sm cursor-pointer">自动安装容器运行时</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Checkbox id="private-registry" />
+      <Label htmlFor="private-registry" className="text-sm cursor-pointer">私有仓库</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Checkbox id="enable-service" defaultChecked />
+      <Label htmlFor="enable-service" className="text-sm cursor-pointer">启用服务</Label>
+    </div>
   </div>
 </Preview>
 
@@ -35,9 +79,69 @@ import { Checkbox } from '@edge/ui'
 import { Label } from '@edge/ui'
 
 <div className="flex items-center gap-2">
-  <Checkbox id="terms" />
-  <Label htmlFor="terms">Accept terms and conditions</Label>
+  <Checkbox
+    id="skip-tls"
+    checked={formData.skipTlsVerify}
+    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, skipTlsVerify: !!checked }))}
+  />
+  <Label htmlFor="skip-tls">跳过证书验证</Label>
 </div>
+```
+
+## 多选对话框
+
+授权/批量选择场景，带全选 Header（来自 `AuthorizeProjectsDialog.tsx`）。
+
+<Preview center={false}>
+  <div className="space-y-2 w-72">
+    <div className="flex items-center gap-2 pb-2 mb-1 border-b border-gray-200">
+      <Checkbox id="dialog-select-all" />
+      <Label htmlFor="dialog-select-all" className="text-sm font-medium cursor-pointer">全选（4 个可选项目）</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Checkbox id="proj-1" defaultChecked />
+      <Label htmlFor="proj-1" className="text-sm cursor-pointer">edge-ota</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Checkbox id="proj-2" />
+      <Label htmlFor="proj-2" className="text-sm cursor-pointer">edge-console</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Checkbox id="proj-3" defaultChecked disabled />
+      <Label htmlFor="proj-3" className="text-sm text-gray-400 cursor-not-allowed">edge-apiserver（已授权）</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Checkbox id="proj-4" />
+      <Label htmlFor="proj-4" className="text-sm cursor-pointer">edge-controller</Label>
+    </div>
+  </div>
+</Preview>
+
+```tsx
+{/* 全选 Header */}
+<div className="flex items-center gap-2 pb-3 mb-3 border-b">
+  <Checkbox
+    id="select-all"
+    checked={isAllSelected}
+    onCheckedChange={handleSelectAll}
+  />
+  <label htmlFor="select-all" className="text-sm font-medium cursor-pointer">
+    全选（{selectableItems.length} 个可选项目）
+  </label>
+</div>
+
+{/* 列表项 */}
+{items.map(item => (
+  <div key={item.id} className="flex items-center gap-2">
+    <Checkbox
+      id={item.id}
+      checked={selectedIds.includes(item.id)}
+      disabled={item.alreadyAuthorized}
+      onCheckedChange={(checked) => handleSelect(item.id, !!checked)}
+    />
+    <Label htmlFor={item.id}>{item.name}</Label>
+  </div>
+))}
 ```
 
 ## Controlled
