@@ -1,3 +1,39 @@
-# Dialogs
+# Domain Dialogs
 
-Coming soon.
+Business dialogs for Edge Platform management operations. These are Layer 3 components — they accept props only and do not call APIs directly.
+
+## Layer Rules
+
+| Layer | Package | Responsibility |
+|-------|---------|----------------|
+| **Layer 2** | `@edge/ui` | Generic dialog patterns: `ConfirmDeleteDialog`, `NameConfirmDeleteDialog`, `CreateResourceDialog`, `YamlEditDialog` |
+| **Layer 3** | `@edge/components` | Business dialogs — accept props only, no API calls |
+
+## Dialog Catalog
+
+| Component | Category | Description |
+|-----------|----------|-------------|
+| [`CreateClusterDialog`](./create-dialogs#createclusterdialog) | Create | 导入已有集群或创建 vCluster |
+| [`CreateNamespaceDialog`](./create-dialogs#createnamespacedialog) | Create | 创建命名空间 |
+| [`CreateUserDialog`](./create-dialogs#createuserdialog) | Create | 创建平台用户 |
+| [`EditLabelsDialog`](./edit-dialogs#editlabelsdialog) | Edit | 编辑 K8s 标签（键值对） |
+| [`EditAnnotationsDialog`](./edit-dialogs#editannotationsdialog) | Edit | 编辑 K8s 注解（键值对） |
+| [`EditQuotaDialog`](./edit-dialogs#editquotadialog) | Edit | 编辑命名空间资源配额 |
+| [`EditRoleInfoDialog`](./edit-dialogs#editroleinfodialog) | Edit | 编辑角色显示名称和描述 |
+| [`InviteMemberDialog`](./member-dialogs#invitememberdialog) | Members | 邀请成员并分配角色 |
+
+## Common Pattern
+
+All business dialogs follow this pattern:
+
+```tsx
+interface XxxDialogProps {
+  open: boolean                          // or isOpen
+  onOpenChange: (open: boolean) => void  // or onClose
+  // ... resource-specific props
+  onConfirm: (...) => Promise<void>      // async callback, no API call inside dialog
+  isLoading?: boolean                    // optional external loading state
+}
+```
+
+**Sources:** `edge-console/src/components/dialogs/`, `edge-console/src/components/users/`, `edge-console/src/components/roles/`, `edge-console/src/components/members/`

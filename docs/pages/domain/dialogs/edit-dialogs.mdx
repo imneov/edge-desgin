@@ -1,0 +1,281 @@
+# Edit Dialogs
+
+Business dialogs for editing Edge Platform resource metadata and configuration.
+
+---
+
+## EditLabelsDialog
+
+编辑 Kubernetes 节点标签（Labels）的对话框，支持增删改查键值对。
+
+**Source:** `edge-console/src/components/dialogs/EditLabelsDialog.tsx`
+
+### Import
+
+```tsx
+import { EditLabelsDialog } from '@edge/components'
+```
+
+### Usage
+
+```tsx
+import { useState } from 'react'
+import EditLabelsDialog from '@edge/components'
+
+function NodeDetail({ node, clusterId }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>编辑标签</Button>
+
+      <EditLabelsDialog
+        open={open}
+        onOpenChange={setOpen}
+        nodeName={node.metadata.name}
+        initialLabels={node.metadata.labels ?? {}}
+        clusterId={clusterId}
+        currentNode={node}
+        onSuccess={() => {
+          // refresh node data
+        }}
+      />
+    </>
+  )
+}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Whether the dialog is open |
+| `onOpenChange` | `(open: boolean) => void` | — | Open state change callback |
+| `nodeName` | `string` | — | Node identifier (for API call) |
+| `initialLabels` | `Record<string, string>` | — | Current labels to pre-populate |
+| `clusterId` | `string` | — | Cluster identifier (for API context) |
+| `currentNode` | `any` | — | Full node object (used as base for update) |
+| `onSuccess` | `() => void` | — | Called after successful save |
+
+### Behavior
+
+- Displays existing labels in an editable key/value table; each row has an inline remove button
+- "Add" row at the bottom with dashed border — enabled when both key and value are filled
+- Save button disabled when no changes detected (deep-compare against `originalLabels`)
+- Fetches latest node data before patching to avoid `resourceVersion` conflicts
+- Error messages: specific handling for `resourceVersion` conflicts, generic fallback
+
+---
+
+## EditAnnotationsDialog
+
+编辑 Kubernetes 节点注解（Annotations）的对话框，与 `EditLabelsDialog` 结构相同，但注解值支持多行文本。
+
+**Source:** `edge-console/src/components/dialogs/EditAnnotationsDialog.tsx`
+
+### Import
+
+```tsx
+import { EditAnnotationsDialog } from '@edge/components'
+```
+
+### Usage
+
+```tsx
+import { useState } from 'react'
+import EditAnnotationsDialog from '@edge/components'
+
+function NodeDetail({ node, clusterId }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>编辑注解</Button>
+
+      <EditAnnotationsDialog
+        open={open}
+        onOpenChange={setOpen}
+        nodeName={node.metadata.name}
+        initialAnnotations={node.metadata.annotations ?? {}}
+        clusterId={clusterId}
+        currentNode={node}
+        onSuccess={() => {
+          // refresh node data
+        }}
+      />
+    </>
+  )
+}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Whether the dialog is open |
+| `onOpenChange` | `(open: boolean) => void` | — | Open state change callback |
+| `nodeName` | `string` | — | Node identifier |
+| `initialAnnotations` | `Record<string, string>` | — | Current annotations to pre-populate |
+| `clusterId` | `string` | — | Cluster identifier |
+| `currentNode` | `any` | — | Full node object |
+| `onSuccess` | `() => void` | — | Called after successful save |
+
+### Difference vs EditLabelsDialog
+
+| Aspect | EditLabelsDialog | EditAnnotationsDialog |
+|--------|-----------------|----------------------|
+| Value input | Single-line `Input` | Multi-line `textarea` (resizable, min 60px) |
+| Font | Default | Monospace (`font-mono`) |
+| Key font | Default | Monospace (`font-mono`) |
+| Use case | Short classification labels | Long config strings, JSON snippets |
+
+---
+
+## EditQuotaDialog
+
+编辑命名空间资源配额的对话框，包含计算、存储和对象数量三类配额。
+
+**Source:** `edge-console/src/components/dialogs/EditQuotaDialog.tsx`
+
+### Import
+
+```tsx
+import { EditQuotaDialog } from '@edge/components'
+```
+
+### Usage
+
+```tsx
+import { useState } from 'react'
+import { EditQuotaDialog } from '@edge/components'
+
+function NamespaceDetail({ namespace }) {
+  const [open, setOpen] = useState(false)
+
+  const handleSave = async (quotaData: any) => {
+    await updateNamespaceQuota(namespace.name, quotaData)
+  }
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>编辑配额</Button>
+
+      <EditQuotaDialog
+        open={open}
+        onOpenChange={setOpen}
+        currentQuota={namespace.quota}
+        onSave={handleSave}
+      />
+    </>
+  )
+}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Whether the dialog is open |
+| `onOpenChange` | `(open: boolean) => void` | — | Open state change callback |
+| `currentQuota` | `any` | `undefined` | Current quota object from API (optional, creates new if absent) |
+| `onSave` | `(quotaData: any) => Promise<void>` | — | Async save callback |
+
+### Quota Sections
+
+**计算资源 (Compute)**
+
+| Field | Description |
+|-------|-------------|
+| `requests.cpu` | CPU request (cores) |
+| `requests.memory` + unit | Memory request with unit selector (Mi/Gi/Ti) |
+| `limits.cpu` | CPU limit (cores) |
+| `limits.memory` + unit | Memory limit with unit selector |
+
+**存储资源 (Storage)**
+
+| Field | Description |
+|-------|-------------|
+| `requests.storage` + unit | Storage request with unit selector (Mi/Gi/Ti) |
+
+**对象数量 (Object Count)**
+
+Dynamic list of resource quotas. Supported resource types:
+`pods`, `services`, `secrets`, `configmaps`, `persistentvolumeclaims`, `replicationcontrollers`, `deployments.apps`, `replicasets.apps`, `statefulsets.apps`, `daemonsets.apps`, `jobs.batch`, `cronjobs.batch`
+
+---
+
+## EditRoleInfoDialog
+
+编辑角色的显示名称（displayName）和描述（description）的对话框。
+
+**Source:** `edge-console/src/components/roles/EditRoleInfoDialog.tsx`
+
+### Import
+
+```tsx
+import EditRoleInfoDialog from '@edge/components'
+```
+
+### Usage
+
+```tsx
+import { useState } from 'react'
+import EditRoleInfoDialog from '@edge/components'
+
+function RoleManagement({ role }) {
+  const [open, setOpen] = useState(false)
+
+  const handleSave = async (data: {
+    displayName: string
+    description: string
+  }): Promise<boolean> => {
+    try {
+      await updateRoleInfo(role.name, data)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>编辑角色信息</Button>
+
+      <EditRoleInfoDialog
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        role={role}
+        onSave={handleSave}
+      />
+    </>
+  )
+}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isOpen` | `boolean` | — | Whether the dialog is open |
+| `onClose` | `() => void` | — | Close callback |
+| `role` | `RoleInfo \| null` | — | Current role object |
+| `onSave` | `(data: { displayName: string; description: string }) => Promise<boolean>` | — | Async save callback; return `false` to keep dialog open on error |
+
+### RoleInfo Type
+
+```tsx
+interface RoleInfo {
+  name: string
+  displayName?: string
+  description?: string
+  scope?: string
+  builtin?: boolean
+}
+```
+
+### Behavior
+
+- Pre-fills `displayName` and `description` from `role` when `isOpen` becomes true
+- Description parsing: supports JSON format (extracts Chinese value from `{ zh: '...' }`) or plain string
+- Save button disabled while saving or when form is unchanged
+- Returns `boolean` from `onSave` — returning `false` keeps dialog open (e.g., for showing API errors)

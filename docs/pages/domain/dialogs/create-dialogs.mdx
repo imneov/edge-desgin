@@ -1,0 +1,195 @@
+# Create Dialogs
+
+Business dialogs for creating Edge Platform resources.
+
+---
+
+## CreateClusterDialog
+
+导入已有 Kubernetes 集群或创建 vCluster 虚拟集群的对话框，支持两种创建模式的 Tab 切换。
+
+**Source:** `edge-console/src/components/dialogs/CreateClusterDialog.tsx`
+
+### Import
+
+```tsx
+import { CreateClusterDialog } from '@edge/components'
+```
+
+### Usage
+
+```tsx
+import { useState } from 'react'
+import { CreateClusterDialog } from '@edge/components'
+
+function ClusterManagement() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>创建集群</Button>
+
+      <CreateClusterDialog
+        open={open}
+        onOpenChange={setOpen}
+        onSuccess={() => {
+          // refresh cluster list
+        }}
+      />
+    </>
+  )
+}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Whether the dialog is open |
+| `onOpenChange` | `(open: boolean) => void` | — | Open state change callback |
+| `onSuccess` | `() => void` | — | Called after successful cluster creation |
+
+### Behavior
+
+The dialog has two tabs:
+
+**Tab 1 — 导入集群 (Import)**
+- RFC1123 name validation (via `RFC1123NameInput`)
+- Optional: alias (别名), provider
+- Required: kubeconfig textarea (monospace font)
+- Optional: description
+- Submit disabled until name is valid and kubeconfig is non-empty
+
+**Tab 2 — 创建 vCluster**
+- RFC1123 name validation
+- Optional: alias, description
+- Resource limits: CPU (cores), memory (e.g. `4Gi`), storage (e.g. `10Gi`)
+- Submit disabled until name is valid
+
+Both modes call `createCluster()` from `@/gen/client` and show `toast.success` on completion.
+
+---
+
+## CreateNamespaceDialog
+
+创建 Kubernetes 命名空间（项目）的对话框，支持 RFC1123 名称验证。
+
+**Source:** `edge-console/src/components/dialogs/CreateNamespaceDialog.tsx`
+
+### Import
+
+```tsx
+import { CreateNamespaceDialog } from '@edge/components'
+```
+
+### Usage
+
+```tsx
+import { useState } from 'react'
+import { CreateNamespaceDialog } from '@edge/components'
+
+function NamespaceList() {
+  const [open, setOpen] = useState(false)
+
+  const handleCreate = async (data: {
+    name: string
+    alias?: string
+    description?: string
+  }) => {
+    await createNamespace(data)
+  }
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>创建项目</Button>
+
+      <CreateNamespaceDialog
+        open={open}
+        onOpenChange={setOpen}
+        onCreateNamespace={handleCreate}
+      />
+    </>
+  )
+}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Whether the dialog is open |
+| `onOpenChange` | `(open: boolean) => void` | — | Open state change callback |
+| `onCreateNamespace` | `(data: { name: string; alias?: string; description?: string; workspace?: string }) => Promise<void>` | — | Async creation callback |
+
+### Behavior
+
+- RFC1123 name validation; submit disabled until name passes validation
+- Alias: max 63 chars, freeform
+- Description: max 256 chars
+- Error shown inline in a red banner; also surfaced via `toast.error`
+- Form resets on cancel or successful creation
+
+---
+
+## CreateUserDialog
+
+创建平台用户的对话框，包含用户名验证、角色选择、邮箱和密码。
+
+**Source:** `edge-console/src/components/users/CreateUserDialog.tsx`
+
+### Import
+
+```tsx
+import { CreateUserDialog } from '@edge/components'
+```
+
+### Usage
+
+```tsx
+import { useState } from 'react'
+import CreateUserDialog from '@edge/components'
+
+function UserManagement() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>创建用户</Button>
+
+      <CreateUserDialog
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onSuccess={() => {
+          // refresh user list
+        }}
+      />
+    </>
+  )
+}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isOpen` | `boolean` | — | Whether the dialog is open |
+| `onClose` | `() => void` | — | Close callback |
+| `onSuccess` | `() => void` | — | Called after successful creation |
+
+### Validation Rules
+
+| Field | Rule |
+|-------|------|
+| Username | RFC1123: lowercase letters, digits, `-`, `.`; start/end with alphanumeric; max 32 chars |
+| Email | Standard email format |
+| Password | 8–64 chars; must contain uppercase, lowercase, digit, and special char |
+| Alias | Max 63 chars |
+| Description | Max 256 chars |
+
+### Behavior
+
+- Platform roles are fetched from `listPlatformRoles()` on dialog open; first role is pre-selected
+- Submit disabled until username, email, and password are all non-empty
+- Inline field-level error messages shown below each input
+- Form resets on each open
+- Renders as a custom div overlay (not Radix Dialog) — uses `fixed inset-0` backdrop

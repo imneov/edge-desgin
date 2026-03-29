@@ -1,0 +1,103 @@
+# Member Dialogs
+
+Business dialogs for managing Edge Platform membership.
+
+---
+
+## InviteMemberDialog
+
+邀请成员并分配角色的对话框，支持多用户选择、分页加载和防抖搜索。
+
+**Source:** `edge-console/src/components/members/InviteMemberDialog.tsx`
+
+### Import
+
+```tsx
+import InviteMemberDialog from '@edge/components'
+```
+
+### Usage
+
+```tsx
+import { useState } from 'react'
+import InviteMemberDialog from '@edge/components'
+
+function ClusterMembers({ clusterId, members }) {
+  const [open, setOpen] = useState(false)
+
+  const handleInvite = async (usernames: string[], role: string) => {
+    await Promise.all(
+      usernames.map((username) =>
+        addClusterMember(clusterId, { username, role })
+      )
+    )
+  }
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>邀请成员</Button>
+
+      <InviteMemberDialog
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onInvite={handleInvite}
+        clusterId={clusterId}
+        existingMembers={members.map((m) => m.username)}
+        availableRoles={[
+          { value: 'viewer', label: '查看者', description: '只读访问' },
+          { value: 'editor', label: '编辑者', description: '可修改资源' },
+          { value: 'admin', label: '管理员', description: '完全控制' },
+        ]}
+        type="cluster"
+      />
+    </>
+  )
+}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isOpen` | `boolean` | — | Whether the dialog is open |
+| `onClose` | `() => void` | — | Close callback |
+| `onInvite` | `(usernames: string[], role: string) => Promise<void>` | — | Async invite callback |
+| `clusterId` | `string` | — | Cluster identifier (for fetching users) |
+| `existingMembers` | `string[]` | — | Usernames already in the team (filtered from selection) |
+| `availableRoles` | `Array<{ value: string; label: string; description: string }>` | — | Roles to offer in the dropdown |
+| `type` | `'cluster' \| 'nodegroup' \| 'namespace' \| 'workspace'` | `'cluster'` | Context label displayed in the dialog |
+
+### Behavior
+
+**User Loading**
+- Fetches platform users via `listUsers()` on open; supports pagination (`pageSize: 20`)
+- Infinite scroll: loads more when list container is scrolled near the bottom
+- Debounced search (500ms) filters by username or display name
+
+**Selection**
+- Users already in `existingMembers` are shown disabled
+- Selected users appear as removable chips
+- Each selected user gets an individual role dropdown (defaults to first available role)
+- Invite button disabled if no users are selected
+
+**Layout**
+- Left panel: searchable user list with checkboxes
+- Right panel: selected users with per-user role assignment
+- Fixed `sm:max-w-[640px]` dialog width
+
+### Role Assignment Pattern
+
+```tsx
+// Available roles example (passed from parent)
+const clusterRoles = [
+  { value: 'cluster-viewer',  label: '集群查看者',  description: '只读权限' },
+  { value: 'cluster-editor',  label: '集群编辑者',  description: '可修改集群资源' },
+  { value: 'cluster-admin',   label: '集群管理员',  description: '完全控制集群' },
+]
+
+// Workspace roles example
+const workspaceRoles = [
+  { value: 'workspace-viewer', label: '工作空间查看者', description: '只读访问' },
+  { value: 'workspace-admin',  label: '工作空间管理员', description: '完全控制' },
+]
+```
