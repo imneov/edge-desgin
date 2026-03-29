@@ -1,0 +1,368 @@
+# Data Fetching Hooks
+
+`@edge/hooks` 提供四个数据获取 hooks，专为 Edge Platform 资源设计。这些 hooks 是**框架无关**的纯 React hooks，内部使用 `fetch` + `AbortController`，不依赖 TanStack Query 或其他状态管理库。
+
+## 架构定位
+
+```
+页面层（Page）
+  └─ 调用 @edge/hooks（数据获取）
+       └─ 将 data 作为 props 传入 @edge/components（业务组件）
+                     └─ 使用 @edge/ui 渲染（纯 UI）
+```
+
+数据流向：hooks 取数 → props 注入 → 组件展示。组件本身不感知数据来源。
+
+## ApiClientConfig
+
+所有数据 hooks 的第一个参数都是 `ApiClientConfig`：
+
+```tsx
+import type { ApiClientConfig } from '@edge/hooks'
+
+const apiConfig: ApiClientConfig = {
+  baseUrl: 'https://api.example.com',  // API 服务器基础 URL
+  token: 'your-bearer-token',           // 可选，Bearer token
+  headers: { 'X-Custom': 'value' },     // 可选，额外请求头
+}
+```
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `baseUrl` | `string` | ✅ | API 服务器基础 URL，不含结尾 `/` |
+| `token` | `string` | — | Bearer token，会被添加到 `Authorization` 头 |
+| `headers` | `Record<string, string>` | — | 附加到每个请求的额外 HTTP 头 |
+
+## UseDataResult\<T\>
+
+所有数据 hooks 的返回值类型：
+
+```tsx
+interface UseDataResult<T> {
+  data: T | null    // 数据（初始为 null，加载成功后更新）
+  loading: boolean  // 请求进行中为 true
+  error: Error | null  // 请求失败时的错误对象
+  refetch: () => void  // 手动重新获取
+}
+```
+
+---
+
+## useClusters
+
+获取集群列表，支持按名称搜索。
+
+### Import
+
+```tsx
+import { useClusters } from '@edge/hooks'
+import type { UseClustersOptions, Cluster } from '@edge/hooks'
+```
+
+### Parameters
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `config` | `ApiClientConfig` | API 客户端配置 |
+| `options` | `UseClustersOptions` | 查询选项（可选） |
+
+`UseClustersOptions`:
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `search` | `string` | 按名称过滤（服务端，大小写不敏感子串匹配） |
+
+### Returns
+
+`UseDataResult<Cluster[]>`
+
+`Cluster` 类型：
+
+```tsx
+interface Cluster {
+  id: string
+  name: string
+  status?: string
+  labels?: Record<string, string>
+}
+```
+
+### Usage
+
+```tsx
+import { useClusters } from '@edge/hooks'
+import { ClusterSelector } from '@edge/components'
+
+function ClusterPickerPage({ apiConfig }) {
+  const [selected, setSelected] = useState('')
+  const [search, setSearch] = useState('')
+
+  const { data: clusters, loading } = useClusters(apiConfig, { search })
+
+  return (
+    <ClusterSelector
+      value={selected}
+      onValueChange={setSelected}
+      clusters={(clusters ?? []).map(c => ({
+        metadata: { name: c.name }
+      }))}
+      loading={loading}
+      onSearch={setSearch}
+    />
+  )
+}
+```
+
+---
+
+## useNamespaces
+
+获取命名空间列表，必须指定所属集群。
+
+### Import
+
+```tsx
+import { useNamespaces } from '@edge/hooks'
+import type { UseNamespacesOptions, Namespace } from '@edge/hooks'
+```
+
+### Parameters
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `config` | `ApiClientConfig` | API 客户端配置 |
+| `options` | `UseNamespacesOptions` | 查询选项 |
+
+`UseNamespacesOptions`:
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `clusterId` | `string` | ✅ | 集群 ID，将命名空间范围限定到该集群 |
+| `workspaceId` | `string` | — | 进一步范围限定到某个工作空间 |
+| `search` | `string` | — | 按名称过滤 |
+
+### Returns
+
+`UseDataResult<Namespace[]>`
+
+`Namespace` 类型：
+
+```tsx
+interface Namespace {
+  id: string
+  name: string
+  clusterId: string
+  workspaceId?: string
+  labels?: Record<string, string>
+}
+```
+
+### Usage
+
+```tsx
+import { useNamespaces } from '@edge/hooks'
+import { NamespaceSelector } from '@edge/components'
+
+function NamespacePicker({ apiConfig, clusterId }) {
+  const [selected, setSelected] = useState('')
+  const { data: namespaces, loading } = useNamespaces(apiConfig, { clusterId })
+
+  return (
+    <NamespaceSelector
+      value={selected}
+      onValueChange={setSelected}
+      namespaces={(namespaces ?? []).map(ns => ({
+        metadata: { name: ns.name }
+      }))}
+      loading={loading}
+    />
+  )
+}
+```
+
+---
+
+## useWorkspaces
+
+获取工作空间列表，必须指定所属集群。
+
+### Import
+
+```tsx
+import { useWorkspaces } from '@edge/hooks'
+import type { UseWorkspacesOptions, Workspace } from '@edge/hooks'
+```
+
+### Parameters
+
+`UseWorkspacesOptions`:
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `clusterId` | `string` | ✅ | 集群 ID |
+| `search` | `string` | — | 按名称过滤 |
+
+### Returns
+
+`UseDataResult<Workspace[]>`
+
+`Workspace` 类型：
+
+```tsx
+interface Workspace {
+  id: string
+  name: string
+  clusterId: string
+  labels?: Record<string, string>
+}
+```
+
+### Usage
+
+```tsx
+import { useWorkspaces } from '@edge/hooks'
+import { WorkspaceSelector } from '@edge/components'
+
+function WorkspacePicker({ apiConfig, clusterId }) {
+  const [selected, setSelected] = useState('')
+  const { data: workspaces, loading } = useWorkspaces(apiConfig, { clusterId })
+
+  return (
+    <WorkspaceSelector
+      value={selected}
+      onValueChange={setSelected}
+      workspaces={(workspaces ?? []).map(ws => ({
+        metadata: { name: ws.name }
+      }))}
+      loading={loading}
+    />
+  )
+}
+```
+
+---
+
+## useNodeGroups
+
+获取节点组列表，必须指定所属集群。
+
+### Import
+
+```tsx
+import { useNodeGroups } from '@edge/hooks'
+import type { UseNodeGroupsOptions, NodeGroup } from '@edge/hooks'
+```
+
+### Parameters
+
+`UseNodeGroupsOptions`:
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `clusterId` | `string` | ✅ | 集群 ID |
+| `search` | `string` | — | 按名称过滤 |
+
+### Returns
+
+`UseDataResult<NodeGroup[]>`
+
+`NodeGroup` 类型：
+
+```tsx
+interface NodeGroup {
+  id: string
+  name: string
+  clusterId: string
+  labels?: Record<string, string>
+}
+```
+
+### Usage
+
+```tsx
+import { useNodeGroups } from '@edge/hooks'
+import { NodeGroupSelector } from '@edge/components'
+
+function NodeGroupPicker({ apiConfig, clusterId }) {
+  const [selected, setSelected] = useState('')
+  const { data: nodeGroups, loading } = useNodeGroups(apiConfig, { clusterId })
+
+  return (
+    <NodeGroupSelector
+      value={selected}
+      onValueChange={setSelected}
+      nodeGroups={(nodeGroups ?? []).map(ng => ({
+        metadata: { name: ng.name }
+      }))}
+      loading={loading}
+    />
+  )
+}
+```
+
+---
+
+## 完整组合示例
+
+以下展示 ClusterSelector + NamespaceSelector 级联选择的标准写法：
+
+```tsx
+"use client"
+
+import { useState } from 'react'
+import { useClusters, useNamespaces } from '@edge/hooks'
+import { ClusterSelector, NamespaceSelector } from '@edge/components'
+import type { ApiClientConfig } from '@edge/hooks'
+
+interface ScopeSelectorProps {
+  apiConfig: ApiClientConfig
+  onScopeChange: (cluster: string, namespace: string) => void
+}
+
+export function ScopeSelector({ apiConfig, onScopeChange }: ScopeSelectorProps) {
+  const [cluster, setCluster] = useState('')
+  const [namespace, setNamespace] = useState('')
+
+  const { data: clusters, loading: clustersLoading } = useClusters(apiConfig)
+  const { data: namespaces, loading: nsLoading } = useNamespaces(
+    apiConfig,
+    { clusterId: cluster },
+  )
+
+  function handleClusterChange(value: string) {
+    setCluster(value)
+    setNamespace('')  // 重置 namespace
+    onScopeChange(value, '')
+  }
+
+  function handleNamespaceChange(value: string) {
+    setNamespace(value)
+    onScopeChange(cluster, value)
+  }
+
+  return (
+    <div className="flex gap-2">
+      <ClusterSelector
+        value={cluster}
+        onValueChange={handleClusterChange}
+        clusters={(clusters ?? []).map(c => ({ metadata: { name: c.name } }))}
+        loading={clustersLoading}
+        width={200}
+      />
+      <NamespaceSelector
+        value={namespace}
+        onValueChange={handleNamespaceChange}
+        namespaces={(namespaces ?? []).map(ns => ({ metadata: { name: ns.name } }))}
+        loading={nsLoading}
+        width={200}
+      />
+    </div>
+  )
+}
+```
+
+## 注意事项
+
+- `useNamespaces`、`useWorkspaces`、`useNodeGroups` 的 `clusterId` 为必填，传入空字符串时不发起请求
+- 这些 hooks 使用原生 `fetch` + `AbortController`，每次 `config` 或 `options` 变化时自动取消上一次请求
+- 在 edge-console 中使用时，`ApiClientConfig` 的 `baseUrl` 和 `token` 通常从应用上下文中获取

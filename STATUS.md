@@ -46,6 +46,19 @@
 
 ## Phase 2 进行中
 
+### ✅ Phase 2.1 完成 (2026-03-30)
+
+**EDG-47** - @edge/components Layer 2/3 分离重构：
+- ClusterSelector、NamespaceSelector、WorkspaceSelector、NodeGroupSelector 均通过 props 接收数据，不直接调 API
+- @edge/ui 的 `SearchableSelect<T>` 作为 Layer 2 纯 UI 底座
+- @edge/hooks 提供 `useClusters`、`useNamespaces`、`useWorkspaces`、`useNodeGroups` 数据获取层
+- 新增 `docs/pages/hooks/data/index.mdx`：四个数据 hooks 完整文档（参数、返回值、组合示例）
+- 子任务 EDG-23（组件）、EDG-24（hooks）、EDG-25（edge-console 迁移）全部完成
+
+### ✅ Phase 2.2 完成 (2026-03-29)
+
+**EDG-48** - edge-console selector 组件迁移到 @edge/components（见 commit e4c3bc9）
+
 ### ✅ Phase 2.3 完成 (2026-03-30)
 
 **EDG-49** - 新页面开发标准文档：
@@ -57,24 +70,11 @@
   - 快速检查清单
 - 更新 `docs/pages/patterns/_meta.ts`：将「新页面开发标准」置于 Patterns 首位
 
-### 🚧 子任务
+### ✅ 子任务（全部完成）
 
-已创建 3 个子任务，分配给 Frontend Engineer:
-
-1. **EDG-23** - Create @edge/components business selector components (High)
-   - ClusterSelector, NamespaceSelector, WorkspaceSelector, NodeGroupSelector
-   - 使用 @edge/ui 的 SearchableSelect 作为底层 UI
-   - 知道业务概念但不调用 API
-
-2. **EDG-24** - Create data fetching hooks for selectors (High)
-   - useClusters, useNamespaces, useWorkspaces, useNodeGroups
-   - 从 ClusterSelector 提取 API 调用逻辑
-   - 放在 edge-console/hooks 目录
-
-3. **EDG-25** - Refactor edge-console ClusterSelector to use new architecture (Medium)
-   - 更新所有使用 ClusterSelector 的页面
-   - 使用新的架构组合
-   - 删除旧文件
+1. **EDG-23** ✅ - ClusterSelector, NamespaceSelector, WorkspaceSelector, NodeGroupSelector 已在 @edge/components
+2. **EDG-24** ✅ - useClusters, useNamespaces, useWorkspaces, useNodeGroups 已在 @edge/hooks
+3. **EDG-25** ✅ - edge-console selector 迁移完成
 
 ### 需要重构的 selector 组件
 
