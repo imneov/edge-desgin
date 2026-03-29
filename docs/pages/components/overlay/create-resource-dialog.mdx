@@ -1,0 +1,94 @@
+# CreateResourceDialog
+
+Generic YAML-based resource creation dialog. Provides a full-width textarea for entering YAML configuration and an async confirm callback.
+
+**Layer:** `@edge/ui` generic dialog pattern
+
+**Source:** `edge-console/src/components/ui/create-resource-dialog.tsx`
+
+---
+
+## Usage
+
+```tsx
+import { useState } from 'react'
+import { CreateResourceDialog } from '@/components/ui/create-resource-dialog'
+
+const DEFAULT_POD_YAML = `apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  namespace: default
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest`
+
+function CreatePodButton() {
+  const [open, setOpen] = useState(false)
+  const [creating, setCreating] = useState(false)
+
+  const handleCreate = async (yaml: string) => {
+    setCreating(true)
+    try {
+      await applyYaml(yaml)
+      setOpen(false)
+    } finally {
+      setCreating(false)
+    }
+  }
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>创建 Pod</Button>
+
+      <CreateResourceDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="创建 Pod"
+        description="粘贴或编辑 YAML 配置，点击创建生效。"
+        defaultYaml={DEFAULT_POD_YAML}
+        onConfirm={handleCreate}
+        isCreating={creating}
+      />
+    </>
+  )
+}
+```
+
+---
+
+## Empty Dialog
+
+```tsx
+<CreateResourceDialog
+  open={open}
+  onOpenChange={setOpen}
+  title="应用 YAML"
+  description="粘贴资源 YAML 配置。"
+  onConfirm={handleApply}
+/>
+```
+
+---
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Whether the dialog is open |
+| `onOpenChange` | `(open: boolean) => void` | — | Open state change callback |
+| `title` | `string` | — | Dialog title |
+| `description` | `string` | — | Dialog description |
+| `onConfirm` | `(yaml: string) => void` | — | Called with the current YAML content on submit |
+| `isCreating` | `boolean` | `false` | Disables inputs and shows "创建中..." while true |
+| `defaultYaml` | `string` | `''` | Initial YAML content pre-filled in the textarea |
+
+---
+
+## Notes
+
+- Uses a plain `<Textarea>` with `font-mono` for input — no syntax highlighting
+- Confirm button is disabled when the textarea is empty or `isCreating` is true
+- Dialog resets to `defaultYaml` each time it opens
+- For Monaco Editor with YAML validation, use [`YamlEditDialog`](/EDG/components/overlay/yaml-edit-dialog) instead

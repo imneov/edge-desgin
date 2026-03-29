@@ -1,0 +1,89 @@
+# NameConfirmDeleteDialog
+
+High-protection deletion dialog that requires the user to type the exact resource identifier before the confirm button becomes enabled. Used for irreversible, high-impact deletions.
+
+**Layer:** `@edge/ui` pattern built on `ConfirmDialog`
+
+**Source:** `edge-console/src/components/dialogs/NameConfirmDeleteDialog.tsx`
+
+> **Tip:** This dialog wraps the same behavior as `ConfirmDialog` with `confirmText` and `destructive` props. Prefer using `ConfirmDialog` directly unless you need the cascade-delete option.
+
+---
+
+## Usage
+
+```tsx
+import { ConfirmDialog } from '@edge/ui'
+
+// ConfirmDialog covers the name-confirm pattern natively:
+<ConfirmDialog
+  open={open}
+  onOpenChange={setOpen}
+  title="删除集群"
+  description="删除后所有关联资源将一并清除，此操作不可撤销。"
+  confirmText="prod-cluster"
+  confirmLabel="确认删除"
+  cancelLabel="取消"
+  destructive
+  loading={isDeleting}
+  onConfirm={handleDelete}
+/>
+```
+
+Or use the full `NameConfirmDeleteDialog` from edge-console for the cascade delete option:
+
+```tsx
+import { NameConfirmDeleteDialog } from '@/components/dialogs/NameConfirmDeleteDialog'
+
+<NameConfirmDeleteDialog
+  open={deleteOpen}
+  onOpenChange={setDeleteOpen}
+  resourceIdentifier="prod-cluster"
+  resourceType="集群"
+  onConfirm={handleDelete}
+  isLoading={isDeleting}
+  error={deleteError}
+  showCascadeOption
+  onCascadeChange={setCascade}
+  defaultCascade={false}
+  extraDescription="删除后所有节点组和节点数据将一并清除。"
+/>
+```
+
+---
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Whether the dialog is open |
+| `onOpenChange` | `(open: boolean) => void` | — | Open state change callback |
+| `resourceIdentifier` | `string` | — | The identifier the user must type to confirm |
+| `resourceType` | `string` | — | Resource type label displayed in the title and input hint |
+| `onConfirm` | `() => Promise<void>` | — | Async callback invoked when name matches and user confirms |
+| `isLoading` | `boolean` | `false` | Disables inputs and shows loading state |
+| `error` | `string \| null` | `null` | Error message shown in a red banner |
+| `titlePrefix` | `string` | `'删除'` | Prefix for the dialog title (e.g. "删除集群") |
+| `extraDescription` | `string` | — | Additional description text shown above the input |
+| `showCascadeOption` | `boolean` | `false` | Whether to show a cascade-delete checkbox |
+| `onCascadeChange` | `(cascade: boolean) => void` | — | Callback when cascade toggle changes |
+| `defaultCascade` | `boolean` | `false` | Initial value of the cascade checkbox |
+
+---
+
+## Behavior
+
+1. Dialog opens with the input cleared.
+2. User types in the `resourceIdentifier` value.
+3. Confirm button becomes enabled only when input exactly matches `resourceIdentifier`.
+4. On confirm, `onConfirm()` is called; errors are displayed via the `error` prop.
+5. Input is reset each time the dialog opens.
+
+---
+
+## Design
+
+- Title uses a red circular warning icon (distinct from `ConfirmDeleteDialog`'s `AlertTriangle`)
+- Input renders `resourceIdentifier` in monospace inside the label
+- Confirm button is red / destructive; disabled until match
+- Cascade option appears in a bordered box above the input when `showCascadeOption` is true

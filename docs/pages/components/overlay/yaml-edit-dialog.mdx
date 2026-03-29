@@ -1,0 +1,109 @@
+# YamlEditDialog
+
+Full-screen YAML editor dialog backed by Monaco Editor. Supports YAML/JSON syntax validation, read-only view mode, and async save. Used wherever resources need to be inspected or edited as raw YAML.
+
+**Layer:** `@edge/ui` generic dialog pattern (heavy — requires Monaco Editor)
+
+**Source:** `edge-console/src/components/dialogs/YamlEditDialog.tsx`
+
+---
+
+## Usage
+
+### Edit Mode
+
+```tsx
+import { useState } from 'react'
+import { YamlEditDialog } from '@/components/dialogs/YamlEditDialog'
+
+function EditDeploymentButton({ deployment }) {
+  const [open, setOpen] = useState(false)
+  const [updating, setUpdating] = useState(false)
+
+  const handleSave = async (yaml: string) => {
+    setUpdating(true)
+    try {
+      await applyYaml(yaml)
+      setOpen(false)
+    } finally {
+      setUpdating(false)
+    }
+  }
+
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>
+        编辑 YAML
+      </Button>
+
+      <YamlEditDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={`编辑 ${deployment.name}`}
+        description="修改 YAML 后点击保存生效"
+        initialYaml={deployment.yaml}
+        onConfirm={handleSave}
+        isUpdating={updating}
+        showValidation
+      />
+    </>
+  )
+}
+```
+
+### Read-Only View
+
+```tsx
+<YamlEditDialog
+  open={open}
+  onOpenChange={setOpen}
+  title="查看 YAML"
+  description="只读模式"
+  initialYaml={resource.yaml}
+  readOnly
+/>
+```
+
+---
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Whether the dialog is open |
+| `onOpenChange` | `(open: boolean) => void` | — | Open state change callback |
+| `title` | `string` | — | Shown in the title bar with a `FileText` icon |
+| `description` | `string` | — | Shown inline next to the title (small text) |
+| `onConfirm` | `(yaml: string) => Promise<void>` | — | Async save callback; required unless `readOnly` |
+| `isUpdating` | `boolean` | `false` | External loading state (disables editor and buttons) |
+| `initialYaml` | `string` | `''` | YAML content loaded into the editor on open |
+| `showValidation` | `boolean` | `true` | Whether to run YAML/JSON parse validation on change |
+| `readOnly` | `boolean` | `false` | Renders a "关闭" button only; editor is not editable |
+
+---
+
+## Layout
+
+The dialog uses a near-fullscreen layout (`calc(100vw - 2rem)` × `calc(100vh - 2rem)`):
+
+```
+┌──────────────────────────────────────────────────┐
+│ 📄 Title                      description text   │  ← #F9FBFF header
+├──────────────────────────────────────────────────┤
+│                                                  │
+│   Monaco Editor (vs-dark theme, YAML language)   │  ← #EFF4F9 background
+│                                                  │
+│   [error banner if validation fails]             │
+│                                                  │
+├──────────────────────────────────────────────────┤
+│                              [取消]  [保存]       │  ← white footer
+└──────────────────────────────────────────────────┘
+```
+
+---
+
+## Dependency Note
+
+This component requires `@monaco-editor/react` and Monaco Editor's web workers. In Next.js apps, ensure the monaco loader is configured (see `edge-console/src/lib/monaco-config.ts`).
+
+For a lightweight alternative without Monaco, use [`CreateResourceDialog`](/EDG/components/overlay/create-resource-dialog) which uses a plain textarea.

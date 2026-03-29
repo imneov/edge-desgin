@@ -146,6 +146,9 @@ export type { StatusIndicatorProps, StatusVariant } from './components/status-in
 export { ConfirmDialog } from './components/confirm-dialog'
 export type { ConfirmDialogProps } from './components/confirm-dialog'
 
+export { ConfirmDeleteDialog } from './components/confirm-delete-dialog'
+export type { ConfirmDeleteDialogProps } from './components/confirm-delete-dialog'
+
 export { ProgressRing } from './components/progress-ring'
 export type { ProgressRingProps } from './components/progress-ring'
 

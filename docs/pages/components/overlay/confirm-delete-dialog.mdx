@@ -1,0 +1,93 @@
+# ConfirmDeleteDialog
+
+Danger confirmation dialog for deleting one or more named items. Renders the target list with red warning styling and an async delete callback.
+
+## Import
+
+```tsx
+import { ConfirmDeleteDialog } from '@edge/ui'
+```
+
+**Source:** `edge-console/src/components/dialogs/ConfirmDeleteDialog.tsx`
+
+---
+
+## Usage
+
+```tsx
+import { useState } from 'react'
+import { ConfirmDeleteDialog } from '@edge/ui'
+
+function NodeTable() {
+  const [open, setOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const selected = ['edge-node-01', 'edge-node-02']
+
+  const handleDelete = async () => {
+    setDeleting(true)
+    await deleteNodes(selected)
+    setDeleting(false)
+  }
+
+  return (
+    <>
+      <Button variant="destructive" onClick={() => setOpen(true)}>
+        删除所选
+      </Button>
+
+      <ConfirmDeleteDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="删除节点"
+        description="以下节点将被永久删除，此操作不可撤销。"
+        itemNames={selected}
+        onConfirm={handleDelete}
+        loading={deleting}
+      />
+    </>
+  )
+}
+```
+
+---
+
+## Single Item
+
+```tsx
+<ConfirmDeleteDialog
+  open={open}
+  onOpenChange={setOpen}
+  title="删除命名空间"
+  description="该命名空间及其所有资源将被永久删除。"
+  itemNames={[namespace.name]}
+  onConfirm={async () => {
+    await deleteNamespace(namespace.name)
+    router.push('/namespaces')
+  }}
+/>
+```
+
+---
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `open` | `boolean` | — | Whether the dialog is open |
+| `onOpenChange` | `(open: boolean) => void` | — | Open state change callback |
+| `title` | `string` | — | Dialog title (shown in red with warning icon) |
+| `description` | `string` | — | Description text below the title |
+| `itemNames` | `string[]` | — | List of item names to be deleted |
+| `onConfirm` | `() => Promise<void>` | — | Async callback invoked when user confirms |
+| `loading` | `boolean` | `false` | Disables buttons and shows "删除中..." while true |
+
+---
+
+## When to Use
+
+| Dialog | Use When |
+|--------|----------|
+| `ConfirmDeleteDialog` | Deleting 1+ items from a list/table |
+| `ConfirmDialog` with `confirmText` | Deleting a single high-value resource (cluster, workspace) |
+
+For single high-value resources that require typing the resource name to confirm, use [`ConfirmDialog`](/EDG/components/overlay/alert-dialog) with `confirmText` and `destructive` props.
