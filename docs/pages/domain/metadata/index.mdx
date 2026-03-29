@@ -1,0 +1,144 @@
+import { LabelsDisplay, AnnotationsDisplay } from '@edge/components'
+import { Preview } from '../../../components/Preview'
+
+# Metadata
+
+Kubernetes labels and annotations display components. These render `metadata.labels` and `metadata.annotations` from any K8s resource in a consistent, readable format.
+
+## Import
+
+```tsx
+import { LabelsDisplay, AnnotationsDisplay } from '@edge/components'
+```
+
+---
+
+## LabelsDisplay
+
+Renders Kubernetes labels as inline badge pairs. Each label is displayed as a split pill: dark background for the key, light background for the value.
+
+<Preview bgColor="#EFF4F9" center={false}>
+  <div className="p-4 bg-white rounded border" style={{ width: 480 }}>
+    <p className="text-xs text-gray-500 mb-2">标签</p>
+    <LabelsDisplay
+      labels={{
+        app: 'nginx',
+        environment: 'production',
+        version: 'v1.24.0',
+        'theriseunion.io/workspace': 'ws-prod',
+        'beta.kubernetes.io/arch': 'amd64',
+      }}
+    />
+  </div>
+</Preview>
+
+```tsx
+<LabelsDisplay
+  labels={resource.metadata.labels}
+/>
+```
+
+### Empty State
+
+<Preview bgColor="#EFF4F9" center={false}>
+  <div className="p-4 bg-white rounded border" style={{ width: 480 }}>
+    <p className="text-xs text-gray-500 mb-2">标签</p>
+    <LabelsDisplay labels={{}} />
+  </div>
+</Preview>
+
+```tsx
+<LabelsDisplay
+  labels={{}}
+  emptyMessage="无标签"
+/>
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `labels` | `{ [key: string]: string }` | — | Labels object from `metadata.labels` |
+| `emptyMessage` | `string` | `'无标签'` | Text shown when labels is empty or undefined |
+| `className` | `string` | `''` | Additional CSS classes |
+
+---
+
+## AnnotationsDisplay
+
+Renders Kubernetes annotations in a two-column grid layout. Keys in gray, values in monospace font with light background — suitable for long values like JSON or base64 strings.
+
+<Preview bgColor="#EFF4F9" center={false}>
+  <div className="p-4 bg-white rounded border" style={{ width: 600 }}>
+    <p className="text-xs text-gray-500 mb-2">注解</p>
+    <AnnotationsDisplay
+      annotations={{
+        'description': 'Production web server for the main application',
+        'kubectl.kubernetes.io/last-applied-configuration': '{"apiVersion":"v1","kind":"Pod"}',
+        'theriseunion.io/created-by': 'admin',
+        'theriseunion.io/alias-name': 'Production Nginx',
+      }}
+    />
+  </div>
+</Preview>
+
+```tsx
+<AnnotationsDisplay
+  annotations={resource.metadata.annotations}
+/>
+```
+
+### Custom Column Layout
+
+By default the key column takes 3/12 and the value column takes 9/12. Adjust with `colSpan`:
+
+```tsx
+<AnnotationsDisplay
+  annotations={resource.metadata.annotations}
+  colSpan={[4, 8]}
+/>
+```
+
+### Empty State
+
+<Preview bgColor="#EFF4F9" center={false}>
+  <div className="p-4 bg-white rounded border" style={{ width: 480 }}>
+    <p className="text-xs text-gray-500 mb-2">注解</p>
+    <AnnotationsDisplay annotations={undefined} />
+  </div>
+</Preview>
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `annotations` | `{ [key: string]: string }` | — | Annotations object from `metadata.annotations` |
+| `emptyMessage` | `string` | `'无注解'` | Text shown when annotations is empty or undefined |
+| `colSpan` | `[number, number]` | `[3, 9]` | Key/value column widths (must sum to 12) |
+| `className` | `string` | `''` | Additional CSS classes |
+
+---
+
+## Usage Pattern
+
+Both components are typically used inside a detail panel or `Descriptions` block:
+
+```tsx
+import { LabelsDisplay, AnnotationsDisplay } from '@edge/components'
+
+function ResourceMetadataTab({ resource }: { resource: KubernetesResource }) {
+  return (
+    <div className="space-y-6">
+      <section>
+        <h3 className="text-sm font-medium text-gray-700 mb-2">标签</h3>
+        <LabelsDisplay labels={resource.metadata.labels} />
+      </section>
+
+      <section>
+        <h3 className="text-sm font-medium text-gray-700 mb-2">注解</h3>
+        <AnnotationsDisplay annotations={resource.metadata.annotations} />
+      </section>
+    </div>
+  )
+}
+```
