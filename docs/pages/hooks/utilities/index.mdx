@@ -1,3 +1,122 @@
-# Utilities
+# Utility Hooks
 
-Coming soon.
+工具类 hooks 提供与 UI 框架无关的通用浏览器/DOM 能力封装，适合在任何 React 组件中使用。
+
+## 可用 Hooks
+
+| Hook | 说明 |
+|------|------|
+| `useClickOutside` | 检测点击目标元素外部 |
+| `useCopyToClipboard` | 复制文本到剪贴板，带复制状态反馈 |
+| `useKeyboardShortcut` | 注册全局键盘快捷键 |
+| `useMediaQuery` | 响应式断点检测 |
+
+## useClickOutside
+
+检测用户点击了指定元素的外部区域，常用于关闭下拉菜单、弹出层。
+
+```tsx
+import { useClickOutside } from '@edge/hooks'
+
+function Dropdown() {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useClickOutside(ref, () => setOpen(false))
+
+  return (
+    <div ref={ref}>
+      <button onClick={() => setOpen(true)}>打开</button>
+      {open && <div className="dropdown-menu">...</div>}
+    </div>
+  )
+}
+```
+
+## useCopyToClipboard
+
+复制文本到剪贴板，返回 `copied` 状态（自动在指定时间后重置）和 `copy` 函数。
+
+```tsx
+import { useCopyToClipboard } from '@edge/hooks'
+
+function TokenDisplay({ token }: { token: string }) {
+  const { copied, copy } = useCopyToClipboard()
+
+  return (
+    <div className="flex items-center gap-2">
+      <code className="text-sm font-mono">{token}</code>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="h-6 w-6 p-0"
+        onClick={() => copy(token)}
+        aria-label="复制"
+      >
+        {copied ? (
+          <Check className="h-4 w-4 text-green-500" />
+        ) : (
+          <Copy className="h-4 w-4" />
+        )}
+      </Button>
+    </div>
+  )
+}
+```
+
+**API**
+
+| 参数/返回 | 类型 | 说明 |
+|-----------|------|------|
+| `resetDelay` | `number` | 复制成功后 `copied` 重置的延迟（ms），默认 2000 |
+| `copied` | `boolean` | 是否刚刚复制成功 |
+| `copy` | `(text: string) => Promise<boolean>` | 执行复制，返回是否成功 |
+
+## useKeyboardShortcut
+
+注册全局键盘快捷键，支持修饰键组合。
+
+```tsx
+import { useKeyboardShortcut } from '@edge/hooks'
+
+function SearchDialog() {
+  const [open, setOpen] = useState(false)
+
+  // 注册 Cmd+K / Ctrl+K 打开搜索
+  useKeyboardShortcut(['Meta+k', 'Control+k'], () => setOpen(true))
+
+  return <CommandDialog open={open} onOpenChange={setOpen} />
+}
+```
+
+**API**
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| `keys` | `string \| string[]` | 快捷键，格式：`'Meta+k'`、`'Control+Shift+p'` |
+| `callback` | `() => void` | 快捷键触发时执行 |
+| `options.enabled` | `boolean` | 是否启用，默认 `true` |
+
+## useMediaQuery
+
+检测 CSS media query 是否匹配，用于响应式条件渲染。
+
+```tsx
+import { useMediaQuery } from '@edge/hooks'
+
+function ResponsiveLayout() {
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
+
+  return isDesktop ? <DesktopLayout /> : <MobileLayout />
+}
+```
+
+常用断点快捷用法：
+
+```tsx
+const isMobile = useMediaQuery('(max-width: 767px)')
+const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1023px)')
+const isDesktop = useMediaQuery('(min-width: 1024px)')
+const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
+const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
+```

@@ -1,3 +1,126 @@
 # AlertDialog
 
-Coming soon.
+AlertDialog 是一个模态确认对话框，用于需要用户明确响应的高风险操作（如删除、停止、重置）。与普通 Dialog 不同，AlertDialog 在用户做出选择前无法通过点击遮罩或按 Escape 关闭。
+
+> **推荐使用封装版本**：日常使用中，优先选择 [`ConfirmDeleteDialog`](/components/overlay/confirm-delete-dialog) 或 [`ConfirmDialog`](/components/overlay/confirm-dialog)，它们已封装了 AlertDialog 并提供了标准化的外观和行为。
+
+## Import
+
+```tsx
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '@edge/ui'
+```
+
+## 基础用法
+
+```tsx
+<AlertDialog>
+  <AlertDialogTrigger asChild>
+    <Button variant="outline" className="text-destructive">
+      删除集群
+    </Button>
+  </AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>确认删除集群？</AlertDialogTitle>
+      <AlertDialogDescription>
+        此操作无法撤销。集群 <strong>prod-cluster</strong> 及其所有工作负载将被永久删除。
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>取消</AlertDialogCancel>
+      <AlertDialogAction
+        className="bg-destructive hover:bg-destructive/90"
+        onClick={handleDelete}
+      >
+        确认删除
+      </AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+## 受控模式
+
+使用状态控制 AlertDialog 的开关，适合通过表格行操作触发：
+
+```tsx
+const [open, setOpen] = useState(false)
+const [isDeleting, setIsDeleting] = useState(false)
+
+async function handleDelete() {
+  setIsDeleting(true)
+  try {
+    await deleteResource(resourceName)
+    toast.success(`${resourceName} 已删除`)
+    setOpen(false)
+    refetch()
+  } catch (err) {
+    toast.error('删除失败')
+  } finally {
+    setIsDeleting(false)
+  }
+}
+
+<AlertDialog open={open} onOpenChange={setOpen}>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>删除 {resourceName}？</AlertDialogTitle>
+      <AlertDialogDescription>
+        此操作不可恢复。
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel disabled={isDeleting}>取消</AlertDialogCancel>
+      <AlertDialogAction
+        className="bg-destructive hover:bg-destructive/90"
+        onClick={handleDelete}
+        disabled={isDeleting}
+      >
+        {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        删除
+      </AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+## 与 ConfirmDeleteDialog 对比
+
+| 需求 | 推荐组件 |
+|------|----------|
+| 简单的"确认/取消"操作 | `ConfirmDialog` |
+| 删除操作（输入资源名确认） | `ConfirmDeleteDialog` |
+| 需要完全自定义内容的高风险操作 | `AlertDialog`（本组件） |
+
+## AlertDialogAction 样式
+
+`AlertDialogAction` 默认使用 `buttonVariants()` 样式（Primary 按钮）。破坏性操作需要手动添加红色样式：
+
+```tsx
+{/* 破坏性操作（删除、停止） */}
+<AlertDialogAction className="bg-destructive hover:bg-destructive/90 text-destructive-foreground">
+  确认删除
+</AlertDialogAction>
+
+{/* 普通确认操作 */}
+<AlertDialogAction>
+  确认
+</AlertDialogAction>
+```
+
+## 无障碍
+
+- AlertDialog 强制焦点在对话框内（Radix UI 内置）
+- 使用 `AlertDialogTitle` 和 `AlertDialogDescription` 确保屏幕阅读器能描述对话框内容
+- 确认按钮应包含操作动词（"确认删除"，而非"确认"）
+- 取消操作始终是 `AlertDialogCancel`，以保证键盘用户可以 Escape 关闭

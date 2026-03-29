@@ -1,3 +1,214 @@
 # List + Detail (CRUD) Pattern
 
-Coming soon.
+列表+详情模式是 Edge Console 中最常见的 CRUD 页面模式，覆盖了命名空间、工作负载、存储、ConfigMap 等几乎所有资源管理页面。
+
+## 页面结构
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  页面标题                                 [ 新建 ] [刷新]  │
+├──────────────────────────────────────────────────────────┤
+│  搜索框                               过滤/排序控件        │
+├──────────────────────────────────────────────────────────┤
+│  ┌────────────────────────────────────────────────────┐   │
+│  │  名称/别名  状态  创建时间  ...    操作             │   │
+│  │  ────────────────────────────────────────────────  │   │
+│  │  item-1    ●运行  2024-01  ...    [ ⋯ ]           │   │
+│  │  item-2    ○停止  2024-02  ...    [ ⋯ ]           │   │
+│  └────────────────────────────────────────────────────┘   │
+│  共 N 条   [ 1 ] 2  3  ...                               │
+└──────────────────────────────────────────────────────────┘
+```
+
+## 工具栏
+
+```tsx
+import { Plus, RotateCw } from 'lucide-react'
+import { Button, Input } from '@edge/ui'
+
+<div className="flex items-center justify-between mb-4">
+  <div className="flex items-center gap-2">
+    <Input
+      placeholder="搜索..."
+      value={search}
+      onChange={e => setSearch(e.target.value)}
+      className="h-8 w-64"
+    />
+  </div>
+  <div className="flex items-center gap-2">
+    <Button
+      variant="outline"
+      size="sm"
+      className="h-8 bg-blue-600 hover:bg-blue-700 text-white hover:text-white"
+      onClick={() => setCreateOpen(true)}
+    >
+      <Plus className="mr-2 h-4 w-4" />
+      新建资源
+    </Button>
+    <Button
+      variant="outline"
+      size="sm"
+      className="h-8 w-8 p-0"
+      onClick={refetch}
+    >
+      <RotateCw className="h-4 w-4" />
+    </Button>
+  </div>
+</div>
+```
+
+## 表格列定义
+
+```tsx
+import { MoreHorizontal } from 'lucide-react'
+import { type ColumnDef } from '@tanstack/react-table'
+import { StatusIndicator } from '@edge/ui'
+
+const columns: ColumnDef<Resource>[] = [
+  {
+    accessorKey: 'name',
+    header: '名称',
+    cell: ({ row }) => (
+      <div>
+        <div className="font-medium text-sm">{row.original.name}</div>
+        {row.original.alias && (
+          <div className="text-xs text-muted-foreground">{row.original.alias}</div>
+        )}
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'status',
+    header: '状态',
+    cell: ({ row }) => (
+      <StatusIndicator
+        status={row.original.status === 'Running' ? 'success' : 'error'}
+        label={row.original.status}
+      />
+    ),
+  },
+  {
+    accessorKey: 'createdAt',
+    header: '创建时间',
+    cell: ({ row }) => (
+      <span className="text-xs text-muted-foreground">
+        {formatDate(row.original.createdAt)}
+      </span>
+    ),
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => <ResourceActions resource={row.original} />,
+  },
+]
+```
+
+## 行操作菜单
+
+```tsx
+import { MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react'
+
+function ResourceActions({ resource }: { resource: Resource }) {
+  const [deleteOpen, setDeleteOpen] = useState(false)
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem asChild>
+            <Link href={`/resources/${resource.name}`}>
+              <Eye className="mr-2 h-4 w-4" />
+              查看详情
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setEditOpen(true)}>
+            <Pencil className="mr-2 h-4 w-4" />
+            编辑
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-destructive"
+            onClick={() => setDeleteOpen(true)}
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            删除
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <ConfirmDeleteDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        resourceName={resource.name}
+        onConfirm={() => deleteResource(resource.name)}
+      />
+    </>
+  )
+}
+```
+
+## 加载与空状态
+
+```tsx
+{isLoading ? (
+  <div className="flex items-center justify-center py-12">
+    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+  </div>
+) : items.length === 0 ? (
+  <EmptyState
+    icon={<Box className="h-8 w-8" />}
+    title="暂无资源"
+    description="点击「新建资源」创建第一个资源"
+    action={
+      <Button size="sm" onClick={() => setCreateOpen(true)}>
+        <Plus className="mr-2 h-4 w-4" />
+        新建资源
+      </Button>
+    }
+  />
+) : (
+  <DataTable columns={columns} data={items} />
+)}
+```
+
+## 详情页结构
+
+点击资源名称跳转到详情页，通常包含：
+
+```
+┌────────────────────────────────────────────────────────┐
+│  ← 返回列表    资源名称    状态徽章    [ 编辑 ] [ 删除 ]  │
+├────────────────────────────────────────────────────────┤
+│  Tabs: 概览 | YAML | 事件 | 监控                       │
+├────────────────────────────────────────────────────────┤
+│  概览标签内容（基本信息 + 关联资源）                      │
+└────────────────────────────────────────────────────────┘
+```
+
+```tsx
+<div className="flex items-center gap-3 mb-6">
+  <Button variant="ghost" size="sm" asChild>
+    <Link href="/resources">
+      <ArrowLeft className="mr-2 h-4 w-4" />
+      返回
+    </Link>
+  </Button>
+  <h1 className="text-xl font-semibold">{resource.name}</h1>
+  <StatusIndicator status="success" label="Running" />
+  <div className="ml-auto flex gap-2">
+    <Button variant="outline" size="sm">编辑</Button>
+    <Button variant="outline" size="sm" className="text-destructive">删除</Button>
+  </div>
+</div>
+```
+
+## 最佳实践
+
+- 搜索使用防抖（300ms），避免频繁请求
+- 删除操作必须通过 `ConfirmDeleteDialog` 二次确认
+- 列表使用服务端分页，避免前端大量数据渲染
+- 刷新按钮触发 React Query `refetch()`，不强制重新挂载组件

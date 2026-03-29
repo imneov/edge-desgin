@@ -1,3 +1,131 @@
 # Dark Mode
 
-Coming soon.
+Edge Design System 使用 CSS custom properties 实现浅色/深色主题切换，所有颜色 token 在 `:root`（浅色）和 `.dark`（深色）选择器下定义双套值。
+
+## 原理
+
+颜色 token 使用 **HSL channel 值**（不含 `hsl()` 包裹），配合 Tailwind 的 `bg-opacity` / 颜色透明度语法：
+
+```css
+/* 浅色主题 */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+}
+
+/* 深色主题 */
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+}
+```
+
+Tailwind 使用这些 channel 值生成颜色类：
+
+```html
+<div class="bg-background text-foreground">
+  自动响应主题
+</div>
+<div class="bg-primary/50">
+  50% 透明度，主题感知
+</div>
+```
+
+## 使用方式
+
+### 在 Tailwind 中使用语义色
+
+所有颜色应优先使用语义 token，而非硬编码 hex 值：
+
+```tsx
+// ✅ 正确：使用语义 token
+<div className="bg-background text-foreground border-border">
+<p className="text-muted-foreground">
+<button className="bg-primary text-primary-foreground hover:bg-primary/90">
+
+// ❌ 避免：硬编码颜色（不支持深色模式）
+<div style={{ background: '#EFF4F9' }}>
+<p className="text-gray-500">
+```
+
+### 主题切换
+
+通过在根元素添加/移除 `.dark` class 切换主题：
+
+```tsx
+function ThemeToggle() {
+  const [dark, setDark] = useState(false)
+
+  function toggle() {
+    const root = document.documentElement
+    root.classList.toggle('dark')
+    setDark(prev => !prev)
+  }
+
+  return (
+    <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={toggle}>
+      {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+    </Button>
+  )
+}
+```
+
+### 系统主题跟随
+
+```tsx
+useEffect(() => {
+  const media = window.matchMedia('(prefers-color-scheme: dark)')
+  document.documentElement.classList.toggle('dark', media.matches)
+
+  media.addEventListener('change', e => {
+    document.documentElement.classList.toggle('dark', e.matches)
+  })
+}, [])
+```
+
+## Next.js 集成
+
+Edge Console 使用 `next-themes` 库管理主题：
+
+```tsx
+// app/layout.tsx
+import { ThemeProvider } from 'next-themes'
+
+export default function RootLayout({ children }) {
+  return (
+    <html suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+        >
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+```tsx
+// 组件中使用
+import { useTheme } from 'next-themes'
+
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme()
+  return (
+    <Button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+      切换主题
+    </Button>
+  )
+}
+```
+
+## 注意事项
+
+- 图片和图表需要额外的深色适配（如 Recharts 轴线颜色）
+- 硬编码 hex 色值（cockpitColors、topologyColors）不支持主题切换，这是已知技术债务
+- Storybook 内置 `.dark` 切换支持，可在开发时预览两种主题

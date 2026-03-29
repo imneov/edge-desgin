@@ -1,3 +1,128 @@
 # Usage Guide
 
-Coming soon.
+Edge Design System 使用 [Lucide React](https://lucide.dev) 图标库。所有图标以 SVG 组件形式导入，支持 `className` 自定义尺寸和颜色。
+
+## Import
+
+```tsx
+import { Plus, RotateCw, Trash2, MoreHorizontal } from 'lucide-react'
+```
+
+## 尺寸规范
+
+Edge Console 中图标尺寸遵循以下规则：
+
+| 场景 | TailwindCSS | 像素 |
+|------|-------------|------|
+| 表格行操作图标 | `h-4 w-4` | 16px |
+| 按钮内图标 | `h-4 w-4` | 16px |
+| 侧边栏导航图标 | `h-5 w-5` | 20px |
+| 空状态大图标 | `h-8 w-8` 或 `h-12 w-12` | 32–48px |
+| 页面标题装饰 | `h-6 w-6` | 24px |
+
+```tsx
+{/* 表格行操作 */}
+<MoreHorizontal className="h-4 w-4" />
+
+{/* 侧边栏导航 */}
+<LayoutDashboard className="h-5 w-5" />
+
+{/* 空状态 */}
+<Box className="h-12 w-12 text-muted-foreground" />
+```
+
+## 颜色规范
+
+图标颜色继承父元素 `currentColor`，通过 `text-*` 工具类控制：
+
+```tsx
+{/* 默认：继承文字颜色 */}
+<Info className="h-4 w-4" />
+
+{/* 语义色 */}
+<CheckCircle className="h-4 w-4 text-green-500" />
+<XCircle className="h-4 w-4 text-red-500" />
+<AlertCircle className="h-4 w-4 text-yellow-500" />
+<Info className="h-4 w-4 text-blue-500" />
+
+{/* 灰度 */}
+<Server className="h-4 w-4 text-muted-foreground" />
+```
+
+## 按钮中使用图标
+
+图标在按钮内需要添加右侧间距：
+
+```tsx
+import { Plus, RotateCw } from 'lucide-react'
+import { Button } from '@edge/ui'
+
+{/* 图标 + 文字按钮 */}
+<Button size="sm" className="h-8">
+  <Plus className="mr-2 h-4 w-4" />
+  新建资源
+</Button>
+
+{/* 纯图标按钮（正方形） */}
+<Button variant="outline" size="sm" className="h-8 w-8 p-0">
+  <RotateCw className="h-4 w-4" />
+</Button>
+```
+
+## 加载状态
+
+使用 `Loader2` 配合 `animate-spin` 实现旋转加载效果：
+
+```tsx
+import { Loader2, RotateCw } from 'lucide-react'
+
+{isLoading ? (
+  <Loader2 className="h-4 w-4 animate-spin" />
+) : (
+  <RotateCw className="h-4 w-4" />
+)}
+```
+
+## 表格行操作菜单
+
+```tsx
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@edge/ui'
+
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+      <MoreHorizontal className="h-4 w-4" />
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent align="end">
+    <DropdownMenuItem>
+      <Pencil className="mr-2 h-4 w-4" />
+      编辑
+    </DropdownMenuItem>
+    <DropdownMenuItem className="text-destructive">
+      <Trash2 className="mr-2 h-4 w-4" />
+      删除
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+## 可访问性
+
+纯装饰性图标（有文字说明时）添加 `aria-hidden`：
+
+```tsx
+<Button>
+  <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+  新建资源
+</Button>
+```
+
+无文字说明的纯图标按钮添加 `aria-label`：
+
+```tsx
+<Button variant="outline" size="sm" className="h-8 w-8 p-0" aria-label="刷新列表">
+  <RotateCw className="h-4 w-4" />
+</Button>
+```

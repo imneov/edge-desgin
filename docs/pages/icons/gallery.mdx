@@ -1,3 +1,86 @@
 # Icon Gallery
 
-Coming soon.
+Edge Design System uses [Lucide React](https://lucide.dev) as the icon library. Below are the icons used across Edge Console, grouped by category.
+
+## Navigation & Layout
+
+| Icon | Import | Usage |
+|------|--------|-------|
+| `LayoutDashboard` | `import { LayoutDashboard } from 'lucide-react'` | 仪表盘入口 |
+| `Settings` | `import { Settings } from 'lucide-react'` | 系统设置 |
+| `ChevronRight` | `import { ChevronRight } from 'lucide-react'` | 面包屑、折叠展开 |
+| `ChevronDown` | `import { ChevronDown } from 'lucide-react'` | 下拉菜单 |
+| `Menu` | `import { Menu } from 'lucide-react'` | 侧边栏折叠 |
+| `X` | `import { X } from 'lucide-react'` | 关闭对话框 |
+| `ArrowLeft` | `import { ArrowLeft } from 'lucide-react'` | 返回上级页面 |
+
+## Resource Actions
+
+| Icon | Import | Usage |
+|------|--------|-------|
+| `Plus` | `import { Plus } from 'lucide-react'` | 新建资源主操作按钮 |
+| `Pencil` | `import { Pencil } from 'lucide-react'` | 编辑资源 |
+| `Trash2` | `import { Trash2 } from 'lucide-react'` | 删除资源 |
+| `MoreHorizontal` | `import { MoreHorizontal } from 'lucide-react'` | 表格行操作菜单触发 |
+| `RotateCw` | `import { RotateCw } from 'lucide-react'` | 刷新列表 |
+| `Copy` | `import { Copy } from 'lucide-react'` | 复制内容 |
+| `Download` | `import { Download } from 'lucide-react'` | 下载文件 |
+| `Upload` | `import { Upload } from 'lucide-react'` | 上传文件 |
+
+## Status & Feedback
+
+| Icon | Import | Usage |
+|------|--------|-------|
+| `CheckCircle` | `import { CheckCircle } from 'lucide-react'` | 操作成功 |
+| `XCircle` | `import { XCircle } from 'lucide-react'` | 操作失败、错误状态 |
+| `AlertCircle` | `import { AlertCircle } from 'lucide-react'` | 警告提示 |
+| `Info` | `import { Info } from 'lucide-react'` | 信息提示 |
+| `Loader2` | `import { Loader2 } from 'lucide-react'` | 加载中旋转动画 |
+| `Check` | `import { Check } from 'lucide-react'` | 已选中、步骤完成 |
+
+## Kubernetes Resources
+
+| Icon | Import | Usage |
+|------|--------|-------|
+| `Box` | `import { Box } from 'lucide-react'` | 工作负载/Pod |
+| `Server` | `import { Server } from 'lucide-react'` | 节点 |
+| `Database` | `import { Database } from 'lucide-react'` | 存储/PVC |
+| `Network` | `import { Network } from 'lucide-react'` | 网络/Service |
+| `Layers` | `import { Layers } from 'lucide-react'` | 命名空间/工作空间 |
+| `Cloud` | `import { Cloud } from 'lucide-react'` | 集群 |
+| `GitBranch` | `import { GitBranch } from 'lucide-react'` | 版本/分支 |
+
+## Monitoring & Observability
+
+| Icon | Import | Usage |
+|------|--------|-------|
+| `Activity` | `import { Activity } from 'lucide-react'` | 监控/指标 |
+| `BarChart2` | `import { BarChart2 } from 'lucide-react'` | 图表 |
+| `Bell` | `import { Bell } from 'lucide-react'` | 告警 |
+| `FileText` | `import { FileText } from 'lucide-react'` | 日志 |
+| `Terminal` | `import { Terminal } from 'lucide-react'` | 终端/控制台 |
+
+## Security & Access
+
+| Icon | Import | Usage |
+|------|--------|-------|
+| `Shield` | `import { Shield } from 'lucide-react'` | 权限/安全 |
+| `Key` | `import { Key } from 'lucide-react'` | 密钥/Secret |
+| `Lock` | `import { Lock } from 'lucide-react'` | 受保护资源 |
+| `Users` | `import { Users } from 'lucide-react'` | 用户管理 |
+| `UserPlus` | `import { UserPlus } from 'lucide-react'` | 添加用户/成员 |
+
+## Standard Usage
+
+```tsx
+import { Plus, RotateCw, MoreHorizontal } from 'lucide-react'
+
+// 固定尺寸（表格行操作）
+<MoreHorizontal className="h-4 w-4" />
+
+// 带间距（按钮图标）
+<Plus className="mr-2 h-4 w-4" />
+
+// 旋转动画（加载中）
+<Loader2 className="h-4 w-4 animate-spin" />
+```

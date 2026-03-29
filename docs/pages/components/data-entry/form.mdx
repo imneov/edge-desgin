@@ -1,3 +1,174 @@
 # Form
 
-Coming soon.
+表单组件提供受控的表单布局和字段验证状态管理，通过 React Context 自动关联 Label、Input 和错误信息。
+
+## Import
+
+```tsx
+import {
+  Form,
+  FormField,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from '@edge/ui'
+```
+
+## 基础用法
+
+```tsx
+const [name, setName] = useState('')
+const [nameError, setNameError] = useState('')
+
+function handleSubmit(e: React.FormEvent) {
+  e.preventDefault()
+  if (!name.trim()) {
+    setNameError('名称不能为空')
+    return
+  }
+  // 提交逻辑...
+}
+
+<Form onSubmit={handleSubmit}>
+  <FormField error={nameError}>
+    <FormLabel>名称</FormLabel>
+    <FormControl>
+      <Input
+        value={name}
+        onChange={e => {
+          setName(e.target.value)
+          setNameError('')
+        }}
+        placeholder="输入资源名称"
+      />
+    </FormControl>
+    <FormDescription>
+      只能包含小写字母、数字和连字符
+    </FormDescription>
+    <FormMessage />
+  </FormField>
+</Form>
+```
+
+## 错误状态
+
+当 `FormField` 的 `error` prop 不为空时，`FormLabel` 自动变为红色，`FormMessage` 显示错误文字：
+
+```tsx
+<FormField error="名称已存在，请换一个">
+  <FormLabel>集群名称</FormLabel>
+  <FormControl>
+    <Input value={name} onChange={...} />
+  </FormControl>
+  <FormMessage />
+  {/* 渲染：名称已存在，请换一个（红色文字） */}
+</FormField>
+```
+
+## 多字段表单
+
+```tsx
+<Form onSubmit={handleSubmit} className="space-y-4">
+  <FormField error={errors.name}>
+    <FormLabel>名称</FormLabel>
+    <FormControl>
+      <Input value={form.name} onChange={e => setField('name', e.target.value)} />
+    </FormControl>
+    <FormMessage />
+  </FormField>
+
+  <FormField>
+    <FormLabel>描述</FormLabel>
+    <FormControl>
+      <Textarea
+        value={form.description}
+        onChange={e => setField('description', e.target.value)}
+        placeholder="可选"
+        rows={3}
+      />
+    </FormControl>
+    <FormDescription>
+      支持最多 200 个字符
+    </FormDescription>
+  </FormField>
+
+  <FormField error={errors.namespace}>
+    <FormLabel>命名空间</FormLabel>
+    <FormControl>
+      <Select value={form.namespace} onValueChange={v => setField('namespace', v)}>
+        <SelectTrigger>
+          <SelectValue placeholder="选择命名空间" />
+        </SelectTrigger>
+        <SelectContent>
+          {namespaces.map(ns => (
+            <SelectItem key={ns} value={ns}>{ns}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </FormControl>
+    <FormMessage />
+  </FormField>
+
+  <div className="flex justify-end gap-2 pt-2">
+    <Button type="button" variant="outline" onClick={onCancel}>取消</Button>
+    <Button type="submit" disabled={isSubmitting}>
+      {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      确定
+    </Button>
+  </div>
+</Form>
+```
+
+## 与 Dialog 组合
+
+表单通常嵌入 Dialog 中，使用 `CreateResourceDialog` 或直接使用 `Dialog` 包裹：
+
+```tsx
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>创建命名空间</DialogTitle>
+    </DialogHeader>
+
+    <Form onSubmit={handleSubmit}>
+      <FormField error={error}>
+        <FormLabel>名称</FormLabel>
+        <FormControl>
+          <Input autoFocus value={name} onChange={e => setName(e.target.value)} />
+        </FormControl>
+        <FormMessage />
+      </FormField>
+    </Form>
+
+    <DialogFooter>
+      <Button variant="outline" onClick={() => setOpen(false)}>取消</Button>
+      <Button onClick={handleSubmit} disabled={!name || isLoading}>
+        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        创建
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+## API
+
+### Form
+
+| Prop | 类型 | 说明 |
+|------|------|------|
+| `className` | `string` | 自定义样式，默认 `space-y-4` |
+| `onSubmit` | `React.FormEventHandler` | 表单提交回调 |
+
+### FormField
+
+| Prop | 类型 | 说明 |
+|------|------|------|
+| `id` | `string` | 字段 ID（自动生成） |
+| `error` | `string` | 错误信息，有值时触发错误样式 |
+| `className` | `string` | 自定义样式 |
+
+### FormLabel / FormControl / FormDescription / FormMessage
+
+均无必填 props，通过 `FormField` Context 自动获取 `id` 和 `error` 状态。

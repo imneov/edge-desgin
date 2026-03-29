@@ -1,3 +1,163 @@
 # Dashboard Layout Pattern
 
-Coming soon.
+仪表盘布局模式用于展示资源概览和关键指标，是 Edge Console Cockpit（集群驾驶舱）页面的核心模式。
+
+## 布局结构
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  页面标题                                  时间范围选择器   │
+├────────────┬─────────────┬─────────────┬─────────────────┤
+│  KPI 卡片   │  KPI 卡片   │  KPI 卡片   │  KPI 卡片        │
+│  CPU 使用率  │  内存使用率  │  节点数     │  Pod 数          │
+├────────────┴─────────────┴─────────────┴─────────────────┤
+│  ┌─────────────────────────┐  ┌──────────────────────┐   │
+│  │  时序图（CPU/内存趋势）   │  │  资源分布（圆环图）    │   │
+│  └─────────────────────────┘  └──────────────────────┘   │
+├──────────────────────────────────────────────────────────┤
+│  ┌──────────────────────────────────────────────────┐    │
+│  │  资源列表（Top 工作负载 / 近期事件）               │    │
+│  └──────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────┘
+```
+
+## KPI 卡片区
+
+```tsx
+import { KpiCard } from '@edge/ui'
+
+<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <KpiCard
+    title="CPU 使用率"
+    value="42%"
+    trend={{ value: 3.2, direction: 'up' }}
+    description="4 核心可用"
+  />
+  <KpiCard
+    title="内存使用率"
+    value="68%"
+    trend={{ value: 1.1, direction: 'down' }}
+    description="16 GB 可用"
+  />
+  <KpiCard
+    title="节点总数"
+    value="12"
+    subValue={{ label: '健康', count: 11 }}
+    description="1 节点异常"
+  />
+  <KpiCard
+    title="Pod 总数"
+    value="247"
+    subValue={{ label: '运行中', count: 241 }}
+    description="6 个异常 Pod"
+  />
+</div>
+```
+
+## 监控图表区
+
+使用 `MonitoringChart`（`@edge/components`）展示时序数据：
+
+```tsx
+import { MonitoringChart } from '@edge/components'
+
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+  <Card>
+    <CardHeader>
+      <CardTitle className="text-sm font-medium">CPU 使用率</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <MonitoringChart
+        data={cpuData}
+        color="#3b82f6"
+        unit="%"
+        height={200}
+      />
+    </CardContent>
+  </Card>
+
+  <Card>
+    <CardHeader>
+      <CardTitle className="text-sm font-medium">内存使用率</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <MonitoringChart
+        data={memoryData}
+        color="#8b5cf6"
+        unit="GiB"
+        height={200}
+      />
+    </CardContent>
+  </Card>
+</div>
+```
+
+## 时间范围选择器
+
+```tsx
+type TimeRange = '1h' | '6h' | '24h' | '7d' | '30d'
+
+const timeRangeOptions: { label: string; value: TimeRange }[] = [
+  { label: '1 小时', value: '1h' },
+  { label: '6 小时', value: '6h' },
+  { label: '24 小时', value: '24h' },
+  { label: '7 天', value: '7d' },
+  { label: '30 天', value: '30d' },
+]
+
+function TimeRangePicker({ value, onChange }: {
+  value: TimeRange
+  onChange: (v: TimeRange) => void
+}) {
+  return (
+    <div className="flex rounded-md border overflow-hidden">
+      {timeRangeOptions.map(opt => (
+        <button
+          key={opt.value}
+          className={cn(
+            "px-3 py-1 text-xs font-medium transition-colors",
+            value === opt.value
+              ? "bg-primary text-primary-foreground"
+              : "hover:bg-muted"
+          )}
+          onClick={() => onChange(opt.value)}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+```
+
+## 响应式网格
+
+仪表盘使用 CSS Grid 实现响应式布局：
+
+```tsx
+{/* KPI 区：移动端 2 列，桌面端 4 列 */}
+<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+{/* 图表区：移动端单列，桌面端双列 */}
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+{/* 全宽区域 */}
+<div className="col-span-full">
+```
+
+## 数据刷新策略
+
+仪表盘数据通过 React Query 自动轮询：
+
+```tsx
+const { data: metrics } = useQuery({
+  queryKey: ['cluster-metrics', clusterId, timeRange],
+  queryFn: () => fetchClusterMetrics(clusterId, timeRange),
+  refetchInterval: 30_000, // 30 秒自动刷新
+  staleTime: 25_000,
+})
+```
+
+## 参考实现
+
+参考 Edge Console 中的 Cockpit 驾驶舱页面（`(workspace)/cockpit/`），这是完整的仪表盘布局实现，包含 CPU/内存/网络等多维度实时监控。

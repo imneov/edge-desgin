@@ -1,3 +1,45 @@
 # Changelog
 
-Coming soon.
+## v0.1.0 — 2026-03-29
+
+### 初始发布
+
+**@edge/tokens**
+- Design token 体系建立：Colors, Typography, Spacing, Shadows, Breakpoints
+- 浅色/深色主题支持（CSS custom properties）
+- Tailwind preset 输出（`@edge/tokens/tailwind-preset`）
+- cockpitColors、topologyColors、statusColors 专用颜色集
+
+**@edge/ui**
+- 基础组件发布：Button, Badge, Card, Dialog, Table, Tabs, Select, Input, Checkbox, Form, Spinner, EmptyState, Pagination, Alert, Sheet, ScrollArea, Collapsible, Toggle, Separator, Tooltip, DropdownMenu, Progress, Avatar, RadioGroup, Switch, Textarea, Label
+- 从 edge-console 提炼的通用组件：
+  - `SearchableSelect<T>` — 支持搜索、异步加载、滚动分页
+  - `StatusIndicator` — 通用状态指示器（支持动画）
+  - `ConfirmDialog` / `ConfirmDeleteDialog` — 确认对话框（支持文本确认）
+  - `ProgressRing` — SVG 环形进度
+  - `CollapsibleSection` — 可折叠面板
+
+**@edge/components**
+- 业务组件发布（Layer 3，知道 Edge 概念，不调 API）：
+  - `ContainerStatus` — 容器状态显示（Pod Phase、容器就绪数）
+  - `ResourceNameDescription` — 资源名称描述（别名、描述、图标）
+  - `ReplicaAdjustmentCard` — 副本调整卡片（圆环进度、增减按钮）
+  - `ReplicaConfirmationDialog` — 副本确认对话框（倒计时自动确认）
+  - `MonitoringChart` — 监控图表（时序数据、zh-CN locale）
+
+**文档站点**
+- Nextra 3.3.1 配置，运行在端口 3030
+- 组件文档、Storybook 集成
+- 三层架构说明文档
+- 设计原则、色彩、字体、间距规范
+
+---
+
+## 版本规划
+
+| 版本 | 内容 |
+|------|------|
+| v0.1.x | 补丁修复，文档完善 |
+| v0.2.0 | Selector 系列（ClusterSelector, NamespaceSelector 等），数据获取 hooks |
+| v0.3.0 | edge-console 完整迁移，删除旧组件 |
+| v1.0.0 | 稳定 API，完整 Storybook 覆盖，Live examples |

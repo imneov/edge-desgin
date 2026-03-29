@@ -1,3 +1,166 @@
 # Scope-based Navigation Pattern
 
-Coming soon.
+范围导航模式是 Edge Console 最核心的 UX 模式——用户在两条平行的层级路径中选择当前操作范围，所有页面内容随之过滤。
+
+## 范围层级
+
+Edge 系统有两条并行的权限和资源范围链：
+
+```
+应用侧（命名空间/工作负载路径）
+Platform → Cluster → Workspace → Namespace
+
+资源侧（节点/边缘路径）
+Platform → Cluster → NodeGroup → Node
+```
+
+## 全局范围选择器
+
+顶部导航栏中的 Cluster/Namespace 选择器是全局范围的入口：
+
+```tsx
+// 顶部导航栏
+<header className="flex items-center gap-4 px-4 h-14 border-b">
+  <Logo />
+
+  {/* 全局集群选择器 */}
+  <ClusterSelector
+    value={selectedCluster}
+    onChange={setSelectedCluster}
+  />
+
+  {/* 命名空间选择器（仅 workspace 视图显示） */}
+  {view === 'workspace' && (
+    <NamespaceSelector
+      clusterId={selectedCluster}
+      value={selectedNamespace}
+      onChange={setSelectedNamespace}
+    />
+  )}
+
+  <div className="ml-auto flex items-center gap-2">
+    <UserMenu />
+  </div>
+</header>
+```
+
+## 范围感知路由
+
+Next.js App Router 通过路由参数传递范围：
+
+```
+/boss/                          → Platform 视图（无集群范围）
+/(workspace)/[cluster]/         → Cluster 范围
+/(workspace)/[cluster]/[ns]/    → Namespace 范围
+/(tenant)/[cluster]/[nodegroup]/→ NodeGroup 范围
+```
+
+```tsx
+// app/(workspace)/[cluster]/[namespace]/deployments/page.tsx
+export default function DeploymentsPage({
+  params
+}: {
+  params: { cluster: string; namespace: string }
+}) {
+  const { data } = useDeployments({
+    cluster: params.cluster,
+    namespace: params.namespace,
+  })
+  // ...
+}
+```
+
+## 面包屑导航
+
+面包屑展示当前范围层级，支持快速跳转：
+
+```tsx
+function ScopeBreadcrumb() {
+  const { cluster, namespace } = useScope()
+
+  return (
+    <nav className="flex items-center gap-1 text-sm text-muted-foreground">
+      <Link href="/" className="hover:text-foreground">Platform</Link>
+      {cluster && (
+        <>
+          <ChevronRight className="h-4 w-4" />
+          <Link
+            href={`/${cluster}`}
+            className="hover:text-foreground font-medium text-foreground"
+          >
+            {cluster}
+          </Link>
+        </>
+      )}
+      {namespace && (
+        <>
+          <ChevronRight className="h-4 w-4" />
+          <Link
+            href={`/${cluster}/${namespace}`}
+            className="hover:text-foreground font-medium text-foreground"
+          >
+            {namespace}
+          </Link>
+        </>
+      )}
+    </nav>
+  )
+}
+```
+
+## 范围切换行为
+
+切换范围时，当前页面的资源列表应自动更新：
+
+```tsx
+function ClusterSwitcher() {
+  const router = useRouter()
+  const params = useParams()
+
+  function handleClusterChange(newCluster: string) {
+    // 跳转到新集群的同级页面（保留当前 tab/路径）
+    const currentPath = getCurrentPagePath()
+    router.push(`/${newCluster}${currentPath}`)
+  }
+
+  return (
+    <Select value={params.cluster} onValueChange={handleClusterChange}>
+      {/* ... */}
+    </Select>
+  )
+}
+```
+
+## 范围权限显示
+
+不同范围的用户看到不同的侧边栏菜单项：
+
+```tsx
+function SidebarNav() {
+  const { permissions } = usePermissions()
+
+  return (
+    <nav>
+      {/* 始终显示 */}
+      <NavItem href="/overview" icon={<LayoutDashboard />}>概览</NavItem>
+
+      {/* 需要 namespace 范围权限 */}
+      {permissions.canViewWorkloads && (
+        <NavItem href="/workloads" icon={<Box />}>工作负载</NavItem>
+      )}
+
+      {/* 仅 Platform 管理员可见 */}
+      {permissions.isPlatformAdmin && (
+        <NavItem href="/users" icon={<Users />}>用户管理</NavItem>
+      )}
+    </nav>
+  )
+}
+```
+
+## 设计原则
+
+1. **范围持久化**：用户切换页面时，已选择的 Cluster/Namespace 保持不变
+2. **范围失效处理**：若用户无权访问当前范围，引导至可访问的最近范围
+3. **无范围页面**：Platform 级别页面（用户管理、集群列表）不依赖 Cluster/Namespace 选择器
+4. **URL 即状态**：范围信息编码在 URL 中，支持分享和收藏

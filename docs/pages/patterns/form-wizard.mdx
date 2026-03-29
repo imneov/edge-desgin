@@ -1,3 +1,162 @@
 # Form Wizard Pattern
 
-Coming soon.
+多步骤表单向导模式，将复杂资源创建流程拆分为有序步骤，降低用户认知负担。Edge Console 中的 `CreateClusterWizard`（集群创建）是典型实现。
+
+## 适用场景
+
+- 资源创建需要 3 个以上配置维度（如集群：基本信息、集群配置、边缘组件、标签注解）
+- 步骤间存在依赖关系（如前一步选择影响后一步的可选项）
+- 需要用户在提交前确认整体配置
+
+## 结构
+
+```
+┌──────────────────────────────────────────┐
+│  步骤指示器                               │
+│  ① 基本信息  ② 集群配置  ③ 边缘组件  ④ 标签 │
+├──────────────────────────────────────────┤
+│                                          │
+│  当前步骤内容区域                          │
+│                                          │
+├──────────────────────────────────────────┤
+│  [ 上一步 ]              [ 下一步 / 完成 ] │
+└──────────────────────────────────────────┘
+```
+
+## 实现模式
+
+### 步骤状态管理
+
+```tsx
+type StepStatus = 'pending' | 'current' | 'completed'
+
+interface WizardStep {
+  id: number
+  name: string
+  status: StepStatus
+}
+
+const [currentStep, setCurrentStep] = useState(0)
+const steps: WizardStep[] = [
+  { id: 0, name: '基本信息', status: 'current' },
+  { id: 1, name: '集群配置', status: 'pending' },
+  { id: 2, name: '边缘组件', status: 'pending' },
+  { id: 3, name: '标签及注解', status: 'pending' },
+]
+```
+
+### 步骤指示器
+
+```tsx
+function StepIndicator({ steps, currentStep }: {
+  steps: WizardStep[]
+  currentStep: number
+}) {
+  return (
+    <div className="flex items-center justify-center gap-2 mb-6">
+      {steps.map((step, index) => (
+        <React.Fragment key={step.id}>
+          <div className="flex items-center gap-2">
+            <div className={cn(
+              "h-6 w-6 rounded-full flex items-center justify-center text-xs font-medium",
+              index < currentStep && "bg-primary text-primary-foreground",
+              index === currentStep && "bg-primary text-primary-foreground ring-2 ring-primary ring-offset-2",
+              index > currentStep && "bg-muted text-muted-foreground"
+            )}>
+              {index < currentStep ? <Check className="h-3 w-3" /> : step.id + 1}
+            </div>
+            <span className={cn(
+              "text-sm",
+              index === currentStep ? "font-medium" : "text-muted-foreground"
+            )}>
+              {step.name}
+            </span>
+          </div>
+          {index < steps.length - 1 && (
+            <div className={cn(
+              "h-px w-8 bg-border",
+              index < currentStep && "bg-primary"
+            )} />
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  )
+}
+```
+
+### 导航控制
+
+```tsx
+const canProceed = useMemo(() => {
+  switch (currentStep) {
+    case 0: return nameValid && name.trim().length > 0
+    case 1: return clusterType === 'auto' || kubeconfig.trim().length > 0
+    default: return true
+  }
+}, [currentStep, nameValid, name, clusterType, kubeconfig])
+
+function handleNext() {
+  if (currentStep < steps.length - 1) {
+    setCurrentStep(prev => prev + 1)
+  } else {
+    handleSubmit()
+  }
+}
+
+// 底部按钮组
+<div className="flex justify-between pt-4 border-t">
+  <Button
+    variant="outline"
+    onClick={() => setCurrentStep(prev => prev - 1)}
+    disabled={currentStep === 0}
+  >
+    <ChevronLeft className="mr-2 h-4 w-4" />
+    上一步
+  </Button>
+  <Button onClick={handleNext} disabled={!canProceed || isCreating}>
+    {isCreating ? (
+      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+    ) : currentStep === steps.length - 1 ? (
+      '完成'
+    ) : (
+      <>
+        下一步
+        <ChevronRight className="ml-2 h-4 w-4" />
+      </>
+    )}
+  </Button>
+</div>
+```
+
+## 关键设计决策
+
+### 每步验证 vs 最终验证
+
+Edge Console 采用**每步即时验证**：每一步的必填项通过后才可以进入下一步，避免用户在最后一步发现第一步有错误。
+
+### 状态归属
+
+所有步骤的表单状态集中在父组件（Wizard）中管理，子步骤组件通过 props 接收值和更新函数：
+
+```tsx
+// ✅ 正确：状态在 Wizard 中
+function CreateClusterWizard() {
+  const [name, setName] = useState('')
+  return <Step1 name={name} onNameChange={setName} />
+}
+
+// ❌ 错误：状态分散在各步骤中（无法在步骤间共享）
+function Step1() {
+  const [name, setName] = useState('') // 无法被 Step2 访问
+}
+```
+
+### Dialog vs 全页面
+
+- 步骤 ≤ 4，字段 ≤ 20：使用 Dialog（如集群创建）
+- 步骤更多或字段复杂：考虑独立页面（如应用部署向导）
+
+## 完整示例参考
+
+参考 `edge-console/src/components/clusters/CreateClusterWizard.tsx`，这是一个完整的四步骤向导实现，涵盖步骤指示器、表单验证、异步提交和错误处理。
