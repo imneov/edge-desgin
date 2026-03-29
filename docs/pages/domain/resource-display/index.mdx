@@ -1,3 +1,449 @@
+import {
+  ClusterInfoCard,
+  NodeCard,
+  StatCard, MiniStat, NetworkStat, PodStat,
+  RingGauge, RingGaugeGroup,
+  ResourceMetricCard,
+} from '@edge/components'
+import { Cpu, HardDrive, Server, Activity } from 'lucide-react'
+import { Preview } from '../../../components/Preview'
+
 # Resource Display
 
-Coming soon.
+Status and resource metric display components for Edge Platform. These components present cluster, node, and resource data in a consistent visual style.
+
+## Import
+
+```tsx
+import {
+  ClusterInfoCard,
+  NodeCard,
+  StatCard, MiniStat, NetworkStat, PodStat,
+  RingGauge, RingGaugeGroup,
+  ResourceMetricCard,
+} from '@edge/components'
+```
+
+---
+
+## ClusterInfoCard
+
+Cluster or workspace information card with dark header, basic info grid, and optional EdgeX enablement button.
+
+### Cluster Mode
+
+<Preview center={false} bgColor="#EFF4F9">
+  <div style={{ width: 320 }}>
+    <ClusterInfoCard
+      name="hw101"
+      displayName="Hardware Cluster 101"
+      clusterId="cluster-001"
+      type="cluster"
+      isHost={true}
+      description="Primary production cluster"
+      provider="edge-platform"
+      status="正常"
+      kubernetesVersion="v1.28.4"
+      platformVersion="v2.4.0"
+    />
+  </div>
+</Preview>
+
+```tsx
+<ClusterInfoCard
+  name="hw101"
+  displayName="Hardware Cluster 101"
+  clusterId="cluster-001"
+  type="cluster"
+  isHost={true}
+  description="Primary production cluster"
+  status="正常"
+  kubernetesVersion="v1.28.4"
+  platformVersion="v2.4.0"
+/>
+```
+
+### Workspace Mode
+
+<Preview center={false} bgColor="#EFF4F9">
+  <div style={{ width: 320 }}>
+    <ClusterInfoCard
+      name="ws-prod"
+      displayName="Production Workspace"
+      clusterId="cluster-001"
+      clusterName="Hardware Cluster 101"
+      type="workspace"
+      description="Production workloads"
+      status="正常"
+      namespaceCount={12}
+      edgeRuntime="openyurt"
+      isEdgeXEnabled={false}
+      showEdgeXButton={true}
+    />
+  </div>
+</Preview>
+
+```tsx
+<ClusterInfoCard
+  name="ws-prod"
+  displayName="Production Workspace"
+  clusterId="cluster-001"
+  clusterName="Hardware Cluster 101"
+  type="workspace"
+  status="正常"
+  namespaceCount={12}
+  edgeRuntime="openyurt"
+  isEdgeXEnabled={false}
+  showEdgeXButton={true}
+  onEnableEdgeX={async () => { /* API call */ }}
+/>
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | — | Resource name |
+| `displayName` | `string` | — | Human-readable display name |
+| `clusterId` | `string` | — | Cluster ID |
+| `type` | `'cluster' \| 'workspace'` | `'cluster'` | Card display mode |
+| `isHost` | `boolean` | `false` | Show "主集群" badge |
+| `description` | `string` | — | Description shown in header |
+| `provider` | `string` | `'edge-platform'` | Provider name |
+| `status` | `string` | `'正常'` | Status text |
+| `kubernetesVersion` | `string` | — | Kubernetes version |
+| `platformVersion` | `string` | — | EdgePlatform version |
+| `clusterName` | `string` | — | Parent cluster name (workspace only) |
+| `namespaceCount` | `number` | — | Namespace count (workspace only) |
+| `edgeRuntime` | `string` | — | Edge runtime type (workspace only) |
+| `isEdgeXEnabled` | `boolean` | `false` | Whether EdgeX is enabled |
+| `onEnableEdgeX` | `() => Promise<void>` | — | Enable EdgeX callback |
+| `showEdgeXButton` | `boolean` | — | Force show EdgeX button |
+| `className` | `string` | `''` | Additional CSS classes |
+
+---
+
+## NodeCard
+
+Node status card displaying resource usage (CPU, memory, disk, GPU) with radial charts. White background with hover shadow.
+
+<Preview center={false} bgColor="#EFF4F9">
+  <div style={{ width: 340 }}>
+    <NodeCard
+      name="edge-node-01"
+      aliasName="Factory Floor Node"
+      ip="192.168.1.101"
+      isReady={true}
+      cpuPercent={42}
+      memPercent={68}
+      diskPercent={35}
+      gpuPercent={0}
+      podCount={8}
+      podCapacity={110}
+      load1={1.24}
+    />
+  </div>
+</Preview>
+
+```tsx
+<NodeCard
+  name="edge-node-01"
+  aliasName="Factory Floor Node"
+  ip="192.168.1.101"
+  isReady={true}
+  cpuPercent={42}
+  memPercent={68}
+  diskPercent={35}
+  gpuPercent={0}
+  podCount={8}
+  podCapacity={110}
+  load1={1.24}
+  onClick={() => router.push(`/nodes/edge-node-01`)}
+/>
+```
+
+### Warning State
+
+<Preview center={false} bgColor="#EFF4F9">
+  <div style={{ width: 340 }}>
+    <NodeCard
+      name="edge-node-02"
+      ip="192.168.1.102"
+      isReady={true}
+      cpuPercent={88}
+      memPercent={91}
+      diskPercent={72}
+      gpuPercent={0}
+      podCount={24}
+      podCapacity={110}
+      load1={4.56}
+    />
+  </div>
+</Preview>
+
+### Offline State
+
+<Preview center={false} bgColor="#EFF4F9">
+  <div style={{ width: 340 }}>
+    <NodeCard
+      name="edge-node-03"
+      ip="192.168.1.103"
+      isReady={false}
+      cpuPercent={0}
+      memPercent={0}
+      diskPercent={0}
+      gpuPercent={0}
+      podCount={0}
+      podCapacity={110}
+      load1={0}
+    />
+  </div>
+</Preview>
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | — | Node name |
+| `aliasName` | `string` | — | Display alias (shown if different from name) |
+| `tenant` | `string` | — | Tenant label |
+| `ip` | `string` | — | Node IP address |
+| `isReady` | `boolean` | — | Node ready state |
+| `cpuPercent` | `number` | — | CPU usage 0–100 |
+| `memPercent` | `number` | — | Memory usage 0–100 |
+| `diskPercent` | `number` | — | Disk usage 0–100 |
+| `gpuPercent` | `number` | `0` | GPU usage 0–100 |
+| `podCount` | `number` | `0` | Current pod count |
+| `podCapacity` | `number` | `0` | Max pod capacity |
+| `load1` | `number` | `0` | 1-minute load average |
+| `onClick` | `() => void` | — | Click callback |
+| `className` | `string` | `''` | Additional CSS classes |
+
+**Status thresholds:** `warning` when any resource ≥ 80%, `offline` when `isReady` is `false`.
+
+---
+
+## StatCard
+
+Dark-theme statistics card for cockpit-style dashboards. Use with dark backgrounds.
+
+<Preview dark>
+  <div className="grid grid-cols-2 gap-3" style={{ width: 480 }}>
+    <StatCard
+      icon={Cpu}
+      value={42}
+      unit="%"
+      label="CPU Usage"
+      colorMode="cyan"
+    />
+    <StatCard
+      icon={Server}
+      value={8}
+      unit=" nodes"
+      label="Active Nodes"
+      colorMode="success"
+      trend="up"
+      trendValue="+2"
+    />
+    <StatCard
+      icon={Activity}
+      value={156}
+      label="Running Pods"
+      colorMode="purple"
+    />
+    <StatCard
+      icon={HardDrive}
+      value={78}
+      unit="%"
+      label="Disk Usage"
+      colorMode="warning"
+    />
+  </div>
+</Preview>
+
+```tsx
+<StatCard
+  icon={Cpu}
+  value={42}
+  unit="%"
+  label="CPU Usage"
+  colorMode="cyan"
+  trend="up"
+  trendValue="+5%"
+/>
+```
+
+### Color Modes
+
+`cyan` · `success` · `warning` · `danger` · `purple` · `default`
+
+### Compound Components
+
+**NetworkStat** — Inbound/outbound traffic display:
+
+<Preview dark>
+  <div style={{ width: 220 }}>
+    <NetworkStat inbound="1.2 GB/s" outbound="856 MB/s" />
+  </div>
+</Preview>
+
+**PodStat** — Pod status with progress bar:
+
+<Preview dark>
+  <div style={{ width: 220 }}>
+    <PodStat total={42} running={38} abnormal={3} failed={1} />
+  </div>
+</Preview>
+
+**MiniStat** — Compact inline stat:
+
+<Preview dark>
+  <div className="flex gap-8">
+    <MiniStat label="Nodes" value="12" color="success" />
+    <MiniStat label="Pods" value="156" color="cyan" />
+    <MiniStat label="Errors" value="3" color="danger" />
+  </div>
+</Preview>
+
+### StatCard Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `icon` | `LucideIcon` | — | Icon component |
+| `value` | `string \| number` | — | Main metric value |
+| `label` | `string` | — | Metric label |
+| `unit` | `string` | — | Unit shown after value |
+| `colorMode` | `ColorMode` | `'default'` | Color theme |
+| `trend` | `'up' \| 'down' \| 'neutral'` | — | Trend direction |
+| `trendValue` | `string` | — | Trend text (e.g. `"+5%"`) |
+| `subInfo` | `React.ReactNode` | — | Footer section content |
+| `className` | `string` | `''` | Additional CSS classes |
+
+---
+
+## RingGauge
+
+Circular SVG gauge for resource utilization. Auto-colors based on thresholds (green → yellow → red) or fixed color modes.
+
+<Preview dark>
+  <RingGaugeGroup>
+    <RingGauge value={35} label="CPU" size="md" />
+    <RingGauge value={68} label="Memory" size="md" />
+    <RingGauge value={82} label="Disk" size="md" colorMode="warning" />
+    <RingGauge value={95} label="GPU" size="md" colorMode="danger" />
+  </RingGaugeGroup>
+</Preview>
+
+```tsx
+<RingGaugeGroup>
+  <RingGauge value={cpuPercent} label="CPU" />
+  <RingGauge value={memPercent} label="Memory" />
+  <RingGauge value={diskPercent} label="Disk" />
+</RingGaugeGroup>
+```
+
+### Size Variants
+
+<Preview dark>
+  <div className="flex items-end gap-6">
+    <RingGauge value={62} label="Small" size="sm" colorMode="cyan" />
+    <RingGauge value={62} label="Medium" size="md" colorMode="cyan" />
+    <RingGauge value={62} label="Large" size="lg" colorMode="cyan" />
+  </div>
+</Preview>
+
+### Custom Display Value
+
+<Preview dark>
+  <RingGauge value={73} label="Memory" size="md" displayValue="5.8G" colorMode="auto" />
+</Preview>
+
+```tsx
+<RingGauge
+  value={73}
+  label="Memory"
+  displayValue="5.8G"
+  unit="GB"
+/>
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | — | Percentage 0–100 |
+| `label` | `string` | — | Label text below gauge |
+| `unit` | `string` | `'%'` | Unit for display |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Gauge size |
+| `colorMode` | `RingGaugeColorMode` | `'auto'` | Color mode (`auto` uses threshold coloring) |
+| `animated` | `boolean` | `true` | Animate value changes |
+| `displayValue` | `string` | — | Override percentage display |
+| `strokeWidth` | `number` | — | Ring stroke width override |
+| `className` | `string` | `''` | Additional CSS classes |
+
+**Auto-color thresholds:** < 70% → cyan, 70–85% → yellow, ≥ 85% → red.
+
+---
+
+## ResourceMetricCard
+
+Compact resource selection card with progress bar. Used for switching between resource views (CPU / Memory / Disk).
+
+<Preview bgColor="#EFF4F9">
+  <div className="flex gap-3">
+    <ResourceMetricCard
+      type="cpu"
+      currentValue={4.2}
+      totalValue={8.0}
+      unit=" cores"
+      selected={true}
+      onClick={() => {}}
+    />
+    <ResourceMetricCard
+      type="memory"
+      currentValue={11.4}
+      totalValue={16.0}
+      unit=" GB"
+      selected={false}
+      onClick={() => {}}
+    />
+    <ResourceMetricCard
+      type="disk"
+      currentValue={234}
+      totalValue={500}
+      unit=" GB"
+      selected={false}
+      onClick={() => {}}
+    />
+  </div>
+</Preview>
+
+```tsx
+const [activeMetric, setActiveMetric] = useState<ResourceMetricType>('cpu')
+
+{(['cpu', 'memory', 'disk'] as ResourceMetricType[]).map(type => (
+  <ResourceMetricCard
+    key={type}
+    type={type}
+    currentValue={metrics[type].current}
+    totalValue={metrics[type].total}
+    unit={metrics[type].unit}
+    selected={activeMetric === type}
+    onClick={() => setActiveMetric(type)}
+  />
+))}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `type` | `'cpu' \| 'memory' \| 'disk'` | — | Resource type (controls icon and color) |
+| `currentValue` | `number` | — | Current usage |
+| `totalValue` | `number` | — | Total capacity |
+| `unit` | `string` | — | Unit string (e.g. `" cores"`, `" GB"`) |
+| `selected` | `boolean` | — | Highlight with blue border |
+| `onClick` | `() => void` | — | Selection callback |
+| `className` | `string` | `''` | Additional CSS classes |
+
+**Color scheme:** CPU → blue, Memory → green, Disk → orange.
