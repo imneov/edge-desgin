@@ -4,5 +4,6 @@ export default {
   monitoring: 'Monitoring',
   dialogs: 'Dialogs',
   topology: 'Topology',
+  metadata: 'Metadata',
   terminal: 'Terminal',
 }

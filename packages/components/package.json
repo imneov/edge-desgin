@@ -27,8 +27,9 @@
     "react-dom": "^18.0.0"
   },
   "dependencies": {
-    "@edge/ui": "workspace:*",
     "@edge/tokens": "workspace:*",
+    "@edge/ui": "workspace:*",
+    "@xyflow/react": "^12.10.2",
     "lucide-react": "^0.562.0",
     "recharts": "^3.1.2"
   },

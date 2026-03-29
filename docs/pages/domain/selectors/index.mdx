@@ -1,3 +1,273 @@
+import { ClusterSelector, WorkspaceSelector, NamespaceSelector, NodeGroupSelector } from '@edge/components'
+import { Preview } from '../../../components/Preview'
+
 # Selectors
 
-Coming soon.
+Domain selectors for choosing Edge Platform resources. All selectors support search, loading states, and optional "All" options.
+
+## Import
+
+```tsx
+import {
+  ClusterSelector,
+  WorkspaceSelector,
+  NamespaceSelector,
+  NodeGroupSelector,
+} from '@edge/components'
+```
+
+## Common Features
+
+All selectors share these features:
+
+- **Search**: Real-time filtering by resource name (ClusterSelector also filters by alias)
+- **Loading State**: Shows loading indicator while fetching data
+- **Clearable**: Users can clear the current selection
+- **"All" Option**: Optional "All {Resources}" choice for filtering scenarios
+- **Width Control**: Fixed width or responsive sizing
+
+## ClusterSelector
+
+Select clusters with support for alias names.
+
+<Preview>
+  <ClusterSelector
+    value="hw101"
+    onValueChange={(value) => console.log('Selected:', value)}
+    clusters={[
+      { metadata: { name: 'hw101', annotations: { 'theriseunion.io/alias-name': 'Hardware Cluster 101' } } },
+      { metadata: { name: 'hk-test', annotations: { 'theriseunion.io/alias-name': 'HK Test Cluster' } } },
+      { metadata: { name: 'staging-01' } },
+    ]}
+    includeAllOption={true}
+    placeholder="选择集群"
+    width={300}
+  />
+</Preview>
+
+```tsx
+import { ClusterSelector } from '@edge/components'
+
+function ClusterFilter() {
+  const [selectedCluster, setSelectedCluster] = useState('all')
+  const [clusters, setClusters] = useState<ClusterData[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Fetch clusters from API
+    fetchClusters().then(data => {
+      setClusters(data)
+      setLoading(false)
+    })
+  }, [])
+
+  return (
+    <ClusterSelector
+      value={selectedCluster}
+      onValueChange={setSelectedCluster}
+      clusters={clusters}
+      loading={loading}
+      includeAllOption={true}
+      placeholder="选择集群"
+      width={300}
+    />
+  )
+}
+```
+
+### ClusterSelector Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Currently selected cluster name |
+| `onValueChange` | `(value: string) => void` | — | Callback when selection changes |
+| `clusters` | `ClusterData[]` | — | Cluster data array |
+| `loading` | `boolean` | `false` | Show loading indicator |
+| `placeholder` | `string` | `"选择集群"` | Placeholder text |
+| `className` | `string` | — | Additional CSS classes |
+| `width` | `string \| number` | — | Component width |
+| `includeAllOption` | `boolean` | `true` | Include "所有集群" option |
+
+**ClusterData Type:**
+
+```tsx
+interface ClusterData {
+  metadata: {
+    name: string
+    annotations?: {
+      'theriseunion.io/alias-name'?: string
+    }
+  }
+}
+```
+
+## WorkspaceSelector
+
+Select workspaces within the platform.
+
+<Preview>
+  <WorkspaceSelector
+    value="workspace-prod"
+    onValueChange={(value) => console.log('Selected:', value)}
+    workspaces={[
+      { metadata: { name: 'workspace-prod' } },
+      { metadata: { name: 'workspace-staging' } },
+      { metadata: { name: 'workspace-dev' } },
+    ]}
+    includeAllOption={true}
+    placeholder="选择工作空间"
+    width={280}
+  />
+</Preview>
+
+```tsx
+import { WorkspaceSelector } from '@edge/components'
+
+function WorkspaceFilter() {
+  const [selectedWorkspace, setSelectedWorkspace] = useState('all')
+  const [workspaces, setWorkspaces] = useState<WorkspaceData[]>([])
+
+  return (
+    <WorkspaceSelector
+      value={selectedWorkspace}
+      onValueChange={setSelectedWorkspace}
+      workspaces={workspaces}
+      includeAllOption={true}
+      placeholder="选择工作空间"
+      width={280}
+    />
+  )
+}
+```
+
+### WorkspaceSelector Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Currently selected workspace name |
+| `onValueChange` | `(value: string) => void` | — | Callback when selection changes |
+| `workspaces` | `WorkspaceData[]` | — | Workspace data array |
+| `loading` | `boolean` | `false` | Show loading indicator |
+| `placeholder` | `string` | `"选择工作空间"` | Placeholder text |
+| `className` | `string` | — | Additional CSS classes |
+| `width` | `string \| number` | — | Component width |
+| `includeAllOption` | `boolean` | `true` | Include "所有工作空间" option |
+
+## NamespaceSelector
+
+Select Kubernetes namespaces within a cluster or workspace.
+
+<Preview>
+  <NamespaceSelector
+    value="default"
+    onValueChange={(value) => console.log('Selected:', value)}
+    namespaces={[
+      { metadata: { name: 'default' } },
+      { metadata: { name: 'kube-system' } },
+      { metadata: { name: 'edge-system' } },
+      { metadata: { name: 'monitoring' } },
+    ]}
+    includeAllOption={true}
+    placeholder="选择命名空间"
+    width={260}
+  />
+</Preview>
+
+```tsx
+import { NamespaceSelector } from '@edge/components'
+
+function NamespaceFilter() {
+  const [selectedNamespace, setSelectedNamespace] = useState('all')
+  const [namespaces, setNamespaces] = useState<NamespaceData[]>([])
+
+  return (
+    <NamespaceSelector
+      value={selectedNamespace}
+      onValueChange={setSelectedNamespace}
+      namespaces={namespaces}
+      includeAllOption={true}
+      placeholder="选择命名空间"
+      width={260}
+    />
+  )
+}
+```
+
+### NamespaceSelector Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Currently selected namespace name |
+| `onValueChange` | `(value: string) => void` | — | Callback when selection changes |
+| `namespaces` | `NamespaceData[]` | — | Namespace data array |
+| `loading` | `boolean` | `false` | Show loading indicator |
+| `placeholder` | `string` | `"选择命名空间"` | Placeholder text |
+| `className` | `string` | — | Additional CSS classes |
+| `width` | `string \| number` | — | Component width |
+| `includeAllOption` | `boolean` | `true` | Include "所有命名空间" option |
+
+## NodeGroupSelector
+
+Select edge node groups for edge resource management.
+
+<Preview>
+  <NodeGroupSelector
+    value="node-group-edge-01"
+    onValueChange={(value) => console.log('Selected:', value)}
+    nodeGroups={[
+      { metadata: { name: 'node-group-edge-01' } },
+      { metadata: { name: 'node-group-edge-02' } },
+      { metadata: { name: 'node-group-factory' } },
+    ]}
+    includeAllOption={true}
+    placeholder="选择节点组"
+    width={280}
+  />
+</Preview>
+
+```tsx
+import { NodeGroupSelector } from '@edge/components'
+
+function NodeGroupFilter() {
+  const [selectedNodeGroup, setSelectedNodeGroup] = useState('all')
+  const [nodeGroups, setNodeGroups] = useState<NodeGroupData[]>([])
+
+  return (
+    <NodeGroupSelector
+      value={selectedNodeGroup}
+      onValueChange={setSelectedNodeGroup}
+      nodeGroups={nodeGroups}
+      includeAllOption={true}
+      placeholder="选择节点组"
+      width={280}
+    />
+  )
+}
+```
+
+### NodeGroupSelector Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Currently selected node group name |
+| `onValueChange` | `(value: string) => void` | — | Callback when selection changes |
+| `nodeGroups` | `NodeGroupData[]` | — | Node group data array |
+| `loading` | `boolean` | `false` | Show loading indicator |
+| `placeholder` | `string` | `"选择节点组"` | Placeholder text |
+| `className` | `string` | — | Additional CSS classes |
+| `width` | `string \| number` | — | Component width |
+| `includeAllOption` | `boolean` | `true` | Include "所有节点组" option |
+
+## Edge Console Usage
+
+These selectors are used throughout Edge Console for resource filtering and selection:
+
+- **Cluster View**: Filter by cluster across multiple workspaces
+- **Workspace View**: Switch between workspaces and filter resources
+- **Namespace View**: Select namespace for workload deployment
+- **Edge Management**: Choose node groups for edge device operations
+
+## Related Components
+
+- [Monitoring Chart](/domain/monitoring) - Time-series data visualization
+- [Resource Display](/domain/resource-display) - Resource metadata components
