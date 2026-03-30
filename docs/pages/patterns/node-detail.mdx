@@ -1,0 +1,293 @@
+import { KPICard, ResourceChart } from '@edge/ui'
+import {
+  NodeCard,
+  RingGauge,
+  RingGaugeGroup,
+  ContainerStatus,
+  LabelsDisplay,
+  AnnotationsDisplay,
+} from '@edge/components'
+import { Preview } from '../../components/Preview'
+import { Activity, Box, Network, RefreshCw } from 'lucide-react'
+
+# Node Detail Pattern
+
+节点详情页面的标准组合模式，展示单个节点的全面运行状态：基本信息、资源仪表、监控图表、Pod 状态、元数据。
+
+## 布局结构
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  NodeCard  (节点基本信息、IP、健康状态)                   │  ← 节点信息卡
+├─────────────────────────────────────────────────────────┤
+│  RingGauge (CPU)  RingGauge (内存)  RingGauge (磁盘)     │  ← 圆环仪表组
+├─────────────────────────────────────────────────────────┤
+│  KPICard × 4  (Pod数 / 系统负载 / 网络 / 重启)           │  ← KPI 行
+├─────────────────────────────────────────────────────────┤
+│  ResourceChart (CPU)   │  ResourceChart (内存)           │  ← 趋势图表
+│  ResourceChart (磁盘)  │  ResourceChart (网络)           │
+├─────────────────────────────────────────────────────────┤
+│  LabelsDisplay              AnnotationsDisplay          │  ← 元数据
+└─────────────────────────────────────────────────────────┘
+```
+
+## 组件清单
+
+| 区域 | 组件 | 来源 |
+|------|------|------|
+| 节点信息卡 | [`NodeCard`](/domain/resource-display) | `@edge/components` |
+| 资源仪表 | [`RingGauge`、`RingGaugeGroup`](/domain/resource-display) | `@edge/components` |
+| KPI 行 | [`KPICard`](/domain/monitoring/metrics-cards) | `@edge/ui` |
+| 趋势图表 | [`ResourceChart`](/domain/monitoring/charts) | `@edge/ui` |
+| 容器状态 | [`ContainerStatus`](/domain/resource-display) | `@edge/components` |
+| 标签 | [`LabelsDisplay`](/domain/metadata) | `@edge/components` |
+| 注解 | [`AnnotationsDisplay`](/domain/metadata) | `@edge/components` |
+
+## 组合代码示例
+
+```tsx
+import { KPICard, ResourceChart } from '@edge/ui'
+import {
+  NodeCard,
+  RingGauge,
+  RingGaugeGroup,
+  ContainerStatus,
+  LabelsDisplay,
+  AnnotationsDisplay,
+} from '@edge/components'
+import { Activity, Box, Network, RefreshCw } from 'lucide-react'
+
+export function NodeDetailPage({ node }) {
+  return (
+    <div className="space-y-6 p-6">
+      {/* 节点信息卡 */}
+      <NodeCard
+        name={node.name}
+        aliasName={node.aliasName}
+        tenant={node.tenant}
+        ip={node.ip}
+        isReady={node.isReady}
+        cpuPercent={node.cpuPercent}
+        memPercent={node.memPercent}
+        diskPercent={node.diskPercent}
+        podCount={node.podCount}
+        podCapacity={node.podCapacity}
+        load1={node.load1}
+      />
+
+      {/* 圆环仪表组 */}
+      <RingGaugeGroup>
+        <RingGauge
+          value={node.cpuPercent}
+          label="CPU"
+          unit="%"
+          size="lg"
+        />
+        <RingGauge
+          value={node.memPercent}
+          label="内存"
+          unit="%"
+          size="lg"
+        />
+        <RingGauge
+          value={node.diskPercent}
+          label="磁盘"
+          unit="%"
+          size="lg"
+        />
+      </RingGaugeGroup>
+
+      {/* KPI 行 */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KPICard
+          icon={Box}
+          title="运行 Pod"
+          value={`${node.podCount}/${node.podCapacity}`}
+          iconBgColor="bg-blue-50"
+          iconColor="text-blue-600"
+        />
+        <KPICard
+          icon={Activity}
+          title="系统负载"
+          value={node.load1}
+          iconBgColor="bg-amber-50"
+          iconColor="text-amber-600"
+        />
+        <KPICard
+          icon={Network}
+          title="网络接收"
+          value={node.net.in}
+          unit="MB/s"
+          iconBgColor="bg-green-50"
+          iconColor="text-green-600"
+        />
+        <KPICard
+          icon={RefreshCw}
+          title="重启次数"
+          value={node.restartCount}
+          unit="次"
+          iconBgColor="bg-gray-50"
+          iconColor="text-gray-500"
+        />
+      </div>
+
+      {/* 趋势图表 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ResourceChart
+          title="CPU 使用率"
+          percentage={node.cpuPercent}
+          timeSeries={node.cpuSeries}
+          color="#3b82f6"
+          unit="%"
+          currentValue={`${node.cpu.used} / ${node.cpu.total} cores`}
+        />
+        <ResourceChart
+          title="内存使用率"
+          percentage={node.memPercent}
+          timeSeries={node.memSeries}
+          color="#8b5cf6"
+          unit="%"
+          currentValue={`${node.mem.used} / ${node.mem.total} GB`}
+        />
+        <ResourceChart
+          title="磁盘使用率"
+          percentage={node.diskPercent}
+          timeSeries={node.diskSeries}
+          color="#f59e0b"
+          unit="%"
+          currentValue={`${node.disk.used} / ${node.disk.total} GB`}
+        />
+        <ResourceChart
+          title="网络吞吐"
+          percentage={node.netPercent}
+          timeSeries={node.netSeries}
+          color="#10b981"
+          unit="MB/s"
+          currentValue={`↑${node.net.out} ↓${node.net.in}`}
+        />
+      </div>
+
+      {/* Pod 容器状态 */}
+      <ContainerStatus containers={node.podStatus} />
+
+      {/* 元数据 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium text-gray-700">标签 (Labels)</h4>
+          <LabelsDisplay labels={node.metadata.labels} />
+        </div>
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium text-gray-700">注解 (Annotations)</h4>
+          <AnnotationsDisplay annotations={node.metadata.annotations} />
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+## Live Preview
+
+### 节点信息卡
+
+<Preview center={false} bgColor="#f8fafc">
+  <div className="p-4 w-full">
+    <NodeCard
+      name="edge-node-01"
+      aliasName="华南机房-节点1"
+      ip="192.168.10.21"
+      isReady={true}
+      cpuPercent={58}
+      memPercent={72}
+      diskPercent={41}
+      podCount={18}
+      podCapacity={110}
+      load1={1.24}
+    />
+  </div>
+</Preview>
+
+### 资源圆环仪表组
+
+<Preview center={false} bgColor="#f8fafc">
+  <div className="flex gap-8 p-6 justify-center w-full">
+    <RingGaugeGroup>
+      <RingGauge value={58} label="CPU" unit="%" size="lg" />
+      <RingGauge value={72} label="内存" unit="%" size="lg" />
+      <RingGauge value={41} label="磁盘" unit="%" size="lg" />
+    </RingGaugeGroup>
+  </div>
+</Preview>
+
+### KPI 行
+
+<Preview center={false} bgColor="#f8fafc">
+  <div className="grid grid-cols-4 gap-3 p-4 w-full">
+    <KPICard
+      icon={Box}
+      title="运行 Pod"
+      value="18/110"
+      iconBgColor="bg-blue-50"
+      iconColor="text-blue-600"
+    />
+    <KPICard
+      icon={Activity}
+      title="系统负载"
+      value="1.24"
+      iconBgColor="bg-amber-50"
+      iconColor="text-amber-600"
+    />
+    <KPICard
+      icon={Network}
+      title="网络接收"
+      value="12.4"
+      unit="MB/s"
+      iconBgColor="bg-green-50"
+      iconColor="text-green-600"
+    />
+    <KPICard
+      icon={RefreshCw}
+      title="重启次数"
+      value={0}
+      unit="次"
+      iconBgColor="bg-gray-50"
+      iconColor="text-gray-500"
+    />
+  </div>
+</Preview>
+
+### 元数据区
+
+<Preview center={false} bgColor="#f8fafc">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 w-full">
+    <div className="space-y-2">
+      <h4 className="text-sm font-medium text-gray-700">标签 (Labels)</h4>
+      <LabelsDisplay
+        labels={{
+          'kubernetes.io/hostname': 'edge-node-01',
+          'node-role.kubernetes.io/worker': '',
+          region: 'south-china',
+          zone: 'sz-dc-01',
+        }}
+      />
+    </div>
+    <div className="space-y-2">
+      <h4 className="text-sm font-medium text-gray-700">注解 (Annotations)</h4>
+      <AnnotationsDisplay
+        annotations={{
+          'node.alpha.kubernetes.io/ttl': '0',
+          'volumes.kubernetes.io/controller-managed-attach-detach': 'true',
+        }}
+      />
+    </div>
+  </div>
+</Preview>
+
+## 布局规则
+
+- **NodeCard** 固定全宽，作为页面信息头，提供节点状态快速判断。
+- **RingGaugeGroup** 最多显示 3 个仪表（CPU / 内存 / 磁盘）；如节点有 GPU 则增加第 4 个。
+- **KPI 行** 移动端 2 列，桌面端 4 列；指标随节点类型调整（GPU 节点替换为 GPU 使用率）。
+- **图表网格** 移动端单列，桌面端双列，共享时间范围。
+- **ContainerStatus** 可选，仅在节点有运行中的 Pod 时展示。
+- 元数据区两列并排，空值时分别显示 `emptyMessage`。

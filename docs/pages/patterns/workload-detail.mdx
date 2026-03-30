@@ -1,0 +1,227 @@
+import { KPICard, ResourceChart } from '@edge/ui'
+import {
+  ResourceNameDescription,
+  ContainerStatus,
+  ReplicaAdjustmentCard,
+  LabelsDisplay,
+  AnnotationsDisplay,
+} from '@edge/components'
+import { Preview } from '../../components/Preview'
+import { Cpu, MemoryStick, Box, RefreshCw } from 'lucide-react'
+
+# Workload Detail Pattern
+
+工作负载详情页面的标准组合模式，覆盖 Deployment、StatefulSet、DaemonSet 等工作负载类型。
+
+## 布局结构
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  ResourceNameDescription  │  ReplicaAdjustmentCard      │  ← 信息头
+├─────────────────────────────────────────────────────────┤
+│  KPICard × 4  (CPU / 内存 / Pod数 / 重启次数)           │  ← KPI 行
+├─────────────────────────────────────────────────────────┤
+│  ResourceChart (CPU 用率)  │  ResourceChart (内存用率)   │  ← 监控图表
+├─────────────────────────────────────────────────────────┤
+│  ContainerStatus  (容器状态)                            │  ← 容器状态
+├─────────────────────────────────────────────────────────┤
+│  LabelsDisplay              AnnotationsDisplay          │  ← 元数据
+└─────────────────────────────────────────────────────────┘
+```
+
+## 组件清单
+
+| 区域 | 组件 | 来源 |
+|------|------|------|
+| 信息头 | [`ResourceNameDescription`](/domain/resource-display) | `@edge/components` |
+| 副本控制 | [`ReplicaAdjustmentCard`](/domain/resource-display/replica-adjustment) | `@edge/components` |
+| KPI 行 | [`KPICard`](/domain/monitoring/metrics-cards) | `@edge/ui` |
+| 监控图表 | [`ResourceChart`](/domain/monitoring/charts) | `@edge/ui` |
+| 容器状态 | [`ContainerStatus`](/domain/resource-display) | `@edge/components` |
+| 标签 | [`LabelsDisplay`](/domain/metadata) | `@edge/components` |
+| 注解 | [`AnnotationsDisplay`](/domain/metadata) | `@edge/components` |
+
+## 组合代码示例
+
+```tsx
+import { useState } from 'react'
+import { KPICard, ResourceChart } from '@edge/ui'
+import {
+  ResourceNameDescription,
+  ContainerStatus,
+  ReplicaAdjustmentCard,
+  ReplicaConfirmationDialog,
+  LabelsDisplay,
+  AnnotationsDisplay,
+} from '@edge/components'
+import { Cpu, MemoryStick, Box, RefreshCw } from 'lucide-react'
+
+export function WorkloadDetailPage({ workload }) {
+  const [desiredReplicas, setDesiredReplicas] = useState(workload.spec.replicas)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [pendingReplicas, setPendingReplicas] = useState(desiredReplicas)
+
+  function handleReplicaChange(n: number) {
+    setPendingReplicas(n)
+    setConfirmOpen(true)
+  }
+
+  async function handleConfirm() {
+    await scaleWorkload(workload.name, pendingReplicas)
+    setDesiredReplicas(pendingReplicas)
+    setConfirmOpen(false)
+  }
+
+  return (
+    <div className="space-y-6 p-6">
+      {/* 信息头 */}
+      <div className="flex items-start justify-between gap-4">
+        <ResourceNameDescription
+          name={workload.name}
+          alias={workload.alias}
+          description={workload.description}
+        />
+        <ReplicaAdjustmentCard
+          currentReplicas={workload.status.readyReplicas}
+          desiredReplicas={desiredReplicas}
+          onReplicaChange={handleReplicaChange}
+        />
+      </div>
+
+      {/* KPI 行 */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KPICard icon={Cpu}       title="CPU 使用率"  value={workload.cpuPercent}    unit="%" />
+        <KPICard icon={MemoryStick} title="内存使用率" value={workload.memPercent}  unit="%" />
+        <KPICard icon={Box}       title="Pod 数量"   value={workload.status.readyReplicas} unit="个" />
+        <KPICard icon={RefreshCw} title="重启次数"   value={workload.restartCount}  unit="次" />
+      </div>
+
+      {/* 监控图表 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ResourceChart
+          title="CPU 使用率"
+          percentage={workload.cpuPercent}
+          timeSeries={workload.cpuSeries}
+          color="#3b82f6"
+          unit="%"
+          currentValue={`${workload.cpu.used} / ${workload.cpu.limit} cores`}
+        />
+        <ResourceChart
+          title="内存使用率"
+          percentage={workload.memPercent}
+          timeSeries={workload.memSeries}
+          color="#8b5cf6"
+          unit="%"
+          currentValue={`${workload.mem.used} / ${workload.mem.limit} GB`}
+        />
+      </div>
+
+      {/* 容器状态 */}
+      <ContainerStatus containers={workload.podStatus} />
+
+      {/* 元数据 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <LabelsDisplay labels={workload.metadata.labels} />
+        <AnnotationsDisplay annotations={workload.metadata.annotations} />
+      </div>
+
+      {/* 副本确认弹框 */}
+      <ReplicaConfirmationDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        currentReplicas={desiredReplicas}
+        targetReplicas={pendingReplicas}
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirmOpen(false)}
+      />
+    </div>
+  )
+}
+```
+
+## Live Preview
+
+### 信息头 + 副本控制
+
+<Preview center={false} bgColor="#f8fafc">
+  <div className="flex items-start justify-between gap-4 p-6 w-full">
+    <ResourceNameDescription
+      name="edge-gateway"
+      alias="边缘网关"
+      description="负责边缘节点流量入口转发"
+    />
+    <ReplicaAdjustmentCard
+      currentReplicas={2}
+      desiredReplicas={3}
+      onReplicaChange={() => {}}
+    />
+  </div>
+</Preview>
+
+### KPI 行
+
+<Preview center={false} bgColor="#f8fafc">
+  <div className="grid grid-cols-4 gap-3 p-4 w-full">
+    <KPICard
+      icon={Cpu}
+      title="CPU 使用率"
+      value="34.2"
+      unit="%"
+    />
+    <KPICard
+      icon={MemoryStick}
+      title="内存使用率"
+      value="61.8"
+      unit="%"
+      iconBgColor="bg-purple-50"
+      iconColor="text-purple-600"
+    />
+    <KPICard
+      icon={Box}
+      title="Pod 数量"
+      value={3}
+      unit="个"
+      iconBgColor="bg-green-50"
+      iconColor="text-green-600"
+      trend={{ value: 1, isPositive: true }}
+    />
+    <KPICard
+      icon={RefreshCw}
+      title="重启次数"
+      value={0}
+      unit="次"
+      iconBgColor="bg-gray-50"
+      iconColor="text-gray-500"
+    />
+  </div>
+</Preview>
+
+### 元数据区
+
+<Preview center={false} bgColor="#f8fafc">
+  <div className="grid grid-cols-2 gap-4 p-4 w-full">
+    <LabelsDisplay
+      labels={{
+        app: 'edge-gateway',
+        env: 'production',
+        tier: 'frontend',
+        version: 'v2.1.0',
+      }}
+    />
+    <AnnotationsDisplay
+      annotations={{
+        'deployment.kubernetes.io/revision': '5',
+        'kubectl.kubernetes.io/last-applied-configuration': '...',
+      }}
+    />
+  </div>
+</Preview>
+
+## 布局规则
+
+- 信息头区使用 `flex justify-between`，副本卡固定右侧。
+- DaemonSet 无需 `ReplicaAdjustmentCard`（不可调整副本数）。
+- KPI 行移动端 2 列，桌面端 4 列。
+- 图表区移动端单列，桌面端双列（`grid-cols-1 lg:grid-cols-2`）。
+- `ContainerStatus` 展示最近 Pod 的容器运行状态，无 Pod 时渲染空状态。
+- 元数据区两列并排，无标签/注解时显示对应 `emptyMessage`。

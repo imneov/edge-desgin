@@ -1,0 +1,228 @@
+import { useState } from 'react'
+import { KPICard, ResourceChart } from '@edge/ui'
+import { ResourceMetricCard, NodeStatsCards } from '@edge/components'
+import { Preview } from '../../components/Preview'
+import { Cpu, MemoryStick, HardDrive, Activity } from 'lucide-react'
+
+# Node Monitoring Pattern
+
+节点监控页面的三区域标准布局：KPI 汇总行 → 资源选择器行 → 图表网格。
+
+适用于：节点监控视图、集群驾驶舱节点面板、边缘节点运行状态页。
+
+## 布局结构
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  KPICard  │  KPICard  │  KPICard  │  KPICard            │  ← KPI 汇总行
+├─────────────────────────────────────────────────────────┤
+│  ResourceMetricCard(CPU)  ResourceMetricCard(内存)  ...  │  ← 资源选择器行
+├─────────────────────────────────────────────────────────┤
+│  ResourceChart (CPU 用率)   │  ResourceChart (内存用率)  │  ← 2 列图表网格
+│  ResourceChart (磁盘用率)   │  ResourceChart (网络吞吐)  │
+└─────────────────────────────────────────────────────────┘
+```
+
+## 组件清单
+
+| 区域 | 组件 | 来源 |
+|------|------|------|
+| KPI 汇总 | [`KPICard`](/domain/monitoring/metrics-cards) | `@edge/ui` |
+| 节点概况 | [`NodeStatsCards`](/domain/monitoring/metrics-cards) | `@edge/components` |
+| 资源选择器 | [`ResourceMetricCard`](/domain/resource-display) | `@edge/components` |
+| 趋势图表 | [`ResourceChart`](/domain/monitoring/charts) | `@edge/ui` |
+
+## 组合代码示例
+
+```tsx
+import { useState } from 'react'
+import { KPICard, ResourceChart } from '@edge/ui'
+import { ResourceMetricCard } from '@edge/components'
+import { Cpu, MemoryStick, HardDrive, Activity } from 'lucide-react'
+
+type MetricType = 'cpu' | 'memory' | 'disk'
+
+export function NodeMonitoringPage({ node }) {
+  const [activeMetric, setActiveMetric] = useState<MetricType>('cpu')
+
+  return (
+    <div className="space-y-4 p-6">
+      {/* Zone 1 — KPI 汇总 */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KPICard
+          icon={Cpu}
+          title="CPU 使用率"
+          value={node.cpuPercent}
+          unit="%"
+        />
+        <KPICard
+          icon={MemoryStick}
+          title="内存使用率"
+          value={node.memPercent}
+          unit="%"
+          iconBgColor="bg-purple-50"
+          iconColor="text-purple-600"
+        />
+        <KPICard
+          icon={HardDrive}
+          title="磁盘使用率"
+          value={node.diskPercent}
+          unit="%"
+          iconBgColor="bg-amber-50"
+          iconColor="text-amber-600"
+        />
+        <KPICard
+          icon={Activity}
+          title="运行 Pod"
+          value={node.podCount}
+          unit="个"
+          iconBgColor="bg-green-50"
+          iconColor="text-green-600"
+        />
+      </div>
+
+      {/* Zone 2 — 资源选择器 */}
+      <div className="flex gap-3">
+        {(['cpu', 'memory', 'disk'] as const).map(type => (
+          <ResourceMetricCard
+            key={type}
+            type={type}
+            currentValue={node.metrics[type].current}
+            totalValue={node.metrics[type].total}
+            unit={node.metrics[type].unit}
+            selected={activeMetric === type}
+            onClick={() => setActiveMetric(type)}
+          />
+        ))}
+      </div>
+
+      {/* Zone 3 — 图表网格 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ResourceChart
+          title="CPU 使用率"
+          percentage={node.cpuPercent}
+          timeSeries={node.cpuSeries}
+          color="#3b82f6"
+          unit="%"
+          currentValue={`${node.cpu.used} / ${node.cpu.total} cores`}
+        />
+        <ResourceChart
+          title="内存使用率"
+          percentage={node.memPercent}
+          timeSeries={node.memSeries}
+          color="#8b5cf6"
+          unit="%"
+          currentValue={`${node.mem.used} / ${node.mem.total} GB`}
+        />
+        <ResourceChart
+          title="磁盘使用率"
+          percentage={node.diskPercent}
+          timeSeries={node.diskSeries}
+          color="#f59e0b"
+          unit="%"
+          currentValue={`${node.disk.used} / ${node.disk.total} GB`}
+        />
+        <ResourceChart
+          title="网络吞吐"
+          percentage={node.netPercent}
+          timeSeries={node.netSeries}
+          color="#10b981"
+          unit="MB/s"
+          currentValue={`↑${node.net.out} ↓${node.net.in}`}
+        />
+      </div>
+    </div>
+  )
+}
+```
+
+## Live Preview
+
+### KPI 汇总行
+
+<Preview center={false} bgColor="#f8fafc">
+  <div className="grid grid-cols-4 gap-3 p-4 w-full">
+    <KPICard
+      icon={Cpu}
+      title="CPU 使用率"
+      value="58.3"
+      unit="%"
+      trend={{ value: 4.2, isPositive: false }}
+    />
+    <KPICard
+      icon={MemoryStick}
+      title="内存使用率"
+      value="72.1"
+      unit="%"
+      iconBgColor="bg-purple-50"
+      iconColor="text-purple-600"
+    />
+    <KPICard
+      icon={HardDrive}
+      title="磁盘使用率"
+      value="41.5"
+      unit="%"
+      iconBgColor="bg-amber-50"
+      iconColor="text-amber-600"
+    />
+    <KPICard
+      icon={Activity}
+      title="运行 Pod"
+      value={18}
+      unit="个"
+      iconBgColor="bg-green-50"
+      iconColor="text-green-600"
+      trend={{ value: 2, isPositive: true }}
+    />
+  </div>
+</Preview>
+
+### 资源选择器行
+
+<Preview center={false} bgColor="#f8fafc">
+  <div className="flex gap-3 p-4 w-full">
+    <ResourceMetricCard
+      type="cpu"
+      currentValue={5.8}
+      totalValue={8}
+      unit=" cores"
+      selected={true}
+      onClick={() => {}}
+    />
+    <ResourceMetricCard
+      type="memory"
+      currentValue={11.5}
+      totalValue={16}
+      unit=" GB"
+      selected={false}
+      onClick={() => {}}
+    />
+    <ResourceMetricCard
+      type="disk"
+      currentValue={83}
+      totalValue={200}
+      unit=" GB"
+      selected={false}
+      onClick={() => {}}
+    />
+  </div>
+</Preview>
+
+## 布局规则
+
+- **KPI 行** 移动端 2 列，桌面端 4 列。
+- **选择器行** 可选 — 单一资源类型页面可省略。
+- **图表网格** 移动端单列，桌面端双列（`grid-cols-1 lg:grid-cols-2`）。
+- 同行图表共享相同时间范围和刷新间隔。
+- 当需要跨节点汇总统计时，在 KPI 行上方加入 [`NodeStatsCards`](/domain/monitoring/metrics-cards) 全宽行。
+
+## 数据刷新策略
+
+```tsx
+const { data: nodeMetrics } = useQuery({
+  queryKey: ['node-metrics', nodeId, timeRange],
+  queryFn: () => fetchNodeMetrics(nodeId, timeRange),
+  refetchInterval: 30_000,
+  staleTime: 25_000,
+})
+```

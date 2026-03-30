@@ -4,4 +4,7 @@ export default {
   'list-detail': 'List + Detail (CRUD)',
   'dashboard-layout': 'Dashboard Layout',
   'scope-navigation': 'Scope-based Navigation',
+  'workload-detail': 'Workload Detail',
+  'node-monitoring': 'Node Monitoring',
+  'node-detail': 'Node Detail',
 }
