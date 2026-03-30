@@ -144,25 +144,16 @@ export function SearchableSelect<T extends SearchableSelectOption = SearchableSe
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation()
     setSearchQuery("")
-    setIsSearchMode(true)
     onValueChange("")
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
-  }
-
-  const getDisplayText = () => {
-    if (isSearchMode || (isOpen && searchQuery)) {
-      return searchQuery
-    }
-    const selected = options.find((opt) => opt.value === value)
-    if (selected) {
-      return selected.label
-    }
-    return value || placeholder
+    setIsOpen(true)
   }
 
   const selectedOption = options.find((opt) => opt.value === value)
+
+  const getDisplayText = () => {
+    if (selectedOption) return selectedOption.label
+    return value || placeholder
+  }
   const showClear = clearable && value
 
   return (
@@ -180,17 +171,19 @@ export function SearchableSelect<T extends SearchableSelectOption = SearchableSe
           "flex items-center justify-between cursor-pointer"
         )}
       >
-        {isSearchMode || (isOpen && !value) ? (
+        {isOpen ? (
           <input
             ref={inputRef}
             type="text"
-            placeholder={searchPlaceholder}
+            placeholder={value ? selectedOption?.label || value : searchPlaceholder}
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value)
+              setIsSearchMode(true)
+            }}
             className="flex-1 outline-none bg-transparent text-sm"
             autoFocus
             onClick={(e) => e.stopPropagation()}
-            onFocus={() => setIsSearchMode(true)}
           />
         ) : (
           <span
