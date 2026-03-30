@@ -66,6 +66,9 @@ export { LabelEditor } from './components/LabelEditor'
 export type { KeyValue, LabelEditorProps } from './components/LabelEditor'
 
 // ─── Data Display ─────────────────────────────────────────────────────────────
+export { PropertyList } from './components/property-list'
+export type { PropertyListProps, PropertyItem } from './components/property-list'
+
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './components/card'
 
 export {

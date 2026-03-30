@@ -1,4 +1,5 @@
 export default {
+  'property-list': 'PropertyList',
   card: 'Card',
   table: 'Table',
   tabs: 'Tabs',
