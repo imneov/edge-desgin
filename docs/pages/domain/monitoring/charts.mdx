@@ -113,3 +113,74 @@ function CpuChart({ timeSeries, currentUsage, percentage }) {
   )
 }
 ```
+
+---
+
+## Monitoring Page Layout Pattern
+
+Monitoring pages in Edge Console follow a consistent three-zone layout: KPI summary row → resource selector row → chart grid.
+
+### Standard Layout
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  KPICard  │  KPICard  │  KPICard  │  KPICard            │  ← 4-col KPI row
+├─────────────────────────────────────────────────────────┤
+│  ResourceMetricCard(CPU) │ ResourceMetricCard(Mem) │ ... │  ← selector row
+├─────────────────────────────────────────────────────────┤
+│  ResourceChart (CPU)    │  ResourceChart (Mem)          │  ← 2-col chart grid
+│  ResourceChart (Disk)   │  ResourceChart (Net)          │
+└─────────────────────────────────────────────────────────┘
+```
+
+```tsx
+import { KPICard, ResourceChart } from '@edge/ui'
+import { ResourceMetricCard } from '@edge/components'
+
+export function NodeMonitoringPage({ node }) {
+  const [activeMetric, setActiveMetric] = useState<'cpu' | 'memory' | 'disk'>('cpu')
+
+  return (
+    <div className="space-y-4 p-6">
+      {/* Zone 1 — KPI summary */}
+      <div className="grid grid-cols-4 gap-3">
+        <KPICard icon={Cpu}      title="CPU"    value={node.cpuPercent}  unit="%" />
+        <KPICard icon={MemoryStick} title="内存" value={node.memPercent} unit="%" />
+        <KPICard icon={HardDrive}  title="磁盘" value={node.diskPercent} unit="%" />
+        <KPICard icon={Activity}   title="Pod"  value={node.podCount}   unit="个" />
+      </div>
+
+      {/* Zone 2 — Resource selector */}
+      <div className="flex gap-3">
+        {(['cpu', 'memory', 'disk'] as const).map(type => (
+          <ResourceMetricCard
+            key={type}
+            type={type}
+            currentValue={node.metrics[type].current}
+            totalValue={node.metrics[type].total}
+            unit={node.metrics[type].unit}
+            selected={activeMetric === type}
+            onClick={() => setActiveMetric(type)}
+          />
+        ))}
+      </div>
+
+      {/* Zone 3 — Chart grid */}
+      <div className="grid grid-cols-2 gap-4">
+        <ResourceChart title="CPU 使用率"  percentage={node.cpuPercent}  timeSeries={cpuSeries}  color="#3b82f6" unit="%" currentValue={`${node.cpu.used} / ${node.cpu.total} cores`} />
+        <ResourceChart title="内存使用率"  percentage={node.memPercent}  timeSeries={memSeries}  color="#8b5cf6" unit="%" currentValue={`${node.mem.used} / ${node.mem.total} GB`} />
+        <ResourceChart title="磁盘使用率"  percentage={node.diskPercent} timeSeries={diskSeries} color="#f59e0b" unit="%" currentValue={`${node.disk.used} / ${node.disk.total} GB`} />
+        <ResourceChart title="网络吞吐"    percentage={node.netPercent}  timeSeries={netSeries}  color="#10b981" unit="MB/s" currentValue={`↑${node.net.out} ↓${node.net.in}`} />
+      </div>
+    </div>
+  )
+}
+```
+
+### Layout Rules
+
+- **KPI row** always spans full width, 4 columns on desktop, 2 on mobile.
+- **Selector row** is optional — omit when the page only shows a single resource type.
+- **Chart grid** uses 2 columns on `lg` and above, 1 column on smaller viewports (`grid-cols-1 lg:grid-cols-2`).
+- Charts within the same grid always share the same time range and refresh interval.
+- Use `ReplicaAdjustmentCard` alongside this layout on workload detail pages when replica control is needed. See [ReplicaAdjustmentCard](/domain/resource-display/replica-adjustment).

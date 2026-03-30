@@ -1,0 +1,135 @@
+import { ReplicaAdjustmentCard } from '@edge/components'
+import { Preview } from '../../../components/Preview'
+
+# ReplicaAdjustmentCard
+
+Dark-theme card for displaying and adjusting workload replica count. Shows current vs desired replicas via a circular progress ring with inline +/− controls.
+
+## Import
+
+```tsx
+import { ReplicaAdjustmentCard } from '@edge/components'
+```
+
+---
+
+## Preview
+
+<Preview dark>
+  <ReplicaAdjustmentCard
+    currentReplicas={3}
+    desiredReplicas={4}
+    onReplicaChange={() => {}}
+  />
+</Preview>
+
+```tsx
+const [desired, setDesired] = useState(4)
+
+<ReplicaAdjustmentCard
+  currentReplicas={3}
+  desiredReplicas={desired}
+  onReplicaChange={setDesired}
+/>
+```
+
+---
+
+## Converging State
+
+When `currentReplicas` equals `desiredReplicas` the ring is fully filled.
+
+<Preview dark>
+  <ReplicaAdjustmentCard
+    currentReplicas={4}
+    desiredReplicas={4}
+    onReplicaChange={() => {}}
+  />
+</Preview>
+
+---
+
+## Loading State
+
+Pass `isLoading` while the scale request is in-flight. Both buttons are disabled and an "调整中…" label appears.
+
+<Preview dark>
+  <ReplicaAdjustmentCard
+    currentReplicas={2}
+    desiredReplicas={5}
+    onReplicaChange={() => {}}
+    isLoading={true}
+  />
+</Preview>
+
+```tsx
+<ReplicaAdjustmentCard
+  currentReplicas={currentReplicas}
+  desiredReplicas={desiredReplicas}
+  onReplicaChange={async (n) => {
+    setLoading(true)
+    await scaleDeployment(n)
+    setLoading(false)
+  }}
+  isLoading={isLoading}
+/>
+```
+
+---
+
+## Boundary Constraints
+
+Use `minReplicas` / `maxReplicas` to clamp the adjustment range. The corresponding button disables at the boundary.
+
+<Preview dark>
+  <ReplicaAdjustmentCard
+    currentReplicas={1}
+    desiredReplicas={1}
+    onReplicaChange={() => {}}
+    minReplicas={1}
+    maxReplicas={10}
+  />
+</Preview>
+
+---
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `currentReplicas` | `number` | — | Number of currently running replicas |
+| `desiredReplicas` | `number` | — | Target replica count (controls ring fill and display) |
+| `onReplicaChange` | `(n: number) => void` | — | Called when + or − is clicked with the new desired count |
+| `isLoading` | `boolean` | `false` | Disable controls and show "调整中…" status |
+| `minReplicas` | `number` | `0` | Lower bound; − button disables at this value |
+| `maxReplicas` | `number` | `100` | Upper bound; + button disables at this value |
+
+---
+
+## Usage in Edge Console
+
+The card is used on workload detail pages (Deployments, StatefulSets) where operators need a quick inline scale control without opening a full dialog.
+
+```tsx
+import { ReplicaAdjustmentCard } from '@edge/components'
+import { useScaleDeployment } from '@/hooks/workloads'
+
+export function DeploymentScalePanel({ deployment }) {
+  const { mutateAsync: scale, isPending } = useScaleDeployment()
+  const [desired, setDesired] = useState(deployment.spec.replicas)
+
+  return (
+    <ReplicaAdjustmentCard
+      currentReplicas={deployment.status.readyReplicas ?? 0}
+      desiredReplicas={desired}
+      onReplicaChange={async (n) => {
+        setDesired(n)
+        await scale({ name: deployment.metadata.name, replicas: n })
+      }}
+      isLoading={isPending}
+      minReplicas={0}
+      maxReplicas={50}
+    />
+  )
+}
+```
