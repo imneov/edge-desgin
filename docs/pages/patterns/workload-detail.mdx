@@ -120,9 +120,15 @@ export function WorkloadDetailPage({ workload }) {
       <ContainerStatus containers={workload.podStatus} />
 
       {/* 元数据 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <LabelsDisplay labels={workload.metadata.labels} />
-        <AnnotationsDisplay annotations={workload.metadata.annotations} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium text-gray-700">标签 (Labels)</h4>
+          <LabelsDisplay labels={workload.metadata.labels} />
+        </div>
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium text-gray-700">注解 (Annotations)</h4>
+          <AnnotationsDisplay annotations={workload.metadata.annotations} />
+        </div>
       </div>
 
       {/* 副本确认弹框 */}
@@ -199,21 +205,27 @@ export function WorkloadDetailPage({ workload }) {
 ### 元数据区
 
 <Preview center={false} bgColor="#f8fafc">
-  <div className="grid grid-cols-2 gap-4 p-4 w-full">
-    <LabelsDisplay
-      labels={{
-        app: 'edge-gateway',
-        env: 'production',
-        tier: 'frontend',
-        version: 'v2.1.0',
-      }}
-    />
-    <AnnotationsDisplay
-      annotations={{
-        'deployment.kubernetes.io/revision': '5',
-        'kubectl.kubernetes.io/last-applied-configuration': '...',
-      }}
-    />
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4 w-full">
+    <div className="space-y-2">
+      <h4 className="text-sm font-medium text-gray-700">标签 (Labels)</h4>
+      <LabelsDisplay
+        labels={{
+          app: 'edge-gateway',
+          env: 'production',
+          tier: 'frontend',
+          version: 'v2.1.0',
+        }}
+      />
+    </div>
+    <div className="space-y-2">
+      <h4 className="text-sm font-medium text-gray-700">注解 (Annotations)</h4>
+      <AnnotationsDisplay
+        annotations={{
+          'deployment.kubernetes.io/revision': '5',
+          'kubectl.kubernetes.io/last-applied-configuration': '...',
+        }}
+      />
+    </div>
   </div>
 </Preview>
 
