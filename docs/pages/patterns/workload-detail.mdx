@@ -75,7 +75,7 @@ export function WorkloadDetailPage({ workload }) {
   return (
     <div className="space-y-6 p-6">
       {/* 信息头 */}
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex items-center justify-between gap-4">
         <ResourceNameDescription
           name={workload.name}
           alias={workload.alias}
@@ -150,7 +150,7 @@ export function WorkloadDetailPage({ workload }) {
 ### 信息头 + 副本控制
 
 <Preview center={false} bgColor="#f8fafc">
-  <div className="flex items-start justify-between gap-4 p-6 w-full">
+  <div className="flex items-center justify-between gap-4 p-6 w-full">
     <ResourceNameDescription
       name="edge-gateway"
       alias="边缘网关"
@@ -231,7 +231,7 @@ export function WorkloadDetailPage({ workload }) {
 
 ## 布局规则
 
-- 信息头区使用 `flex justify-between`，副本卡固定右侧。
+- 信息头区使用 `flex items-center justify-between`，副本卡固定右侧，与名称垂直居中对齐。
 - DaemonSet 无需 `ReplicaAdjustmentCard`（不可调整副本数）。
 - KPI 行移动端 2 列，桌面端 4 列。
 - 图表区移动端单列，桌面端双列（`grid-cols-1 lg:grid-cols-2`）。
