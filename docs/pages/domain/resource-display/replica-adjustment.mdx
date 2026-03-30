@@ -106,6 +106,33 @@ Use `minReplicas` / `maxReplicas` to clamp the adjustment range. The correspondi
 
 ---
 
+## Related Components
+
+`ReplicaAdjustmentCard` is often paired with `ReplicaConfirmationDialog` to add a 5-second countdown confirmation before committing the scale request.
+
+```tsx
+import { ReplicaAdjustmentCard, ReplicaConfirmationDialog } from '@edge/components'
+
+const [pending, setPending] = useState(desired)
+const [confirmOpen, setConfirmOpen] = useState(false)
+
+<ReplicaAdjustmentCard
+  currentReplicas={current}
+  desiredReplicas={desired}
+  onReplicaChange={(n) => { setPending(n); setConfirmOpen(true) }}
+/>
+<ReplicaConfirmationDialog
+  open={confirmOpen}
+  onOpenChange={setConfirmOpen}
+  currentReplicas={desired}
+  targetReplicas={pending}
+  onConfirm={handleConfirm}
+  onCancel={() => setConfirmOpen(false)}
+/>
+```
+
+---
+
 ## Usage in Edge Console
 
 The card is used on workload detail pages (Deployments, StatefulSets) where operators need a quick inline scale control without opening a full dialog.
